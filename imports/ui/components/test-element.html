@@ -1,0 +1,32 @@
+<dom-module id="test-element">
+  <template>
+    <link rel="stylesheet" type="text/css" href="test-element.css">
+    <style>
+      #nnDiv{
+        color:blue;
+      }
+
+      paper-button{
+        color:red;
+      }
+
+    </style>
+
+  </template>
+
+  <script>
+      class TestElement extends Polymer.Element {
+          static get is() {
+              return 'test-element';
+          }
+
+          static get properties() {
+              return {
+
+              };
+          }
+      }
+
+      window.customElements.define(TestElement.is, TestElement);
+  </script>
+</dom-module>

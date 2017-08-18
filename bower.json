@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "app-route": "PolymerElements/app-route",
+    "app-layout": "PolymerElements/app-layout",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout",
+    "iron-pages": "PolymerElements/iron-pages",
+    "polymer": "Polymer/polymer",
+    "paper-button": "PolymerElements/paper-button",
+    "paper-card": "PolymerElements/paper-card",
+    "paper-styles": "PolymerElements/paper-styles"
+  },
+  "name": "synthesis-demo",
+  "version": "2.0-preview"
+}
