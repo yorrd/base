@@ -1,0 +1,50 @@
+<link rel="import" href="../redux/mongo-redux-mixin.html">
+
+<dom-module id="mongo-data">
+  <template>
+      <template is="dom-repeat" items="{{todos}}" index-as="index">
+        <paper-input value={{item.name}}></paper-input>
+        <button on-click="_deleteItem">Delete</button>
+      </template>
+      {{testdata}}
+  </template>
+</dom-module>
+
+<script>
+
+class MongoData extends MongoReduxMixin(Polymer.Element, 'mongo-data', 'mongodata_unfiltered') {
+    static get is() {
+        return 'mongo-data';
+    }
+    static get properties() {
+        return {
+            todos: {
+                type: Array,
+                statePath: 'mongodata_unfiltered',
+            },
+            filter: {
+                type: Object,
+                value: { },
+            },
+
+            // accessing polymer example variable from test-layout
+            testdata: {
+                type: String,
+                statePath: 'testdata',
+            },
+        };
+    }
+
+    static get actions() {
+        return Object.assign({}, MongoReduxMixin.actions);
+    }
+
+    _deleteItem(e) {
+        const id = e.model.item._id;
+        this.dispatch('remove', id);
+    }
+}
+
+window.customElements.define(MongoData.is, MongoData);
+
+</script>

@@ -1,0 +1,167 @@
+<link rel="import" href="../bower_components/polymer-redux/polymer-redux.html">
+
+<script>
+import { createStore, applyMiddleware } from 'redux';
+import DatabaseHolder from './database-holder';
+
+// TODO remove this, it's a stupid idea because we already have the redux
+// time machine. Just for testing the combiner
+const debugReducer = (state = ['No debug message'], action) => {
+    let logMessage = '';
+    switch (action.type) {
+            case 'INSERT_DOC':
+                logMessage = `Insert new Item: ${JSON.stringify(action.doc)}`;
+                break;
+            case 'REMOVE_DOC':
+                logMessage = `Remove Item: ${JSON.stringify(action.doc)}`;
+                break;
+            case 'ADDED_DOC':
+                logMessage = `Inserted new Item: ${JSON.stringify(action.doc)}`;
+                break;
+            case 'REMOVED_DOC':
+                logMessage = `Deleted Item: ${JSON.stringify(action.doc)}`;
+                break;
+            case 'UPDATED_DOC':
+                logMessage = `Updated Item: ${JSON.stringify(action.doc)}`;
+                break;
+            case 'SET_FILTER':
+                logMessage = `Set Filter: ${JSON.stringify(action.filter)}`;
+                break;
+            default:
+            // ignore
+    }
+    return [...state, logMessage];
+};
+
+const reducer = (state = {}, action) => {
+    let object = Object.assign({}, state);
+    switch (action.type) {
+            // actions which are only called from the observer on the mongo database
+            case 'ADDED_DOC': {
+                if (!state[action.statePath]) {
+                    object[action.statePath] = [action.doc];
+                } else {
+                    object[action.statePath] = [...state[action.statePath], action.doc];
+                }
+                break;
+            }
+            case 'REMOVED_DOC': {
+                if (!state[action.statePath]) {
+                    object[action.statePath] = [];
+                } else {
+                    object[action.statePath] = state[action.statePath].filter(item => item._id !== action.doc._id);
+                }
+                break;
+            }
+            case 'UPDATED_DOC': {
+                if (!state[action.statePath]) {
+                    object[action.statePath] = [];
+                } else {
+                    object[action.statePath] = state[action.statePath].map((item) => {
+                        if (item._id === action.doc._id) { return action.doc; }
+                        return item;
+                    });
+                }
+                break;
+            }
+
+            // filter action for the respective statePath / collection. We're claling this "statePath"_filter
+            case 'SET_FILTER': {
+                object[action.statePath] = [];
+                // TODO better do .filter here? instead of _filter
+                object[`${action.statePath}_filter`] = action.filter;
+                break;
+            }
+            default:
+                object = Object.assign({}, state);
+    }
+
+    // insert polymer tracked variables
+    if (action.type === 'UPDATE_POLYMER_VARIABLE') {
+        object[action.statePath] = action.value;
+    }
+
+    // TODO could / should use combineReducers here
+    return Object.assign(object, {
+        debugMessage: debugReducer(state.debugMessage, action),
+    });
+};
+
+
+const mongoMiddleware = middlewareStore => next => (action) => {
+    switch (action.type) {
+            case 'INSERT_DOC':
+                DatabaseHolder.getDatabase(action.collection).insert(action.doc);
+                break;
+            case 'REMOVE_DOC':
+                DatabaseHolder.getDatabase(action.collection).remove({ _id: action.id });
+                break;
+            default:
+    }
+
+    const returnValue = next(action);
+
+    if (action.type === 'SET_FILTER') {
+        DatabaseHolder.stopObserverHandle(action.statePath);
+        const obsHandle = DatabaseHolder.getDatabase(action.collection).find(action.filter).observe({
+            added: (doc) => {
+                middlewareStore.dispatch({
+                    type: 'ADDED_DOC',
+                    collection: action.collection,
+                    statePath: action.statePath,
+                    doc,
+                });
+            },
+            changed: (doc) => {
+                middlewareStore.dispatch({
+                    type: 'UPDATED_DOC',
+                    collection: action.collection,
+                    statePath: action.statePath,
+                    doc,
+                });
+            },
+            removed: (doc) => {
+                middlewareStore.dispatch({
+                    type: 'REMOVED_DOC',
+                    collection: action.collection,
+                    statePath: action.statePath,
+                    doc,
+                });
+            },
+        });
+        DatabaseHolder.setObserverHandle(action.statePath, obsHandle);
+    }
+
+    return returnValue;
+};
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // for the debugger in the browser
+const store = createStore(reducer, {/* SSR hydration!!! */}, composeEnhancers(applyMiddleware(mongoMiddleware)));
+ReduxMixin = PolymerRedux(store);
+
+AdornisPolymerRedux = Parent => class AdornisPolymerRedux extends ReduxMixin(Parent) {
+    ready() {
+        super.ready();
+
+        // get automatically managed properties
+        const props = this.constructor.properties;
+        const trackedProperties = Object.keys(props)
+            .filter(prop => props[prop].dispatch)
+            .forEach((trackedProp) => {
+                const { statePath } = props[trackedProp];
+                if (statePath.includes('.')) throw new Error("no nested polymer properties allowed at this time for the 'dispatch' shorthand");
+                const listenerName = `_trackedPropChanged__${statePath.replace('.', '_')}`;
+                if (!statePath) throw new Error(`dispatch given but not statePath for property ${trackedProp}`);
+
+                this[listenerName] = (newVal) => {
+                    if (!newVal) return;
+                    this.dispatch({
+                        type: 'UPDATE_POLYMER_VARIABLE',
+                        statePath,
+                        value: newVal,
+                    });
+                };
+                this._createPropertyObserver(trackedProp, listenerName);
+            });
+    }
+};
+</script>

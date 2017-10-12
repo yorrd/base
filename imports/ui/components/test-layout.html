@@ -1,0 +1,93 @@
+<link rel="import" href="mongo-data.html">
+
+<dom-module id="test-layout">
+  <template>
+    <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
+    <style>
+        .main{
+          @apply(--layout-horizontal);
+          @apply(--layout-center-center);
+        }
+        app-header {
+          background-color: var(--primary-color);
+          color: #fff;
+        }
+        app-header paper-icon-button {
+          --paper-icon-button-ink-color: white;
+        }
+    </style>
+
+    <!--================== <Router> ================-->
+
+    <app-location route="{{route}}"></app-location>
+
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}"></app-route>
+
+    <!--================= </Router> ================-->
+
+    <app-header- class="fit layout vertical">
+        <app-header fixed condenses>
+            <app-toolbar>
+                fancy redux log
+            </app-toolbar>
+        </app-header>
+
+        <table style="display: block; max-height: 120px; overflow-y: scroll; font-family: monospace">
+            <template is="dom-repeat" items="[[messages]]" index-as="index">
+                <tr><td>[[index]]</td><td>[[item]]</td></tr>
+            </template>
+        </table>
+
+        <paper-input value="{{testdata}}"></paper-input>
+
+        <paper-toggle-button on-checked-changed="_toggleFilter"></paper-toggle-button>
+        <button on-click="handleUpdateMessage">Insert Hallo Welt</button>
+        <mongo-data id="mongoData" filter="{{filter}}"></mongo-data>
+
+    </app-header-layout>
+
+  </template>
+</dom-module>
+
+<script>
+import { MwcMixin } from 'meteor/mwc:mixin';
+
+class TestLayout extends AdornisPolymerRedux(MwcMixin(Polymer.Element)) {
+    static get is() {
+        return 'test-layout';
+    }
+
+    static get properties() {
+        return {
+            route: Object,
+            routeData: Object,
+            messages: {
+                type: Array,
+                statePath: 'debugMessage',
+            },
+
+            // generic polymer property which is synched globally via redux
+            testdata: {
+                type: String,
+                statePath: 'testdata',
+                dispatch: true,
+            },
+        };
+    }
+
+    _toggleFilter(e) {
+        if (e.currentTarget.checked) {
+            this.filter = { name: 'hallo welt 1' };
+        } else {
+            this.filter = { };
+        }
+    }
+
+    handleUpdateMessage() {
+        this.$.mongoData.dispatch('insert', { name: 'new dispatch cool shit stuff ' });
+    }
+}
+
+window.customElements.define(TestLayout.is, TestLayout);
+
+</script>
