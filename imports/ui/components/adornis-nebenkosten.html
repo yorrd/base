@@ -1,0 +1,92 @@
+<dom-module id="adornis-nebenkosten">
+    <template>
+        <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
+        <style>
+            table {border-spacing: 0}
+            tr[final] td {background-color: #aaa}
+            tr td:last-of-type {font-family: monospace; text-align: right}
+        </style>
+        <div class="layout horizontal">
+            <div class="layout vertical flex">
+                <div>heizBetriebsKosten: {{heizBetriebsKosten}}</div>
+                <div>Wasserkosten: {{kaltwasserKosten}}</div>
+            </div>
+            <div class="layout vertical flex">
+                <div>{{m_heizkostenZaehler}}</div>
+                <div>{{m_warmwasserZaehler}}</div>
+                <div>{{m_kaltwasserZaehler}}</div>
+            </div>
+            <div class="layout vertical flex">
+                <div class="layout horizontal">Heizkosten: {{gesamtHeizKosten}}</div>
+                <div class="layout horizontal">Warmwasserkosten: {{gesamtWarmwasserkosten}}</div>
+                <div class="layout horizontal">Kaltwasserkosten: {{gesamtKaltwasserKosten}}</div>
+            </div>
+        </div>
+
+    </template>
+</dom-module>
+
+<script>
+
+class AdornisNebenkosten extends AdornisPolymerRedux(Polymer.Element) {
+    static get is() {
+        return 'adornis-nebenkosten';
+    }
+    static get properties() {
+        return {
+            // m_ => miete fuer
+            // gesamtX => inklusive miete fuer die zaehler
+            // Heizeinheit => summe der heizkostenverteilerwerte (uebersetzung von kWh)
+
+            // constants
+            warmwasserTemperatur: { type: Number, value: 60 },
+            quadratmeterHeizflaeche: { type: Number, value: 606.06 },
+
+            // summe der zaehler
+            brennstoffVerbrauch: {
+                type: Number, value: 74327, statePath: 'brennstoffVerbrauch', dispatch: true,
+            },
+            wasserVerbrauch: { // vom wasserwerk, nicht unbedingt kaltwassser + warmwasser, weil die vom zaehler kommen
+                type: Number, value: 595, statePath: 'wasserVerbrauch', dispatch: true,
+            },
+            heizeinheiten: {
+                type: Number, value: 97419, statePath: 'heizeinheiten', dispatch: true,
+            },
+
+            // heizungsanlage sind alle kosten, die zum heizen beitragen
+            heizBetriebsKosten: { type: Number, value: 4912.77 },
+            heizBetriebsKostenProKwh: { type: Number, computed: '_div(heizBetriebsKosten, brennstoffVerbrauch)' },
+            heizKosten: { type: Number, computed: '_sub(heizBetriebsKosten, warmwasserBereitungskosten)' },
+            m_heizkostenZaehler: { type: Number, value: 334.56 },
+            gesamtHeizKosten: {
+                type: Number, computed: '_sum(heizKosten, m_heizkostenZaehler)', statePath: 'gesamtHeizKosten', dispatch: true,
+            },
+
+            // warmwasser
+            warmwasserVerbrauch: { type: Number, value: 191.35, title: 'Warmwasser Verbrauch' },
+            warmwasserAnteilVonbrennstoffVerbrauch: { type: Number, computed: '_warmwasserAnteilVonbrennstoffVerbrauch(warmwasserVerbrauch)' },
+            warmwasserBereitungskosten: { type: Number, computed: '_mul(warmwasserVerbrauch, heizBetriebsKostenProKwh)' },
+            kostenKaltwasserFuerWarmwasser: { type: Number, computed: '_mul(warmwasserVerbrauch, kaltwasserkostenProM3)' },
+            m_warmwasserZaehler: { type: Number, value: 334.56 },
+            gesamtWarmwasserkosten: {
+                type: Number, computed: '_sum(kostenKaltwasserFuerWarmwasser, warmwasserBereitungskosten, m_warmwasserZaehler)', statePath: 'gesamtWarmwasserKosten', dispatch: true,
+            },
+
+            // kaltwasser
+            kaltwasserVerbrauch: { type: Number, value: 420.39 },
+            kaltwasserKosten: { type: Number, value: 2627.82 },
+            kaltwasserkostenProM3: { type: Number, computed: '_div(kaltwasserKosten, wasserVerbrauch)' },
+            m_kaltwasserZaehler: { type: Number, value: 334.56 },
+            gesamtKaltwasserKosten: {
+                type: Number, computed: '_sum(kaltwasserKosten, m_kaltwasserZaehler)', statePath: 'gesamtKaltwasserKosten', dispatch: true,
+            },
+        };
+    }
+
+    _warmwasserAnteilVonbrennstoffVerbrauch(warmwasserVerbrauch) {
+        return 2.5 * warmwasserVerbrauch * (this.warmwasserTemperatur - 10); // temperatur multipliziert
+    }
+}
+
+window.customElements.define(AdornisNebenkosten.is, AdornisNebenkosten);
+</script>

@@ -1,0 +1,82 @@
+<dom-module id="adornis-finance">
+    <template>
+        <style>
+            table {border-spacing: 0}
+            tr[final] td {background-color: #aaa}
+        </style>
+        <div class="layout vertical">
+            <table>
+                <tr><td>Input</td><td><paper-input value="{{input}}" label="Rechnung"></paper-input></td></tr>
+                <tr final><td>Nach USt</td><td>{{_(withoutUSt)}}</td></tr>
+                <template is="dom-repeat" items="{{spendingsDetail}}" index-as="index">
+                    <tr>
+                        <td><paper-input value="{{item.value}}"></paper-input></td>
+                        <td>{{item.type}}</td>
+                    </tr>
+                </template>
+                <tr><td>insg Ausgaben</td><td>{{spendings}}"></paper-input></td></tr>
+                <tr final><td>Nach Ausgaben</td><td>{{_(withoutSpendings)}}</td></tr>
+                <tr final><td>Nach KoeSt und GewSt</td><td>{{_(withoutTaxes)}}</td></tr>
+            </table>
+        </div>
+
+
+    </template>
+</dom-module>
+
+<script>
+
+const EUR = 'Eur';
+const PERC = '%';
+
+class AdornisFinance extends AdornisPolymerRedux(Polymer.Element) {
+    static get is() {
+        return 'adornis-finance';
+    }
+    static get properties() {
+        return {
+            // finance fields
+            input: Number,
+            withoutUSt: { type: Number, computed: '_subUSt(input)' },
+            spendingsDetail: { type: Array, value: [{ type: EUR, value: 1 }] },
+            spendings: { type: Number, computed: '_sumSpendings(spendingsDetail.*)' },
+            withoutSpendings: { type: Number, computed: '_subSpendings(withoutUSt, spendings)' },
+            withoutTaxes: { type: Number, computed: '_subTaxes(withoutSpendings)' },
+        };
+    }
+
+    static get actions() {
+        return Object.assign({}, ReduxMixin.actions);
+    }
+
+    _(val) {
+        return `${Math.floor(val * 100) / 100} Eur`;
+    }
+
+    _sumSpendings() {
+        const arr = this.spendingsDetail;
+        return arr.reduce((sum, curr) => {
+            if (curr.type === EUR) {
+                return sum + +curr.value;
+            } else if (curr.type === PERC) {
+                return sum + (this.withoutUSt * +curr.value);
+            }
+            return 0;
+        }, 0);
+    }
+
+    _subUSt(input) {
+        return input / 1.19;
+    }
+
+    _subSpendings(input) {
+        return input - this.spendings;
+    }
+
+    _subTaxes(input) {
+        return input * (1 - (0.123 + 0.15825));
+    }
+}
+
+window.customElements.define(AdornisFinance.is, AdornisFinance);
+</script>

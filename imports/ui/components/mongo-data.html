@@ -1,5 +1,3 @@
-<link rel="import" href="../redux/mongo-redux-mixin.html">
-
 <dom-module id="mongo-data">
   <template>
       <template is="dom-repeat" items="{{todos}}" index-as="index">
@@ -12,7 +10,7 @@
 
 <script>
 
-class MongoData extends MongoReduxMixin(Polymer.Element, 'mongo-data', 'mongodata_unfiltered') {
+class MongoData extends AdornisPolymerRedux(Polymer.Element, 'mongo-data', 'mongodata_unfiltered') {
     static get is() {
         return 'mongo-data';
     }
@@ -33,10 +31,6 @@ class MongoData extends MongoReduxMixin(Polymer.Element, 'mongo-data', 'mongodat
                 statePath: 'testdata',
             },
         };
-    }
-
-    static get actions() {
-        return Object.assign({}, MongoReduxMixin.actions);
     }
 
     _deleteItem(e) {

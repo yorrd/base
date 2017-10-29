@@ -102,6 +102,7 @@ const mongoMiddleware = middlewareStore => next => (action) => {
     const returnValue = next(action);
 
     if (action.type === 'SET_FILTER') {
+        // TODO move to the constructor or something?
         DatabaseHolder.stopObserverHandle(action.statePath);
         const obsHandle = DatabaseHolder.getDatabase(action.collection).find(action.filter).observe({
             added: (doc) => {
@@ -138,9 +139,56 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducer, {/* SSR hydration!!! */}, composeEnhancers(applyMiddleware(mongoMiddleware)));
 ReduxMixin = PolymerRedux(store);
 
-AdornisPolymerRedux = Parent => class AdornisPolymerRedux extends ReduxMixin(Parent) {
-    ready() {
-        super.ready();
+AdornisPolymerRedux = (Parent, CollectionName, StatePath) => class AdornisPolymerRedux extends ReduxMixin(Parent) {
+    static get actions() {
+        return {
+            insert(doc) {
+                return {
+                    type: 'INSERT_DOC',
+                    collection: CollectionName,
+                    statePath: StatePath,
+                    doc,
+                };
+            },
+            remove(id) {
+                return {
+                    type: 'REMOVE_DOC',
+                    collection: CollectionName,
+                    statePath: StatePath,
+                    id,
+                };
+            },
+            filter(filter) {
+                return {
+                    type: 'SET_FILTER',
+                    collection: CollectionName,
+                    statePath: StatePath,
+                    filter,
+                };
+            },
+        };
+    }
+
+    constructor() {
+        super();
+
+        // TODO make collection optional
+        if (CollectionName && StatePath) {
+            // create observers for the database redux statePath
+            Object.keys(this.constructor.properties)
+                .filter(prop => this.constructor.properties[prop].statePath === StatePath)
+                .forEach((prop) => {
+                    this._createMethodObserver(`_arrayUpdate(${prop}.*)`);
+                });
+
+            // listen for filter change
+            this._createPropertyObserver('filter', '_changeFilter');
+
+            // show warning if you don't have a filter
+            if (!Object.keys(this.constructor.properties).includes('filter')) {
+                console.error(`You don't have a filter for ${StatePath} on collection ${CollectionName}`);
+            }
+        }
 
         // get automatically managed properties
         const props = this.constructor.properties;
@@ -160,8 +208,40 @@ AdornisPolymerRedux = Parent => class AdornisPolymerRedux extends ReduxMixin(Par
                         value: newVal,
                     });
                 };
+
                 this._createPropertyObserver(trackedProp, listenerName);
             });
+    }
+
+    _arrayUpdate(diff) { // eslint-disable-line class-methods-use-this
+        // this should only run if there are deeper level updates in an object within the array from the database
+        if (diff.path.indexOf('.') === -1) return;
+        const id = (diff.path.split('.')[1]);
+        const dbObj = diff.base[id];
+        // will automatically trigger the mongo observer which will then update the data in the store
+        DatabaseHolder.getDatabase(CollectionName).update({ _id: dbObj._id }, { $set: dbObj });
+    }
+
+    _changeFilter() {
+        this.dispatch('filter', this.filter);
+    }
+
+    // convenience methods
+
+    _div(a, b) {
+        return +a / +b;
+    }
+
+    _mul(...args) {
+        return args.reduce((prod, curr) => prod * curr, 1);
+    }
+
+    _sum(...args) {
+        return args.reduce((prod, curr) => prod + curr, 0);
+    }
+
+    _sub(a, b) {
+        return +a - +b;
     }
 };
 </script>

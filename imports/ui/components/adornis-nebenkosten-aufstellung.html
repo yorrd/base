@@ -1,0 +1,112 @@
+<dom-module id="adornis-nebenkosten-aufstellung">
+    <template>
+        <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
+        <style>
+        </style>
+        {{_mieter.name}}: {{_mieter.qm}}{{heizeinheiten}}
+        <table>
+            gesamt, braucht keiner<br/>
+            <tr><td>Heizkosten</td><td>{{gesamtHeizKosten}}</td></tr>
+            <tr><td>Grundkosten</td><td>{{_mul(gesamtHeizKosten,grundkostenRatioHeizung)}}</td></tr>
+            <tr><td>Verbrauchskosten</td><td>{{_mul(gesamtHeizKosten,verbrauchskostenRatioHeizung)}}</td></tr>
+            <tr><td>Warmwasserkosten</td><td>{{gesamtWarmwasserKosten}}</td></tr>
+            <tr><td>Grundkosten</td><td>{{_mul(gesamtWarmwasserKosten,grundkostenRatioWarmwasser)}}</td></tr>
+            <tr><td>Verbrauchskosten</td><td>{{_mul(gesamtWarmwasserKosten,verbrauchskostenRatioWarmwasser)}}</td></tr>
+            <tr><td>Kaltwasserkosten</td><td>{{gesamtKaltwasserKosten}}</td></tr>
+            <tr><td>Verbrauchskosten</td><td>alles davon</td></tr>
+            <hr/>
+            <tr>jetzt richtig</tr>
+            <tr><td>Heizkosten</td></tr>
+            <tr><td>Grundkosten</td><td>{{_mul(heizkostenProM2, _mieter.qm)}}</td></tr>
+        </table>
+
+    </template>
+</dom-module>
+
+<script>
+
+class AdornisNebenkostenAufstellung extends AdornisPolymerRedux(Polymer.Element) {
+    static get is() {
+        return 'adornis-nebenkosten-aufstellung';
+    }
+    static get properties() {
+        return {
+            // grundkosten vs verbrauchskosten ratio
+            grundkostenRatioHeizung: { type: Number, value: 0.5 },
+            verbrauchskostenRatioHeizung: { type: Number, computed: '_sub(1, grundkostenRatioHeizung)' },
+            grundkostenRatioWarmwasser: { type: Number, value: 0.3 },
+            verbrauchskostenRatioWarmwasser: { type: Number, computed: '_sub(1, grundkostenRatioWarmwasser)' },
+
+            heizeinheiten: { type: Number, statePath: 'heizeinheiten' },
+            quadratmeterHeizflaeche: { type: Number, statePath: 'quadratmeterHeizflaeche' },
+            warmwasserVerbrauch: { type: Number, statePath: 'warmwasserVerbrauch' },
+            kaltwasserVerbrauch: { type: Number, statePath: 'kaltwasserVerbrauch' },
+            gesamtHeizKosten: { type: Number, statePath: 'gesamtHeizKosten' },
+            gesamtWarmwasserKosten: { type: Number, statePath: 'gesamtWarmwasserKosten' },
+            gesamtKaltwasserKosten: { type: Number, statePath: 'gesamtKaltwasserKosten' },
+
+            heizkostenProM2: { type: Number, computed: '_div(gesamtHeizKosten, quadratmeterHeizflaeche)' },
+            heizkostenProEinheit: { type: Number, computed: '_div(gesamtHeizKosten, heizeinheiten)' },
+            warmwasserkostenProM2: { type: Number, computed: '_div(gesamtWarmwasserKosten, quadratmeterHeizflaeche)' },
+            warmwasserkostenProM3: { type: Number, computed: '_div(gesamtWarmwasserKosten, warmwasserVerbrauch)' },
+            kaltwasserkostenProM2: { type: Number, computed: '_div(gesamtKaltwasserKosten, kaltwasserVerbrauch)' },
+
+            mieter: String,
+            _mieter: { type: Object, computed: '_getMieter(mieter)' },
+
+            _mieterListe: {
+                type: Array,
+                value: [
+                // heizeinheiten ist die summe der werte an heizkostenverteiler * parameter des heizkoerpers
+                    {
+                        name: 'm1',
+                        qm: 30,
+                        heizeinheiten: 2500,
+                        warmwasserm3: 12,
+                        kaltwasserm3: 20,
+                        zeitanteil: 1,
+                    },
+                    {
+                        name: 'm2',
+                        qm: 32,
+                        heizeinheiten: 2600,
+                        warmwasserm3: 11,
+                        kaltwasserm3: 25,
+                        zeitanteil: 1,
+                    },
+                    {
+                        name: 'm3',
+                        qm: 28,
+                        heizeinheiten: 2900,
+                        warmwasserm3: 11,
+                        kaltwasserm3: 19,
+                        zeitanteil: 0.9,
+                    },
+                    {
+                        name: 'm4',
+                        qm: 50,
+                        heizeinheiten: 4000,
+                        warmwasserm3: 24,
+                        kaltwasserm3: 60,
+                        zeitanteil: 1,
+                    },
+                    {
+                        name: 'm5',
+                        qm: 39,
+                        heizeinheiten: 3100,
+                        warmwasserm3: 15,
+                        kaltwasserm3: 29,
+                        zeitanteil: 0.8,
+                    },
+                ],
+            },
+        };
+    }
+
+    _getMieter(mieterName) {
+        return this._mieterListe.find(m => m.name === mieterName);
+    }
+}
+
+window.customElements.define(AdornisNebenkostenAufstellung.is, AdornisNebenkostenAufstellung);
+</script>

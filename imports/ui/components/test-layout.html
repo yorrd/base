@@ -1,4 +1,7 @@
 <link rel="import" href="mongo-data.html">
+<link rel="import" href="adornis-finance.html">
+<link rel="import" href="adornis-nebenkosten.html">
+<link rel="import" href="adornis-nebenkosten-aufstellung.html">
 
 <dom-module id="test-layout">
   <template>
@@ -26,7 +29,7 @@
     <!--================= </Router> ================-->
 
     <app-header- class="fit layout vertical">
-        <app-header fixed condenses>
+        <!-- <app-header fixed condenses>
             <app-toolbar>
                 fancy redux log
             </app-toolbar>
@@ -43,6 +46,10 @@
         <paper-toggle-button on-checked-changed="_toggleFilter"></paper-toggle-button>
         <button on-click="handleUpdateMessage">Insert Hallo Welt</button>
         <mongo-data id="mongoData" filter="{{filter}}"></mongo-data>
+
+        <adornis-finance></adornis-finance> -->
+        <adornis-nebenkosten></adornis-nebenkosten>
+        <adornis-nebenkosten-aufstellung mieter="m1"></adornis-nebenkosten-aufstellung>
 
     </app-header-layout>
 
