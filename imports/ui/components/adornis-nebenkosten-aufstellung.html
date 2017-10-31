@@ -1,23 +1,84 @@
 <dom-module id="adornis-nebenkosten-aufstellung">
     <template>
-        <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
+        <style is="custom-style" include="iron-flex iron-flex-alignment adornis adornis-tables"></style>
         <style>
+            [invis] {opacity: 0;}
+            [equal],
+            [times] {position: relative}
+            [equal]::before,
+            [times]::before {
+                position: absolute;
+                left: 0;
+                top: auto;
+                bottom: auto;
+                color: #888;
+            }
+            [equal]::before {content: "="}
+            [times]::before {content: "×"}
         </style>
-        {{_mieter.name}}: {{_mieter.qm}}{{heizeinheiten}}
+
+        <div class="layout horizontal center">
+            <h1 class="flex">{{mieter.name}}</h1>
+            <!-- TODO use svg logo -->
+            <img src="/logo_neu.png" />
+        </div>
         <table>
-            gesamt, braucht keiner<br/>
-            <tr><td>Heizkosten</td><td>{{gesamtHeizKosten}}</td></tr>
-            <tr><td>Grundkosten</td><td>{{_mul(gesamtHeizKosten,grundkostenRatioHeizung)}}</td></tr>
-            <tr><td>Verbrauchskosten</td><td>{{_mul(gesamtHeizKosten,verbrauchskostenRatioHeizung)}}</td></tr>
-            <tr><td>Warmwasserkosten</td><td>{{gesamtWarmwasserKosten}}</td></tr>
-            <tr><td>Grundkosten</td><td>{{_mul(gesamtWarmwasserKosten,grundkostenRatioWarmwasser)}}</td></tr>
-            <tr><td>Verbrauchskosten</td><td>{{_mul(gesamtWarmwasserKosten,verbrauchskostenRatioWarmwasser)}}</td></tr>
-            <tr><td>Kaltwasserkosten</td><td>{{gesamtKaltwasserKosten}}</td></tr>
-            <tr><td>Verbrauchskosten</td><td>alles davon</td></tr>
-            <hr/>
-            <tr>jetzt richtig</tr>
-            <tr><td>Heizkosten</td></tr>
-            <tr><td>Grundkosten</td><td>{{_mul(heizkostenProM2, _mieter.qm)}}</td></tr>
+            <thead>
+                <tr><th></th><th>Preis pro Einheit</th><th></th><th>Einheiten</th><th></th><th>Zeitanteil</th></tr>
+            </thead>
+            <thead>
+                <tr><th>Heizkosten</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Grundkosten</td>
+                    <td numeric>{{_(heizkostenProM2, 4)}}</td><td unit>&euro;/m<sup>2</sup></td>
+                    <td numeric times>{{_(mieter.qm, 2)}}</td><td unit>m<sup>2</sup></td>
+                    <td numeric times invis$="{{_hideOne(mieter.zeitanteil)}}">{{_(mieter.zeitanteil, 4)}}</td>
+                    <td numeric equal>{{_(grundHeizKostenMieter, 2, "&euro;")}}</td>
+                </tr>
+                <tr>
+                    <td>Verbrauchskosten</td>
+                    <td numeric>{{_(heizkostenProEinheit, 4)}}</td><td unit>&euro;/E</td>
+                    <td numeric times>{{mieter.heizeinheiten}}</td><td></td><td></td>
+                    <td numeric equal>{{_(verbrauchsHeizKostenMieter, 2, "&euro;")}}</td>
+                </tr>
+            </tbody>
+            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td numeric final>{{_(heizkosten, 2, "&euro;")}}</td></tr>
+            <thead>
+                <tr><th>Warmwasserkosten</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Grundkosten</td>
+                    <td numeric>{{_(warmwasserkostenProM2, 4)}}</td><td unit>&euro;/m<sup>2</sup></td>
+                    <td numeric times>{{_(mieter.qm, 2)}}</td><td unit>m<sup>2</sup></td>
+                    <td numeric times invis$="{{_hideOne(mieter.zeitanteil)}}">{{_(mieter.zeitanteil, 4)}}</td>
+                    <td numeric equal>{{_(grundWarmwasserKostenAnteilig, 2, "&euro;")}}</td>
+                </tr>
+                <tr>
+                    <td>Verbrauchskosten</td>
+                    <td numeric>{{_(warmwasserkostenProM3, 4)}}</td><td unit>&euro;/m<sup>3</sup></td>
+                    <td numeric times>{{_(mieter.warmwasserm3, 2)}}</td><td unit>m<sup>3</sup></td><td></td>
+                    <td numeric equal>{{_(verbrauchsWarmwasserKostenMieter, 2, "&euro;")}}</td>
+                </tr>
+            </tbody>
+            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td numeric final>{{_(warmwasserkosten, 2, "&euro;")}}</td></tr>
+            <thead>
+                <tr><th>Kaltwasserkosten</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Verbrauchskosten</td>
+                    <td numeric>{{_(kaltwasserkostenProM3, 4)}}</td><td unit>&euro;/m<sup>3</sup></td>
+                    <td numeric times>{{_(mieter.kaltwasserm3, 2)}}</td><td unit>m<sup>3</sup></td><td></td>
+                    <td numeric equal>{{_(verbrauchsKaltwasserKostenMieter, 2, "&euro;")}}</td>
+                </tr>
+            </tbody>
+            <tr><td></td><td></td><td></td><td></td><td></td><td></td><td numeric final>{{_(kaltwasserkosten, 2, "&euro;")}}</td></tr>
+            <tfoot>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td numeric final>{{_(kosten, 2, "&euro;")}}</td></tr>
+            </tfoot>
         </table>
 
     </template>
@@ -32,7 +93,7 @@ class AdornisNebenkostenAufstellung extends AdornisPolymerRedux(Polymer.Element)
     static get properties() {
         return {
             // grundkosten vs verbrauchskosten ratio
-            grundkostenRatioHeizung: { type: Number, value: 0.5 },
+            grundkostenRatioHeizung: { type: Number, value: 0.3 },
             verbrauchskostenRatioHeizung: { type: Number, computed: '_sub(1, grundkostenRatioHeizung)' },
             grundkostenRatioWarmwasser: { type: Number, value: 0.3 },
             verbrauchskostenRatioWarmwasser: { type: Number, computed: '_sub(1, grundkostenRatioWarmwasser)' },
@@ -40,71 +101,170 @@ class AdornisNebenkostenAufstellung extends AdornisPolymerRedux(Polymer.Element)
             heizeinheiten: { type: Number, statePath: 'heizeinheiten' },
             quadratmeterHeizflaeche: { type: Number, statePath: 'quadratmeterHeizflaeche' },
             warmwasserVerbrauch: { type: Number, statePath: 'warmwasserVerbrauch' },
-            kaltwasserVerbrauch: { type: Number, statePath: 'kaltwasserVerbrauch' },
+            kaltwasserVerbrauchInklAllgemein: { type: Number, statePath: 'kaltwasserVerbrauchInklAllgemein' },
             gesamtHeizKosten: { type: Number, statePath: 'gesamtHeizKosten' },
             gesamtWarmwasserKosten: { type: Number, statePath: 'gesamtWarmwasserKosten' },
             gesamtKaltwasserKosten: { type: Number, statePath: 'gesamtKaltwasserKosten' },
 
-            heizkostenProM2: { type: Number, computed: '_div(gesamtHeizKosten, quadratmeterHeizflaeche)' },
-            heizkostenProEinheit: { type: Number, computed: '_div(gesamtHeizKosten, heizeinheiten)' },
-            warmwasserkostenProM2: { type: Number, computed: '_div(gesamtWarmwasserKosten, quadratmeterHeizflaeche)' },
-            warmwasserkostenProM3: { type: Number, computed: '_div(gesamtWarmwasserKosten, warmwasserVerbrauch)' },
-            kaltwasserkostenProM2: { type: Number, computed: '_div(gesamtKaltwasserKosten, kaltwasserVerbrauch)' },
+            grundHeizKosten: { type: Number, computed: '_mul(gesamtHeizKosten, grundkostenRatioHeizung)' },
+            verbrauchsHeizKosten: { type: Number, computed: '_mul(gesamtHeizKosten, verbrauchskostenRatioHeizung)' },
+            grundWarmwasserKosten: { type: Number, computed: '_mul(gesamtWarmwasserKosten, grundkostenRatioWarmwasser)' },
+            verbrauchsWarmwasserKosten: { type: Number, computed: '_mul(gesamtWarmwasserKosten, verbrauchskostenRatioWarmwasser)' },
 
-            mieter: String,
-            _mieter: { type: Object, computed: '_getMieter(mieter)' },
+            heizkostenProM2: { type: Number, computed: '_div(grundHeizKosten, quadratmeterHeizflaeche)' },
+            heizkostenProEinheit: { type: Number, computed: '_div(verbrauchsHeizKosten, heizeinheiten)' },
+            warmwasserkostenProM2: { type: Number, computed: '_div(grundWarmwasserKosten, quadratmeterHeizflaeche)' },
+            warmwasserkostenProM3: { type: Number, computed: '_div(verbrauchsWarmwasserKosten, warmwasserVerbrauch)' },
+            kaltwasserkostenProM3: { type: Number, computed: '_div(gesamtKaltwasserKosten, kaltwasserVerbrauchInklAllgemein)' },
+
+            grundHeizkostenProJahr: { type: Number, computed: '_mul(heizkostenProM2, mieter.qm)' },
+            grundHeizKostenMieter: { type: Number, computed: '_mul(grundHeizkostenProJahr, mieter.zeitanteil)' },
+            verbrauchsHeizKostenMieter: { type: Number, computed: '_mul(heizkostenProEinheit, mieter.heizeinheiten)' },
+            grundWarmwasserkostenProJahr: { type: Number, computed: '_mul(warmwasserkostenProM2, mieter.qm)' },
+            grundWarmwasserKostenAnteilig: { type: Number, computed: '_mul(grundWarmwasserkostenProJahr, mieter.zeitanteil)' },
+            verbrauchsWarmwasserKostenMieter: { type: Number, computed: '_mul(warmwasserkostenProM3, mieter.warmwasserm3)' },
+            verbrauchsKaltwasserKostenMieter: { type: Number, computed: '_mul(kaltwasserkostenProM3, mieter.kaltwasserm3)' },
+
+            // endwerte
+            heizkosten: { type: Number, computed: '_sum(grundHeizKostenMieter, verbrauchsHeizKostenMieter)' },
+            warmwasserkosten: { type: Number, computed: '_sum(grundWarmwasserKostenAnteilig, verbrauchsWarmwasserKostenMieter)' },
+            kaltwasserkosten: { type: Number, computed: '_sum(verbrauchsKaltwasserKostenMieter)' },
+
+            // finito
+            kosten: { type: Number, computed: '_sum(heizkosten, warmwasserkosten, kaltwasserkosten)' },
+
+            mieterId: { type: String, value: '' },
+            mieter: { type: Object, computed: '_getMieter(mieterId, quadratmeterHeizflaeche)' }, // quadratmeterHeizflaeche als Platzhalter, dass der redux state observed wird (sonst funktioniert der gesamtreport nicht, der keine MieterID bekommt)
 
             _mieterListe: {
                 type: Array,
                 value: [
-                // heizeinheiten ist die summe der werte an heizkostenverteiler * parameter des heizkoerpers
                     {
-                        name: 'm1',
-                        qm: 30,
-                        heizeinheiten: 2500,
-                        warmwasserm3: 12,
-                        kaltwasserm3: 20,
+                        _id: '1',
+                        name: 'Ploskov (Konstantin), ',
+                        qm: -1,
+                        heizeinheiten: -1,
+                        warmwasserm3: -1,
+                        kaltwasserm3: -1,
+                        zeitanteil: 0.2104,
+                    }, {
+                        _id: '2',
+                        name: 'Weinkostladen Fertsch (), ',
+                        qm: -1,
+                        heizeinheiten: -1,
+                        warmwasserm3: -1,
+                        kaltwasserm3: -1,
+                        zeitanteil: 0.7896,
+                    }, {
+                        _id: '3',
+                        name: 'Hänsgen (Sven), ',
+                        qm: 53.8,
+                        heizeinheiten: 4731,
+                        warmwasserm3: 10.07,
+                        kaltwasserm3: 17.78,
+                        zeitanteil: 0.6694,
+                    }, {
+                        _id: '4',
+                        name: 'Rumbler (Werner), ',
+                        qm: 0,
+                        heizeinheiten: 4731,
+                        warmwasserm3: 10.07,
+                        kaltwasserm3: 17.78,
+                        zeitanteil: 0.3306,
+                    }, {
+                        _id: '5',
+                        name: 'Nicklas (Uwe), ',
+                        qm: 27.2,
+                        heizeinheiten: 5679,
+                        warmwasserm3: 1.97,
+                        kaltwasserm3: 3.79,
                         zeitanteil: 1,
-                    },
-                    {
-                        name: 'm2',
-                        qm: 32,
-                        heizeinheiten: 2600,
-                        warmwasserm3: 11,
-                        kaltwasserm3: 25,
+                    }, {
+                        _id: '6',
+                        name: 'Dedaj (Andi), ',
+                        qm: 34.9,
+                        heizeinheiten: 6045,
+                        warmwasserm3: 1.97,
+                        kaltwasserm3: 3.79,
+                        zeitanteil: 0.9153,
+                    }, {
+                        _id: '7',
+                        name: 'Hasan (Chamdin), Hasan',
+                        qm: -1,
+                        heizeinheiten: -1,
+                        warmwasserm3: -1,
+                        kaltwasserm3: -1,
                         zeitanteil: 1,
-                    },
-                    {
-                        name: 'm3',
-                        qm: 28,
-                        heizeinheiten: 2900,
-                        warmwasserm3: 11,
-                        kaltwasserm3: 19,
-                        zeitanteil: 0.9,
-                    },
-                    {
-                        name: 'm4',
-                        qm: 50,
-                        heizeinheiten: 4000,
-                        warmwasserm3: 24,
-                        kaltwasserm3: 60,
+                    }, {
+                        _id: '8',
+                        name: 'Khan (Nasir Ahmad), Khan',
+                        qm: 89,
+                        heizeinheiten: 16990,
+                        warmwasserm3: 46.22,
+                        kaltwasserm3: 73.96,
                         zeitanteil: 1,
-                    },
-                    {
-                        name: 'm5',
-                        qm: 39,
-                        heizeinheiten: 3100,
-                        warmwasserm3: 15,
-                        kaltwasserm3: 29,
-                        zeitanteil: 0.8,
+                    }, {
+                        _id: '9',
+                        name: 'Rack (Rainer), Rack',
+                        qm: 71.4,
+                        heizeinheiten: 13159,
+                        warmwasserm3: 35.5,
+                        kaltwasserm3: 66.8,
+                        zeitanteil: 1,
+                    }, {
+                        _id: '10',
+                        name: 'Kivrak (Gülcan), ',
+                        qm: 102,
+                        heizeinheiten: 6402,
+                        warmwasserm3: 26.81,
+                        kaltwasserm3: 60.92,
+                        zeitanteil: 1,
+                    }, {
+                        _id: '11',
+                        name: 'Dedaj (Majlinda), ',
+                        qm: 79.6,
+                        heizeinheiten: 18856,
+                        warmwasserm3: 32.78,
+                        kaltwasserm3: 88.65,
+                        zeitanteil: 1,
+                    }, {
+                        _id: '12',
+                        name: 'Thiele (Agnieszka), ',
+                        qm: 72.1,
+                        heizeinheiten: 7485,
+                        warmwasserm3: 6.19,
+                        kaltwasserm3: 24.63,
+                        zeitanteil: 1,
+                    }, {
+                        _id: '13',
+                        name: 'Ada (Erdal), Ada',
+                        qm: 96.8,
+                        heizeinheiten: 18072,
+                        warmwasserm3: 29.84,
+                        kaltwasserm3: 80.07,
+                        zeitanteil: 1,
                     },
                 ],
             },
         };
     }
 
-    _getMieter(mieterName) {
-        return this._mieterListe.find(m => m.name === mieterName);
+    _getMieter(mieterID) {
+        if (mieterID === '') {
+            return {
+                name: 'Verteilung der Kosten',
+                qm: this.quadratmeterHeizflaeche,
+                heizeinheiten: this.heizeinheiten,
+                warmwasserm3: this.warmwasserVerbrauch,
+                kaltwasserm3: this.kaltwasserVerbrauchInklAllgemein,
+                zeitanteil: 1,
+            };
+        }
+        return this._mieterListe.find(m => m._id === `${mieterID}`);
+    }
+
+    _hideOne(number) {
+        return +number === 1;
     }
 }
 

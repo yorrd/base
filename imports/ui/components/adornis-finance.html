@@ -7,19 +7,21 @@
         <div class="layout vertical">
             <table>
                 <tr><td>Input</td><td><paper-input value="{{input}}" label="Rechnung"></paper-input></td></tr>
-                <tr final><td>Nach USt</td><td>{{_(withoutUSt)}}</td></tr>
-                <template is="dom-repeat" items="{{spendingsDetail}}" index-as="index">
+                <tr final><td>Nach USt</td><td>{{_(withoutUSt, 2, "Eur")}}</td></tr>
+                <template is="dom-repeat" items="{{spendingsDetail}}">
                     <tr>
                         <td><paper-input value="{{item.value}}"></paper-input></td>
-                        <td>{{item.type}}</td>
+                        <td><paper-button on-tap="_changeType">{{item.type}}</paper-button></td>
+                        <td><paper-input value="{{item.usage}}"></paper-input></td>
+                        <td><paper-button on-tap="_removeItem">-</paper-button></td>
                     </tr>
                 </template>
-                <tr><td>insg Ausgaben</td><td>{{spendings}}"></paper-input></td></tr>
-                <tr final><td>Nach Ausgaben</td><td>{{_(withoutSpendings)}}</td></tr>
-                <tr final><td>Nach KoeSt und GewSt</td><td>{{_(withoutTaxes)}}</td></tr>
+                <tr><td>insg Ausgaben</td><td>{{spendings}}</paper-input><paper-button on-tap="_addSpending">+</paper-button></td></tr>
+                <tr final><td>Nach Ausgaben</td><td>{{_(withoutSpendings, 2, "Eur")}}</td></tr>
+                <tr final><td>Nach KoeSt und GewSt</td><td>{{_(withoutTaxes, 2, "Eur")}}</td></tr>
+                <tr final><td>Ohne Rücklage</td><td>{{_(withoutRuecklage, 2, "Eur")}}</td></tr>
             </table>
         </div>
-
 
     </template>
 </dom-module>
@@ -29,52 +31,50 @@
 const EUR = 'Eur';
 const PERC = '%';
 
-class AdornisFinance extends AdornisPolymerRedux(Polymer.Element) {
+class AdornisFinance extends AdornisPolymerRedux(Polymer.Element, 'spendings', 'mongo_spendings') {
     static get is() {
         return 'adornis-finance';
     }
     static get properties() {
         return {
+            // constants
+            afterTaxes: { type: Number, value: (1 - (0.123 + 0.15825)) },
             // finance fields
-            input: Number,
-            withoutUSt: { type: Number, computed: '_subUSt(input)' },
-            spendingsDetail: { type: Array, value: [{ type: EUR, value: 1 }] },
-            spendings: { type: Number, computed: '_sumSpendings(spendingsDetail.*)' },
-            withoutSpendings: { type: Number, computed: '_subSpendings(withoutUSt, spendings)' },
-            withoutTaxes: { type: Number, computed: '_subTaxes(withoutSpendings)' },
+            input: { type: Number, value: 100 },
+            withoutUSt: { type: Number, computed: '_div(input,1.19)' },
+            spendingsDetail: { type: Array, statePath: 'mongo_spendings' },
+            filter: { type: Object, value: {} },
+            spendings: { type: Number, computed: '_sumSpendings(withoutUSt, spendingsDetail.*)' },
+            withoutSpendings: { type: Number, computed: '_sub(withoutUSt, spendings)' },
+            withoutTaxes: { type: Number, computed: '_mul(withoutSpendings, afterTaxes)' },
+            withoutRuecklage: { type: Number, computed: '_mul(withoutTaxes, 0.75)' },
         };
     }
 
-    static get actions() {
-        return Object.assign({}, ReduxMixin.actions);
+    _changeType(e) {
+        e.model.set('item.type', (e.model.item.type === EUR ? PERC : EUR));
     }
 
-    _(val) {
-        return `${Math.floor(val * 100) / 100} Eur`;
+    _removeItem(e) {
+        this.dispatch('remove', e.model.item._id);
     }
 
-    _sumSpendings() {
-        const arr = this.spendingsDetail;
+    _addSpending() {
+        // this.push('spendingsDetail', { value: 0, type: EUR });
+        this.dispatch('insert', { value: 0, type: EUR, usage: '' });
+    }
+
+    _sumSpendings(withoutUSt, spendingsDiff) {
+        const arr = spendingsDiff.base;
+        if (!arr) return;
         return arr.reduce((sum, curr) => {
             if (curr.type === EUR) {
                 return sum + +curr.value;
             } else if (curr.type === PERC) {
-                return sum + (this.withoutUSt * +curr.value);
+                return sum + (withoutUSt * (+curr.value / 100));
             }
             return 0;
         }, 0);
-    }
-
-    _subUSt(input) {
-        return input / 1.19;
-    }
-
-    _subSpendings(input) {
-        return input - this.spendings;
-    }
-
-    _subTaxes(input) {
-        return input * (1 - (0.123 + 0.15825));
     }
 }
 

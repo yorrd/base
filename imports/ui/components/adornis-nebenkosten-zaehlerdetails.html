@@ -1,0 +1,82 @@
+<dom-module id="adornis-nebenkosten-zaehlerdetails">
+    <template>
+        <style is="custom-style" include="iron-flex iron-flex-alignment adornis adornis-tables"></style>
+        <style>
+        </style>
+
+        <h1>Heizkosten</h1>
+        <table>
+            <tbody>
+                <template is="dom-repeat" items="{{zaehler.heizkosten}}" index-as="index">
+                    <tr>
+                        <td>{{item.name}}</td>
+                        <td>{{item.ort}}</td>
+                        <td>{{_date(item.date)}}</td>
+                        <td>{{item.alt}}</td>
+                        <td>{{item.neu}}</td>
+                        <td>{{item.parameter}}</td>
+                        <td numeric>{{_(item.diff, 4)}}</td>
+                    </tr>
+                </template>
+            </tbody>
+            <tfoot><tr><td></td><td></td><td></td><td></td><td></td><td></td><td numeric final>{{_(sumZaehler, 4)}}</td></tr></tfoot>
+        </table>
+
+    </template>
+</dom-module>
+
+<script>
+
+class AdornisNebenkostenZaehler extends AdornisPolymerRedux(Polymer.Element) {
+    static get is() {
+        return 'adornis-nebenkosten-zaehlerdetails';
+    }
+    static get properties() {
+        return {
+            mieterId: String,
+            // TODO ableiten aus mieter
+            zaehler: {
+                type: Object,
+                value: {
+                    heizkosten: [
+                    // insgesamt 4731
+                        {
+                            name: '81913206', ort: 'W', date: Date.now(), alt: 0, neu: 2910, parameter: 1.234,
+                        },
+                        {
+                            name: '81913207', ort: 'S', date: Date.now(), alt: 0, neu: 1318, parameter: 1.234,
+                        },
+                        {
+                            name: '81913208', ort: 'W', date: Date.now(), alt: 0, neu: 1783, parameter: 1.234,
+                        },
+                        {
+                            name: '81913209', ort: 'W', date: Date.now(), alt: 32, neu: 86, parameter: 1.234,
+                        },
+                        {
+                            name: '81913210', ort: 'B', date: Date.now(), alt: 0, neu: 0, parameter: 1.234,
+                        },
+                    ],
+                },
+            },
+            sumZaehler: { type: Number, computed: '_sumZaehler(zaehler.heizkosten.*)' },
+        };
+    }
+
+    static get observers() {
+        return ['_calcResult(zaehler.heizkosten.*)'];
+    }
+
+    _calcResult(args) {
+        args.base.forEach((zaehler, i) => {
+            this.set(`${args.path}.${i}.diff`, (zaehler.neu - zaehler.alt)
+                                                * (zaehler.parameter ? zaehler.parameter : 1));
+        });
+    }
+
+    _sumZaehler(arr) {
+        return arr.base.reduce((sum, curr) => sum + +curr.diff, 0);
+    }
+}
+
+window.customElements.define(AdornisNebenkostenZaehler.is, AdornisNebenkostenZaehler);
+</script>

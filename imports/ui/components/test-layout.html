@@ -2,11 +2,15 @@
 <link rel="import" href="adornis-finance.html">
 <link rel="import" href="adornis-nebenkosten.html">
 <link rel="import" href="adornis-nebenkosten-aufstellung.html">
+<link rel="import" href="adornis-nebenkosten-zaehlerdetails.html">
+<link rel="import" href="adornis-styles.html">
 
 <dom-module id="test-layout">
   <template>
-    <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
+    <style is="custom-style" include="iron-flex iron-flex-alignment adornis"></style>
     <style>
+
+        :root {font-family: sans-serif}
         .main{
           @apply(--layout-horizontal);
           @apply(--layout-center-center);
@@ -17,6 +21,10 @@
         }
         app-header paper-icon-button {
           --paper-icon-button-ink-color: white;
+        }
+        .print-break {
+            page-break-before: always;
+            page-break-inside: avoid;
         }
     </style>
 
@@ -45,11 +53,19 @@
 
         <paper-toggle-button on-checked-changed="_toggleFilter"></paper-toggle-button>
         <button on-click="handleUpdateMessage">Insert Hallo Welt</button>
-        <mongo-data id="mongoData" filter="{{filter}}"></mongo-data>
+        <mongo-data id="mongoData" filter="{{filter}}"></mongo-data> -->
 
-        <adornis-finance></adornis-finance> -->
-        <adornis-nebenkosten></adornis-nebenkosten>
-        <adornis-nebenkosten-aufstellung mieter="m1"></adornis-nebenkosten-aufstellung>
+        <!-- <adornis-finance></adornis-finance> -->
+        <div>
+            <adornis-nebenkosten></adornis-nebenkosten>
+            <div class="print-break"></div>
+            <adornis-nebenkosten-zaehlerdetails mieter-id="0" style="page-break-after: always"></adornis-nebenkosten-zaehlerdetails>
+            <div class="print-break"></div>
+            <template is="dom-repeat" items="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]" index-as="index">
+                <adornis-nebenkosten-aufstellung mieter-id="{{item}}"></adornis-nebenkosten-aufstellung>
+                <div class="print-break"></div>
+            </template>
+        </div>
 
     </app-header-layout>
 

@@ -1,27 +1,23 @@
 <dom-module id="adornis-nebenkosten">
     <template>
-        <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
+        <style is="custom-style" include="iron-flex iron-flex-alignment adornis adornis-tables"></style>
         <style>
-            table {border-spacing: 0}
-            tr[final] td {background-color: #aaa}
-            tr td:last-of-type {font-family: monospace; text-align: right}
         </style>
         <div class="layout horizontal">
-            <div class="layout vertical flex">
-                <div>heizBetriebsKosten: {{heizBetriebsKosten}}</div>
-                <div>Wasserkosten: {{kaltwasserKosten}}</div>
+            <div class="layout vertical" style="padding: calc(.5em + 6px)">
+                <div numeric style="padding: 6px">heizBetriebsKosten: {{_(heizBetriebsKosten, 2, "Eur")}}</div>
+                <div numeric style="padding: 6px">Wasserkosten: {{_(kaltwasserKosten, 2, "Eur")}}</div>
             </div>
-            <div class="layout vertical flex">
-                <div>{{m_heizkostenZaehler}}</div>
-                <div>{{m_warmwasserZaehler}}</div>
-                <div>{{m_kaltwasserZaehler}}</div>
-            </div>
-            <div class="layout vertical flex">
-                <div class="layout horizontal">Heizkosten: {{gesamtHeizKosten}}</div>
-                <div class="layout horizontal">Warmwasserkosten: {{gesamtWarmwasserkosten}}</div>
-                <div class="layout horizontal">Kaltwasserkosten: {{gesamtKaltwasserKosten}}</div>
-            </div>
+            <table style="width: auto">
+                <tr><td numeric>+ Miete: {{_(m_heizkostenZaehler, 2, "Eur")}} = </td><td numeric>Heizkosten: {{_(gesamtHeizKosten, 2, "Eur")}}</td></tr>
+                <tr><td numeric>+ Miete: {{_(m_warmwasserZaehler, 2, "Eur")}} = </td><td numeric>Warmwasserkosten: {{_(gesamtWarmwasserkosten, 2, "Eur")}}</td></tr>
+                <tr><td numeric>+ Miete: {{_(m_kaltwasserZaehler, 2, "Eur")}} = </td><td numeric>Kaltwasserkosten: {{_(gesamtKaltwasserKosten, 2, "Eur")}}</td></tr>
+            </table>
         </div>
+
+        <table>
+
+        </table>
 
     </template>
 </dom-module>
@@ -40,18 +36,21 @@ class AdornisNebenkosten extends AdornisPolymerRedux(Polymer.Element) {
 
             // constants
             warmwasserTemperatur: { type: Number, value: 60 },
-            quadratmeterHeizflaeche: { type: Number, value: 606.06 },
+            quadratmeterHeizflaeche: {
+                type: Number, value: 606.06, statePath: 'quadratmeterHeizflaeche', dispatch: true,
+            },
 
             // summe der zaehler
             brennstoffVerbrauch: {
                 type: Number, value: 74327, statePath: 'brennstoffVerbrauch', dispatch: true,
             },
-            wasserVerbrauch: { // vom wasserwerk, nicht unbedingt kaltwassser + warmwasser, weil die vom zaehler kommen
+            wasserVerbrauch: { // fuer kalt, warm und allgemein
                 type: Number, value: 595, statePath: 'wasserVerbrauch', dispatch: true,
             },
             heizeinheiten: {
                 type: Number, value: 97419, statePath: 'heizeinheiten', dispatch: true,
             },
+            wasserKosten: { type: Number, value: 2627.82 },
 
             // heizungsanlage sind alle kosten, die zum heizen beitragen
             heizBetriebsKosten: { type: Number, value: 4912.77 },
@@ -63,10 +62,12 @@ class AdornisNebenkosten extends AdornisPolymerRedux(Polymer.Element) {
             },
 
             // warmwasser
-            warmwasserVerbrauch: { type: Number, value: 191.35, title: 'Warmwasser Verbrauch' },
+            warmwasserVerbrauch: {
+                type: Number, value: 191.35, title: 'Warmwasser Verbrauch', statePath: 'warmwasserVerbrauch', dispatch: true,
+            },
             warmwasserAnteilVonbrennstoffVerbrauch: { type: Number, computed: '_warmwasserAnteilVonbrennstoffVerbrauch(warmwasserVerbrauch)' },
-            warmwasserBereitungskosten: { type: Number, computed: '_mul(warmwasserVerbrauch, heizBetriebsKostenProKwh)' },
-            kostenKaltwasserFuerWarmwasser: { type: Number, computed: '_mul(warmwasserVerbrauch, kaltwasserkostenProM3)' },
+            warmwasserBereitungskosten: { type: Number, computed: '_mul(warmwasserAnteilVonbrennstoffVerbrauch, heizBetriebsKostenProKwh)' },
+            kostenKaltwasserFuerWarmwasser: { type: Number, computed: '_mul(warmwasserVerbrauch, wasserkostenProM3)' },
             m_warmwasserZaehler: { type: Number, value: 334.56 },
             gesamtWarmwasserkosten: {
                 type: Number, computed: '_sum(kostenKaltwasserFuerWarmwasser, warmwasserBereitungskosten, m_warmwasserZaehler)', statePath: 'gesamtWarmwasserKosten', dispatch: true,
@@ -74,12 +75,19 @@ class AdornisNebenkosten extends AdornisPolymerRedux(Polymer.Element) {
 
             // kaltwasser
             kaltwasserVerbrauch: { type: Number, value: 420.39 },
-            kaltwasserKosten: { type: Number, value: 2627.82 },
-            kaltwasserkostenProM3: { type: Number, computed: '_div(kaltwasserKosten, wasserVerbrauch)' },
+            allgemeinWasserVerbrauch: { // der rest, der in den allgemeinzaehlern bleibt. Wird mit dem Kaltwasser mitberechnet
+                type: Number, computed: '_sub(wasserVerbrauch, warmwasserVerbrauch, kaltwasserVerbrauch)',
+            },
+            kaltwasserVerbrauchInklAllgemein: {
+                type: Number, computed: '_sum(kaltwasserVerbrauch, allgemeinWasserVerbrauch)', statePath: 'kaltwasserVerbrauchInklAllgemein', dispatch: true,
+            },
+            kaltwasserAnteil: { type: Number, computed: '_div(kaltwasserVerbrauchInklAllgemein, wasserVerbrauch)' },
+            kaltwasserKosten: { type: Number, computed: '_mul(wasserKosten, kaltwasserAnteil)' },
             m_kaltwasserZaehler: { type: Number, value: 334.56 },
             gesamtKaltwasserKosten: {
                 type: Number, computed: '_sum(kaltwasserKosten, m_kaltwasserZaehler)', statePath: 'gesamtKaltwasserKosten', dispatch: true,
             },
+            wasserkostenProM3: { type: Number, computed: '_div(wasserKosten, wasserVerbrauch)' },
         };
     }
 

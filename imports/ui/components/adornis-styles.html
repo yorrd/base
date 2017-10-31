@@ -1,0 +1,22 @@
+<dom-module id="adornis">
+    <template>
+        <style>
+            @print {* {-webkit-print-color-adjust: exact;}}
+            * {font-size: 13px}
+        </style>
+    </template>
+</dom-module>
+<dom-module id="adornis-tables">
+  <template>
+    <style>
+        table {border-color: #888; border-spacing: 0; width: 100%}
+        table td {padding: 6px 12px; font-family: Arial, sans-serif}
+        table td[final] {font-weight: bold}
+        table th {text-align: left}
+        table thead {font-weight: bold; }
+        table tfoot tr td:last-of-type {border-top: 1px solid #888}
+        [numeric] {font-family: monospace; text-align: right; vertical-align: bottom;}
+        [unit] {color: #888; padding-left: 0;}
+    </style>
+  </template>
+</dom-module>

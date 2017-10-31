@@ -135,7 +135,7 @@ const mongoMiddleware = middlewareStore => next => (action) => {
 
     return returnValue;
 };
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // for the debugger in the browser
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || (x => x); // for the debugger in the browser
 const store = createStore(reducer, {/* SSR hydration!!! */}, composeEnhancers(applyMiddleware(mongoMiddleware)));
 ReduxMixin = PolymerRedux(store);
 
@@ -215,7 +215,7 @@ AdornisPolymerRedux = (Parent, CollectionName, StatePath) => class AdornisPolyme
 
     _arrayUpdate(diff) { // eslint-disable-line class-methods-use-this
         // this should only run if there are deeper level updates in an object within the array from the database
-        if (diff.path.indexOf('.') === -1) return;
+        if (diff.path.indexOf('.') === -1 || diff.path.indexOf('.splices') > -1) return;
         const id = (diff.path.split('.')[1]);
         const dbObj = diff.base[id];
         // will automatically trigger the mongo observer which will then update the data in the store
@@ -233,15 +233,27 @@ AdornisPolymerRedux = (Parent, CollectionName, StatePath) => class AdornisPolyme
     }
 
     _mul(...args) {
-        return args.reduce((prod, curr) => prod * curr, 1);
+        return args.reduce((prod, curr) => prod * +curr, 1);
     }
 
     _sum(...args) {
-        return args.reduce((prod, curr) => prod + curr, 0);
+        return args.reduce((sum, curr) => sum + +curr, 0);
     }
 
-    _sub(a, b) {
-        return +a - +b;
+    _sub(...args) {
+        return args.slice(1).reduce((diff, curr) => diff - +curr, args[0]);
+    }
+
+    _(val, digits, unit) {
+        if (!unit) unit = '';
+        if (!digits) digits = 0;
+        return `${(+val).toFixed(digits)} ${unit}`.replace('.', ',');
+    }
+
+    _date(date) {
+        const monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+        const d = new Date(date);
+        return `${d.getDay()}. ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
     }
 };
 </script>
