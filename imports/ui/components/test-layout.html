@@ -23,8 +23,11 @@
           --paper-icon-button-ink-color: white;
         }
         .print-break {
-            page-break-before: always;
+            page-break-after: always;
             page-break-inside: avoid;
+        }
+        paper-input-container input {
+            @apply(--paper-input-container-shared-input-style);
         }
     </style>
 
@@ -57,11 +60,19 @@
 
         <!-- <adornis-finance></adornis-finance> -->
         <div>
-            <adornis-nebenkosten></adornis-nebenkosten>
-            <div class="print-break"></div>
-            <adornis-nebenkosten-zaehlerdetails mieter-id="0" style="page-break-after: always"></adornis-nebenkosten-zaehlerdetails>
-            <div class="print-break"></div>
+            <div id="inputs">
+                <paper-input label="Wasserkosten" value-as-number value="{{wasserKosten}}"></paper-input>
+            </div>
+            <div class="page-break"></div>
             <template is="dom-repeat" items="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]" index-as="index">
+                <div class="layout vertical end" style="height: 60px">
+                    <!-- TODO use svg logo -->
+                    <img src="/logo_neu.png" width="120" height="120" />
+                </div>
+                <adornis-nebenkosten-aufstellung mieter-id=""></adornis-nebenkosten-aufstellung>
+                <adornis-nebenkosten></adornis-nebenkosten>
+                <!-- <adornis-nebenkosten-zaehlerdetails mieter-id="0" style="page-break-after: always"></adornis-nebenkosten-zaehlerdetails>
+                <div class="print-break"></div> -->
                 <adornis-nebenkosten-aufstellung mieter-id="{{item}}"></adornis-nebenkosten-aufstellung>
                 <div class="print-break"></div>
             </template>
@@ -95,6 +106,10 @@ class TestLayout extends AdornisPolymerRedux(MwcMixin(Polymer.Element)) {
                 statePath: 'testdata',
                 dispatch: true,
             },
+
+            wasserKosten: {
+                type: Number, value: 2627.82, statePath: 'wasserKosten', dispatch: true, observer: '_enforceNumber',
+            },
         };
     }
 
@@ -108,6 +123,14 @@ class TestLayout extends AdornisPolymerRedux(MwcMixin(Polymer.Element)) {
 
     handleUpdateMessage() {
         this.$.mongoData.dispatch('insert', { name: 'new dispatch cool shit stuff ' });
+    }
+
+    _enforceNumber(newVal, oldVal) {
+        let numVal;
+        if (typeof newVal === 'string') {
+            numVal = +newVal;
+            this.wasserKosten = isNaN(numVal) ? oldVal : numVal;
+        }
     }
 }
 

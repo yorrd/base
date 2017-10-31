@@ -2,26 +2,9 @@
     <template>
         <style is="custom-style" include="iron-flex iron-flex-alignment adornis adornis-tables"></style>
         <style>
-            [invis] {opacity: 0;}
-            [equal],
-            [times] {position: relative}
-            [equal]::before,
-            [times]::before {
-                position: absolute;
-                left: 0;
-                top: auto;
-                bottom: auto;
-                color: #888;
-            }
-            [equal]::before {content: "="}
-            [times]::before {content: "×"}
         </style>
 
-        <div class="layout horizontal center">
-            <h1 class="flex">{{mieter.name}}</h1>
-            <!-- TODO use svg logo -->
-            <img src="/logo_neu.png" />
-        </div>
+        <h1>{{mieter.name}}</h1>
         <table>
             <thead>
                 <tr><th></th><th>Preis pro Einheit</th><th></th><th>Einheiten</th><th></th><th>Zeitanteil</th></tr>
@@ -92,12 +75,14 @@ class AdornisNebenkostenAufstellung extends AdornisPolymerRedux(Polymer.Element)
     }
     static get properties() {
         return {
+            // TODO auch global machen
             // grundkosten vs verbrauchskosten ratio
             grundkostenRatioHeizung: { type: Number, value: 0.3 },
             verbrauchskostenRatioHeizung: { type: Number, computed: '_sub(1, grundkostenRatioHeizung)' },
             grundkostenRatioWarmwasser: { type: Number, value: 0.3 },
             verbrauchskostenRatioWarmwasser: { type: Number, computed: '_sub(1, grundkostenRatioWarmwasser)' },
 
+            // TODO ab hier sollte global
             heizeinheiten: { type: Number, statePath: 'heizeinheiten' },
             quadratmeterHeizflaeche: { type: Number, statePath: 'quadratmeterHeizflaeche' },
             warmwasserVerbrauch: { type: Number, statePath: 'warmwasserVerbrauch' },
@@ -110,12 +95,14 @@ class AdornisNebenkostenAufstellung extends AdornisPolymerRedux(Polymer.Element)
             verbrauchsHeizKosten: { type: Number, computed: '_mul(gesamtHeizKosten, verbrauchskostenRatioHeizung)' },
             grundWarmwasserKosten: { type: Number, computed: '_mul(gesamtWarmwasserKosten, grundkostenRatioWarmwasser)' },
             verbrauchsWarmwasserKosten: { type: Number, computed: '_mul(gesamtWarmwasserKosten, verbrauchskostenRatioWarmwasser)' },
+            // TODO bis hier sollte global
 
             heizkostenProM2: { type: Number, computed: '_div(grundHeizKosten, quadratmeterHeizflaeche)' },
             heizkostenProEinheit: { type: Number, computed: '_div(verbrauchsHeizKosten, heizeinheiten)' },
             warmwasserkostenProM2: { type: Number, computed: '_div(grundWarmwasserKosten, quadratmeterHeizflaeche)' },
             warmwasserkostenProM3: { type: Number, computed: '_div(verbrauchsWarmwasserKosten, warmwasserVerbrauch)' },
             kaltwasserkostenProM3: { type: Number, computed: '_div(gesamtKaltwasserKosten, kaltwasserVerbrauchInklAllgemein)' },
+            // TODO bis hier sollte global
 
             grundHeizkostenProJahr: { type: Number, computed: '_mul(heizkostenProM2, mieter.qm)' },
             grundHeizKostenMieter: { type: Number, computed: '_mul(grundHeizkostenProJahr, mieter.zeitanteil)' },
