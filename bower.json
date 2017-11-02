@@ -10,7 +10,8 @@
     "paper-styles": "PolymerElements/paper-styles",
     "polymer-redux": "^1.0.4",
     "paper-input": "PolymerElements/paper-input#^2.0.2",
-    "paper-toggle-button": "PolymerElements/paper-toggle-button#^2.0.0"
+    "paper-toggle-button": "PolymerElements/paper-toggle-button#^2.0.0",
+    "io-value": "arodic/io-value#^2.1.0"
   },
   "name": "synthesis-demo",
   "version": "2.0-preview"

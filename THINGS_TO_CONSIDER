@@ -1,0 +1,12 @@
+meteor up
+purpl
+    Push components critical for initial route
+    Render the initial route ASAP
+    Pre-cache components for remaining routes
+    Lazy-load and create next routes on-demand
+ssr
+    headless chrome (puppeteer)
+lighthouse
+apollo uses redux?!
+mobile config
+polymer 3

@@ -61,7 +61,7 @@
         <!-- <adornis-finance></adornis-finance> -->
         <div>
             <div id="inputs">
-                <paper-input label="Wasserkosten" value-as-number value="{{wasserKosten}}"></paper-input>
+                <io-value type="number" value="{{wasserKosten}}"></io-value>
             </div>
             <div class="page-break"></div>
             <template is="dom-repeat" items="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]" index-as="index">
@@ -71,8 +71,7 @@
                 </div>
                 <adornis-nebenkosten-aufstellung mieter-id=""></adornis-nebenkosten-aufstellung>
                 <adornis-nebenkosten></adornis-nebenkosten>
-                <!-- <adornis-nebenkosten-zaehlerdetails mieter-id="0" style="page-break-after: always"></adornis-nebenkosten-zaehlerdetails>
-                <div class="print-break"></div> -->
+                <!-- <adornis-nebenkosten-zaehlerdetails mieter-id="0" style="page-break-after: always"></adornis-nebenkosten-zaehlerdetails> -->
                 <adornis-nebenkosten-aufstellung mieter-id="{{item}}"></adornis-nebenkosten-aufstellung>
                 <div class="print-break"></div>
             </template>
@@ -108,7 +107,7 @@ class TestLayout extends AdornisPolymerRedux(MwcMixin(Polymer.Element)) {
             },
 
             wasserKosten: {
-                type: Number, value: 2627.82, statePath: 'wasserKosten', dispatch: true, observer: '_enforceNumber',
+                type: Number, value: 2627.82, statePath: 'wasserKosten', dispatch: true,
             },
         };
     }
@@ -123,14 +122,6 @@ class TestLayout extends AdornisPolymerRedux(MwcMixin(Polymer.Element)) {
 
     handleUpdateMessage() {
         this.$.mongoData.dispatch('insert', { name: 'new dispatch cool shit stuff ' });
-    }
-
-    _enforceNumber(newVal, oldVal) {
-        let numVal;
-        if (typeof newVal === 'string') {
-            numVal = +newVal;
-            this.wasserKosten = isNaN(numVal) ? oldVal : numVal;
-        }
     }
 }
 

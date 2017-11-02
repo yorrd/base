@@ -211,6 +211,13 @@ AdornisPolymerRedux = (Parent, CollectionName, StatePath) => class AdornisPolyme
 
                 this._createPropertyObserver(trackedProp, listenerName);
             });
+
+        // if there is no dispatch but a statepath, don't allow a value, would be overridden instantly anyways
+        Object.keys(props)
+            .filter(prop => !props[prop].dispatch && props[prop].statePath)
+            .forEach((trackedProp) => {
+                if (props[trackedProp].value) throw new Error(`there should be no value on the dispatch field ${trackedProp}`);
+            });
     }
 
     _arrayUpdate(diff) { // eslint-disable-line class-methods-use-this
@@ -247,7 +254,10 @@ AdornisPolymerRedux = (Parent, CollectionName, StatePath) => class AdornisPolyme
     _(val, digits, unit) {
         if (!unit) unit = '';
         if (!digits) digits = 0;
-        return `${(+val).toFixed(digits)} ${unit}`.replace('.', ',');
+
+        const number = `${(+val).toFixed(digits)}`.replace('.', ',');
+        const numArr = number.split(',');
+        return `${numArr[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.')},${numArr[1]} ${unit}`;
     }
 
     _date(date) {

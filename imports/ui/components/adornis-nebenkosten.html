@@ -113,7 +113,7 @@ class AdornisNebenkosten extends AdornisPolymerRedux(Polymer.Element) {
 
             // warmwasser
             warmwasserVerbrauch: {
-                type: Number, value: 191.35, title: 'Warmwasser Verbrauch', statePath: 'warmwasserVerbrauch', dispatch: true,
+                type: Number, value: 187.05, title: 'Warmwasser Verbrauch', statePath: 'warmwasserVerbrauch', dispatch: true,
             },
             warmwasserAnteilVonbrennstoffVerbrauch: { type: Number, computed: '_warmwasserAnteilVonbrennstoffVerbrauch(warmwasserVerbrauch)' },
             warmwasserBereitungskosten: { type: Number, computed: '_mul(warmwasserAnteilVonbrennstoffVerbrauch, heizBetriebsKostenProKwh)' },
@@ -124,7 +124,7 @@ class AdornisNebenkosten extends AdornisPolymerRedux(Polymer.Element) {
             },
 
             // kaltwasser
-            kaltwasserVerbrauch: { type: Number, value: 420.39 },
+            kaltwasserVerbrauch: { type: Number, value: 408.09 },
             allgemeinWasserVerbrauch: { // der rest, der in den allgemeinzaehlern bleibt. Wird mit dem Kaltwasser mitberechnet
                 type: Number, computed: '_sub(wasserVerbrauch, warmwasserVerbrauch, kaltwasserVerbrauch)',
             },
