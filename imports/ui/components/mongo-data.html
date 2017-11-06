@@ -10,7 +10,7 @@
 
 <script>
 
-class MongoData extends AdornisPolymerRedux(Polymer.Element, 'mongo-data', 'mongodata_unfiltered') {
+class MongoData extends AdornisPolymerRedux(Polymer.Element) {
     static get is() {
         return 'mongo-data';
     }
@@ -18,11 +18,13 @@ class MongoData extends AdornisPolymerRedux(Polymer.Element, 'mongo-data', 'mong
         return {
             todos: {
                 type: Array,
+                collection: 'mongo-data',
                 statePath: 'mongodata_unfiltered',
+                paramProperty: 'filter',
             },
             filter: {
-                type: Object,
-                value: { },
+                type: Array,
+                value: [],
             },
 
             // accessing polymer example variable from test-layout
@@ -35,7 +37,7 @@ class MongoData extends AdornisPolymerRedux(Polymer.Element, 'mongo-data', 'mong
 
     _deleteItem(e) {
         const id = e.model.item._id;
-        this.dispatch('remove', id);
+        this.dispatch('remove', id, 'mongo-data', 'mongodata_unfiltered');
     }
 }
 

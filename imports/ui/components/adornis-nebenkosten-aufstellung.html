@@ -89,7 +89,7 @@ class AdornisNebenkostenAufstellung extends AdornisPolymerRedux(Polymer.Element)
             kaltwasserVerbrauchInklAllgemein: { type: Number, statePath: 'kaltwasserVerbrauchInklAllgemein' },
             gesamtHeizKosten: { type: Number, statePath: 'gesamtHeizKosten' },
             gesamtWarmwasserKosten: { type: Number, statePath: 'gesamtWarmwasserKosten' },
-            gesamtKaltwasserKosten: { type: Number, statePath: 'gesamtKaltwasserKosten', observer: '_test' },
+            gesamtKaltwasserKosten: { type: Number, statePath: 'gesamtKaltwasserKosten' },
 
             grundHeizKosten: { type: Number, computed: '_mul(gesamtHeizKosten, grundkostenRatioHeizung)' },
             verbrauchsHeizKosten: { type: Number, computed: '_mul(gesamtHeizKosten, verbrauchskostenRatioHeizung)' },
@@ -121,117 +121,12 @@ class AdornisNebenkostenAufstellung extends AdornisPolymerRedux(Polymer.Element)
             kosten: { type: Number, computed: '_sum(heizkosten, warmwasserkosten, kaltwasserkosten)' },
 
             mieterId: { type: String, value: '' },
-            mieter: { type: Object, computed: '_getMieter(mieterId, quadratmeterHeizflaeche)' }, // quadratmeterHeizflaeche als Platzhalter, dass der redux state observed wird (sonst funktioniert der gesamtreport nicht, der keine MieterID bekommt)
+            mieter: { type: Object, computed: '_getMieter(mieterId, _mieterListe)' }, // quadratmeterHeizflaeche als Platzhalter, dass der redux state observed wird (sonst funktioniert der gesamtreport nicht, der keine MieterID bekommt)
 
             _mieterListe: {
                 type: Array,
-                value: [
-                    {
-                        _id: '1',
-                        name: 'Ploskov (Konstantin), ',
-                        qm: -1,
-                        heizeinheiten: -1,
-                        warmwasserm3: -1,
-                        kaltwasserm3: -1,
-                        zeitanteil: 0.2104,
-                    }, {
-                        _id: '2',
-                        name: 'Weinkostladen Fertsch (), ',
-                        qm: -1,
-                        heizeinheiten: -1,
-                        warmwasserm3: -1,
-                        kaltwasserm3: -1,
-                        zeitanteil: 0.7896,
-                    }, {
-                        _id: '3',
-                        name: 'Hänsgen (Sven), ',
-                        qm: 53.8,
-                        heizeinheiten: 4731,
-                        warmwasserm3: 10.07,
-                        kaltwasserm3: 17.78,
-                        zeitanteil: 0.6694,
-                    }, {
-                        _id: '4',
-                        name: 'Rumbler (Werner), ',
-                        qm: 0,
-                        heizeinheiten: 4731,
-                        warmwasserm3: 10.07,
-                        kaltwasserm3: 17.78,
-                        zeitanteil: 0.3306,
-                    }, {
-                        _id: '5',
-                        name: 'Nicklas (Uwe), ',
-                        qm: 27.2,
-                        heizeinheiten: 5679,
-                        warmwasserm3: 1.97,
-                        kaltwasserm3: 3.79,
-                        zeitanteil: 1,
-                    }, {
-                        _id: '6',
-                        name: 'Dedaj (Andi), ',
-                        qm: 34.9,
-                        heizeinheiten: 6045,
-                        warmwasserm3: 1.97,
-                        kaltwasserm3: 3.79,
-                        zeitanteil: 0.9153,
-                    }, {
-                        _id: '7',
-                        name: 'Hasan (Chamdin), Hasan',
-                        qm: -1,
-                        heizeinheiten: -1,
-                        warmwasserm3: -1,
-                        kaltwasserm3: -1,
-                        zeitanteil: 1,
-                    }, {
-                        _id: '8',
-                        name: 'Khan (Nasir Ahmad), Khan',
-                        qm: 89,
-                        heizeinheiten: 16990,
-                        warmwasserm3: 46.22,
-                        kaltwasserm3: 73.96,
-                        zeitanteil: 1,
-                    }, {
-                        _id: '9',
-                        name: 'Rack (Rainer), Rack',
-                        qm: 71.4,
-                        heizeinheiten: 13159,
-                        warmwasserm3: 31.2,
-                        kaltwasserm3: 54.5,
-                        zeitanteil: 1,
-                    }, {
-                        _id: '10',
-                        name: 'Kivrak (Gülcan), ',
-                        qm: 102,
-                        heizeinheiten: 6402,
-                        warmwasserm3: 26.81,
-                        kaltwasserm3: 60.92,
-                        zeitanteil: 1,
-                    }, {
-                        _id: '11',
-                        name: 'Dedaj (Majlinda), ',
-                        qm: 79.6,
-                        heizeinheiten: 18856,
-                        warmwasserm3: 32.78,
-                        kaltwasserm3: 88.65,
-                        zeitanteil: 1,
-                    }, {
-                        _id: '12',
-                        name: 'Thiele (Agnieszka), ',
-                        qm: 72.1,
-                        heizeinheiten: 7485,
-                        warmwasserm3: 6.19,
-                        kaltwasserm3: 24.63,
-                        zeitanteil: 1,
-                    }, {
-                        _id: '13',
-                        name: 'Ada (Erdal), Ada',
-                        qm: 96.8,
-                        heizeinheiten: 18072,
-                        warmwasserm3: 29.84,
-                        kaltwasserm3: 80.07,
-                        zeitanteil: 1,
-                    },
-                ],
+                collection: 'mieterdaten',
+                statePath: 'mieterdaten',
             },
         };
     }
@@ -247,15 +142,12 @@ class AdornisNebenkostenAufstellung extends AdornisPolymerRedux(Polymer.Element)
                 zeitanteil: 1,
             };
         }
+        if (!this._mieterListe) return {};
         return this._mieterListe.find(m => m._id === `${mieterID}`);
     }
 
     _hideOne(number) {
         return +number === 1;
-    }
-
-    _test(num) {
-        console.log('Num: ', num);
     }
 }
 

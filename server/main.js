@@ -5,11 +5,31 @@ import { Meteor } from 'meteor/meteor';
 
 const TestCollection = new Mongo.Collection('mongo-data');
 const SpendingsCollection = new Mongo.Collection('spendings');
+const MieterDaten = new Mongo.Collection('mieterdaten');
 
 Meteor.startup(() => {
     // code to run on server at startup
-    Meteor.publish('mongo-data');
-    Meteor.publish('spendings');
+    Meteor.publish('mongo-data', filtered => TestCollection.find(filtered ? { name: 'new dispatch cool shit stuff ' } : {}));
+    Meteor.publish('spendings', () => SpendingsCollection.find());
+    Meteor.publish('mieterdaten', () => {
+        console.log('asdf');
+        return MieterDaten.find();
+    });
+    TestCollection.allow({
+        insert: () => true,
+        update: () => true,
+        remove: () => true,
+    });
+    SpendingsCollection.allow({
+        insert: () => true,
+        update: () => true,
+        remove: () => true,
+    });
+    MieterDaten.allow({
+        insert: () => true,
+        update: () => true,
+        remove: () => true,
+    });
 
     // read initial data
     // console.log(data);

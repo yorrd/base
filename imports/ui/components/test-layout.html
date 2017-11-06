@@ -40,7 +40,7 @@
     <!--================= </Router> ================-->
 
     <app-header- class="fit layout vertical">
-        <!-- <app-header fixed condenses>
+        <app-header fixed condenses>
             <app-toolbar>
                 fancy redux log
             </app-toolbar>
@@ -56,7 +56,7 @@
 
         <paper-toggle-button on-checked-changed="_toggleFilter"></paper-toggle-button>
         <button on-click="handleUpdateMessage">Insert Hallo Welt</button>
-        <mongo-data id="mongoData" filter="{{filter}}"></mongo-data> -->
+        <mongo-data id="mongoData" filter="{{filter}}"></mongo-data>
 
         <!-- <adornis-finance></adornis-finance> -->
         <div>
@@ -113,15 +113,11 @@ class TestLayout extends AdornisPolymerRedux(MwcMixin(Polymer.Element)) {
     }
 
     _toggleFilter(e) {
-        if (e.currentTarget.checked) {
-            this.filter = { name: 'hallo welt 1' };
-        } else {
-            this.filter = { };
-        }
+        this.filter = [e.currentTarget.checked];
     }
 
     handleUpdateMessage() {
-        this.$.mongoData.dispatch('insert', { name: 'new dispatch cool shit stuff ' });
+        this.$.mongoData.dispatch('insert', { name: 'new dispatch cool shit stuff ' }, 'mongo-data', 'mongodata_unfiltered');
     }
 }
 
