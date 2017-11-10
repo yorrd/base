@@ -6,7 +6,6 @@ import DatabaseHolder from './database-holder';
 
 const reducer = (state = {}, action) => {
     let object = Object.assign({}, state);
-    // const id =
     switch (action.type) {
             // actions which are only called from the observer on the mongo database
             case 'ADDED_DOC': {

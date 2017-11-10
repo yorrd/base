@@ -11,7 +11,6 @@
 <link rel="import" href="../bower_components/paper-styles/paper-styles.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
-<link rel="import" href="../bower_components/io-value/io-value.html">
 
 
 <link rel="import" href="mongo-data.html">
@@ -58,14 +57,13 @@
     <app-header- class="fit layout vertical">
 
         <paper-toggle-button on-checked-changed="_toggleFilter"></paper-toggle-button>
-        <button on-click="handleUpdateMessage">Insert Hallo Welt</button>
+        <paper-button on-click="handleUpdateMessage">Insert Hallo Welt</paper-button>
         <mongo-data id="mongoData" filter="{{filter}}"></mongo-data>
 
         <adornis-finance></adornis-finance>
 
         <!-- <div>
             <div id="inputs">
-                <io-value type="number" value="{{wasserKosten}}"></io-value>
             </div>
             <div class="page-break"></div>
             <template is="dom-repeat" items="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]" index-as="index">
