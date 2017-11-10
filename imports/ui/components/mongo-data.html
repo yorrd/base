@@ -36,8 +36,7 @@ class MongoData extends AdornisPolymerRedux(Polymer.Element) {
     }
 
     _deleteItem(e) {
-        const id = e.model.item._id;
-        this.dispatch('remove', id, 'mongo-data', 'mongodata_unfiltered');
+        this.splice('todos', e.model.index, 1);
     }
 }
 

@@ -117,7 +117,8 @@ class TestLayout extends AdornisPolymerRedux(MwcMixin(Polymer.Element)) {
     }
 
     handleUpdateMessage() {
-        this.$.mongoData.dispatch('insert', { name: 'new dispatch cool shit stuff ' }, 'mongo-data', 'mongodata_unfiltered');
+        this.$.mongoData.push('todos', { name: 'inserted via array modification' });
+        this.$.mongoData.dispatch('insert', { name: 'inserted via dispatch' }, 'mongo-data', 'mongodata_unfiltered');
     }
 }
 

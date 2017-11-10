@@ -38,10 +38,15 @@ const reducer = (state = {}, action) => {
     switch (action.type) {
             // actions which are only called from the observer on the mongo database
             case 'ADDED_DOC': {
+                // replace the non-hydrated
                 if (!state[action.statePath]) {
                     object[action.statePath] = [action.doc];
                 } else {
-                    object[action.statePath] = [...state[action.statePath], action.doc];
+                    const hydrateIndex = state[action.statePath].findIndex(obj => !obj._id);
+                    if (hydrateIndex > -1) {
+                        state[action.statePath].splice(hydrateIndex, 1, action.doc);
+                        object[action.statePath] = [...state[action.statePath]];
+                    } else object[action.statePath] = [...state[action.statePath], action.doc];
                 }
                 break;
             }
@@ -216,35 +221,50 @@ AdornisPolymerRedux = Parent => class AdornisPolymerRedux extends ReduxMixin(Par
     }
 
     _arrayUpdate(diff) { // eslint-disable-line class-methods-use-this
+        const propName = diff.path.split('.')[0];
+        const collName = this.constructor.properties[propName].collection;
+
+        // this is for removals and additions
+        if (diff.path.indexOf('.splices') > -1) {
+            diff.value.indexSplices.forEach((id) => {
+                id.removed.forEach((obj) => {
+                    DatabaseHolder.getDatabase(collName).remove({ _id: obj._id });
+                });
+                if (id.addedCount === 1) {
+                    DatabaseHolder.getDatabase(collName).insert(id.object[id.index]);
+                }
+                if (id.addedCount > 1) throw new Error('multiple additions in splice are not yet supported');
+            });
+            return;
+        }
+
         // this should only run if there are deeper level updates in an object within the array from the database
         if (diff.path.indexOf('.') === -1 || diff.path.indexOf('.splices') > -1) return;
         const id = (diff.path.split('.')[1]);
         const dbObj = diff.base[id];
         // will automatically trigger the mongo observer which will then update the data in the store
-        const propName = diff.path.split('.')[0];
-        const collName = this.constructor.properties[propName].collection;
         DatabaseHolder.getDatabase(collName).update({ _id: dbObj._id }, { $set: dbObj });
     }
 
     // convenience methods
 
-    _div(a, b) {
+    _div(a, b) { // eslint-disable-line class-methods-use-this
         return +a / +b;
     }
 
-    _mul(...args) {
+    _mul(...args) { // eslint-disable-line class-methods-use-this
         return args.reduce((prod, curr) => prod * +curr, 1);
     }
 
-    _sum(...args) {
+    _sum(...args) { // eslint-disable-line class-methods-use-this
         return args.reduce((sum, curr) => sum + +curr, 0);
     }
 
-    _sub(...args) {
+    _sub(...args) { // eslint-disable-line class-methods-use-this
         return args.slice(1).reduce((diff, curr) => diff - +curr, args[0]);
     }
 
-    _(val, digits, unit) {
+    _(val, digits, unit) { // eslint-disable-line class-methods-use-this
         if (!unit) unit = '';
         if (!digits) digits = 0;
 
@@ -253,13 +273,13 @@ AdornisPolymerRedux = Parent => class AdornisPolymerRedux extends ReduxMixin(Par
         return `${numArr[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.')},${numArr[1]} ${unit}`;
     }
 
-    _date(date) {
+    _date(date) { // eslint-disable-line class-methods-use-this
         const monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
         const d = new Date(date);
         return `${d.getDay()}. ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
     }
 
-    _print(...x) {
+    _print(...x) { // eslint-disable-line class-methods-use-this
         console.log(x);
     }
 };
