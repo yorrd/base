@@ -4,35 +4,6 @@
 import { createStore, applyMiddleware } from 'redux';
 import DatabaseHolder from './database-holder';
 
-// TODO remove this, it's a stupid idea because we already have the redux
-// time machine. Just for testing the combiner
-const debugReducer = (state = ['No debug message'], action) => {
-    let logMessage = '';
-    switch (action.type) {
-            case 'INSERT_DOC':
-                logMessage = `Insert new Item: ${JSON.stringify(action.doc)}`;
-                break;
-            case 'REMOVE_DOC':
-                logMessage = `Remove Item: ${JSON.stringify(action.doc)}`;
-                break;
-            case 'ADDED_DOC':
-                logMessage = `Inserted new Item: ${JSON.stringify(action.doc)}`;
-                break;
-            case 'REMOVED_DOC':
-                logMessage = `Deleted Item: ${JSON.stringify(action.doc)}`;
-                break;
-            case 'UPDATED_DOC':
-                logMessage = `Updated Item: ${JSON.stringify(action.doc)}`;
-                break;
-            case 'SET_FILTER':
-                logMessage = `Set Filter: ${JSON.stringify(action.filter)}`;
-                break;
-            default:
-            // ignore
-    }
-    return [...state, logMessage];
-};
-
 const reducer = (state = {}, action) => {
     let object = Object.assign({}, state);
     switch (action.type) {
@@ -80,7 +51,6 @@ const reducer = (state = {}, action) => {
 
     // TODO could / should use combineReducers here
     return Object.assign(object, {
-        debugMessage: debugReducer(state.debugMessage, action),
     });
 };
 
@@ -264,7 +234,7 @@ AdornisPolymerRedux = Parent => class AdornisPolymerRedux extends ReduxMixin(Par
         return args.slice(1).reduce((diff, curr) => diff - +curr, args[0]);
     }
 
-    _(val, digits, unit) { // eslint-disable-line class-methods-use-this
+    _(val, digits = 2, unit) { // eslint-disable-line class-methods-use-this
         if (!unit) unit = '';
         if (!digits) digits = 0;
 

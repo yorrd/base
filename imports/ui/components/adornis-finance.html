@@ -16,7 +16,7 @@
                         <td><paper-button on-tap="_removeItem">-</paper-button></td>
                     </tr>
                 </template>
-                <tr><td>insg Ausgaben</td><td>{{spendings}}</paper-input><paper-button on-tap="_addSpending">+</paper-button></td></tr>
+                <tr><td>insg Ausgaben</td><td>{{_(spendings, 2, "Eur")}}</paper-input><paper-button on-tap="_addSpending">+</paper-button></td></tr>
                 <tr final><td>Nach Ausgaben</td><td>{{_(withoutSpendings, 2, "Eur")}}</td></tr>
                 <tr final><td>Nach KoeSt und GewSt</td><td>{{_(withoutTaxes, 2, "Eur")}}</td></tr>
                 <tr final><td>Ohne Rücklage</td><td>{{_(withoutRuecklage, 2, "Eur")}}</td></tr>
@@ -31,7 +31,7 @@
 const EUR = 'Eur';
 const PERC = '%';
 
-class AdornisFinance extends AdornisPolymerRedux(Polymer.Element, 'spendings', 'mongo_spendings') {
+class AdornisFinance extends AdornisPolymerRedux(Polymer.Element) {
     static get is() {
         return 'adornis-finance';
     }
@@ -42,7 +42,7 @@ class AdornisFinance extends AdornisPolymerRedux(Polymer.Element, 'spendings', '
             // finance fields
             input: { type: Number, value: 100 },
             withoutUSt: { type: Number, computed: '_div(input,1.19)' },
-            spendingsDetail: { type: Array, statePath: 'mongo_spendings' },
+            spendingsDetail: { type: Array, statePath: 'mongo_spendings', collection: 'spendings' },
             filter: { type: Object, value: {} },
             spendings: { type: Number, computed: '_sumSpendings(withoutUSt, spendingsDetail.*)' },
             withoutSpendings: { type: Number, computed: '_sub(withoutUSt, spendings)' },
@@ -51,22 +51,21 @@ class AdornisFinance extends AdornisPolymerRedux(Polymer.Element, 'spendings', '
         };
     }
 
-    _changeType(e) {
+    _changeType(e) { // eslint-disable-line class-methods-use-this
         e.model.set('item.type', (e.model.item.type === EUR ? PERC : EUR));
     }
 
     _removeItem(e) {
-        this.dispatch('remove', e.model.item._id);
+        this.splice('spendingsDetail', e.model.index, 1);
     }
 
     _addSpending() {
-        // this.push('spendingsDetail', { value: 0, type: EUR });
-        this.dispatch('insert', { value: 0, type: EUR, usage: '' });
+        this.push('spendingsDetail', { value: 0, type: EUR });
     }
 
-    _sumSpendings(withoutUSt, spendingsDiff) {
+    _sumSpendings(withoutUSt, spendingsDiff) { // eslint-disable-line class-methods-use-this
         const arr = spendingsDiff.base;
-        if (!arr) return;
+        if (!arr) return 0;
         return arr.reduce((sum, curr) => {
             if (curr.type === EUR) {
                 return sum + +curr.value;
