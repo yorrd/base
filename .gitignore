@@ -1,4 +1,2 @@
 node_modules/
-public/bower_components
 imports/ui/bower_components
-npm-debug.log
