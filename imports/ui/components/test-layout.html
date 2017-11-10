@@ -35,7 +35,7 @@
           color: #fff;
         }
         app-header paper-icon-button {
-          --paper-icon-button-ink-color: white;
+            --paper-icon-button-ink-color: white;
         }
         .print-break {
             page-break-after: always;
@@ -56,11 +56,15 @@
 
     <app-header- class="fit layout vertical">
 
-        <paper-toggle-button on-checked-changed="_toggleFilter"></paper-toggle-button>
+        <mongo-repeat collection="spendings" items="{{xxx}}"><template>
+            <paper-card>{{item.usage}}</paper-card>
+        </template></mongo-repeat>
+
+        <!-- <paper-toggle-button on-checked-changed="_toggleFilter"></paper-toggle-button>
         <paper-button on-click="handleUpdateMessage">Insert Hallo Welt</paper-button>
         <mongo-data id="mongoData" filter="{{filter}}"></mongo-data>
 
-        <adornis-finance></adornis-finance>
+        <adornis-finance></adornis-finance> -->
 
         <!-- <div>
             <div id="inputs">
@@ -104,11 +108,20 @@ class TestLayout extends AdornisPolymerRedux(MwcMixin(Polymer.Element)) {
             wasserKosten: {
                 type: Number, value: 2627.82, statePath: 'wasserKosten', dispatch: true,
             },
+            xxx: { type: Array, observer: '_print' },
         };
+    }
+
+    static get observers() {
+        return ['_print(xxx.*)'];
     }
 
     _toggleFilter(e) {
         this.filter = [e.currentTarget.checked];
+    }
+
+    _print(e) {
+        console.log(e, this.xxx);
     }
 
     handleUpdateMessage() {

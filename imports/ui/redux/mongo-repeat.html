@@ -1,0 +1,47 @@
+<!-- dom repeat overwrite -->
+
+<!-- <dom-module id="mongo-repeat">
+  <template>
+      <template is="dom-repeat" items="{{todos}}" index-as="index">
+        <paper-input value={{item.name}}></paper-input>
+        <button on-click="_deleteItem">Delete Button</button>
+      </template>
+  </template>
+</dom-module> -->
+<!-- <dom-module id="mongo-repeat">
+    <template>
+        100%
+    </template>
+</dom-module> -->
+
+<script>
+
+class MongoRepeat extends AdornisPolymerRedux(Polymer.DomRepeat) {
+    static get is() {
+        return 'mongo-repeat';
+    }
+
+    static get properties() {
+        return {
+            items: { notify: true },
+            collection: { type: String, observer: '_setCollection' },
+        };
+        // return super.properties;
+    }
+
+    _setCollection(collection) {
+        // this.dispatch('subscribe', [], collection, `__${collection}`);
+        const coll = new Mongo.Collection(collection);
+        Meteor.subscribe(collection);
+        this.set('items', []);
+        coll.find().observe({ added: doc => this.push('items', doc) });
+    }
+
+    _deleteItem(e) {
+        this.splice('todos', e.model.index, 1);
+    }
+}
+
+window.customElements.define(MongoRepeat.is, MongoRepeat);
+
+</script>
