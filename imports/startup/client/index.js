@@ -1,3 +1,1 @@
-window.addEventListener('WebComponentsReady', () => {
-    import '../../ui/index.html';
-});
+import '../../ui/index.html';
