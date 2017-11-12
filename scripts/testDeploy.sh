@@ -3,7 +3,7 @@
 debug=$1
 
 rm -rf bundle
-if [ debug = 'debug' ]
+if [ "$debug" = 'debug' ]
 then
     meteor build --debug ./ --server-only --architecture os.linux.x86_64
 else
