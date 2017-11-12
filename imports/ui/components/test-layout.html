@@ -1,3 +1,4 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
 
 <link rel="import" href="../bower_components/app-layout/app-layout.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
@@ -6,15 +7,15 @@
 
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<!-- <link rel="import" href="../bower_components/paper-button/paper-button.html"> -->
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-styles/paper-styles.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 
 
-<link rel="import" href="mongo-data.html">
-<link rel="import" href="adornis-finance.html">
+<!-- <link rel="import" href="mongo-data.html"> -->
+<!-- <link rel="import" href="adornis-finance.html"> -->
 <!-- <link rel="import" href="adornis-nebenkosten.html">
 <link rel="import" href="adornis-nebenkosten-aufstellung.html">
 <link rel="import" href="adornis-nebenkosten-zaehlerdetails.html"> -->
@@ -75,8 +76,6 @@
 
         <hr />
 
-        <adornis-finance></adornis-finance>
-
         <!-- <div>
             <div id="inputs">
             </div>
@@ -120,6 +119,13 @@ class TestLayout extends AdornisPolymerRedux(MwcMixin(Polymer.Element)) {
                 value: [false],
             },
         };
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        import('./adornis-finance.html');
+        import('./mongo-data.html');
+        import('../bower_components/paper-button/paper-button.html');
     }
 
     _toggleFilter(e) {

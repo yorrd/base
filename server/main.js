@@ -1,4 +1,6 @@
 import { Meteor } from 'meteor/meteor';
+import { onPageLoad } from 'meteor/server-render';
+
 // import * as data from '../imports/jsonFile.js';
 
 // const fs = require('fs');
@@ -34,4 +36,8 @@ Meteor.startup(() => {
     // read initial data
     // console.log(data);
     // console.log(data.length);
+});
+
+onPageLoad((sink) => {
+    sink.appendToBody('<test-layout></test-layout>');
 });

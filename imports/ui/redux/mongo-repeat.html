@@ -18,6 +18,11 @@ class MongoRepeat extends AdornisPolymerRedux(Polymer.DomRepeat) {
             subParams: Array,
             debounceInterval: Number,
             collection: { type: String, value: null, observer: '_setCollection' },
+
+            // because of the database-nature of things, immediately change the defaults for initial count and target framerate
+            // this SHOULD be overwritten, but it's better this way than not set at all
+            initialCount: { type: Number, value: 50 },
+            targetFramerate: { type: Number, value: 60 },
         };
     }
 
