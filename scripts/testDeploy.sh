@@ -1,6 +1,15 @@
 #!/usr/bin/bash
+
+debug=$1
+
 rm -rf bundle
-meteor build ./ --server-only --architecture os.linux.x86_64
+if [ debug = 'debug' ]
+then
+    meteor build --debug ./ --server-only --architecture os.linux.x86_64
+else
+    meteor build ./ --server-only --architecture os.linux.x86_64
+fi
+
 tar xf *.tar.gz
 mv bundle .bundle
 workingdir=`pwd`
