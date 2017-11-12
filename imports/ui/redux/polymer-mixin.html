@@ -1,4 +1,7 @@
 <script>
+
+import DatabaseHolder from './database-holder';
+
 AdornisPolymerRedux = Parent => class AdornisPolymerRedux extends ReduxMixin(Parent) {
     static get actions() {
         return {
@@ -41,18 +44,8 @@ AdornisPolymerRedux = Parent => class AdornisPolymerRedux extends ReduxMixin(Par
         Object.keys(props)
             .filter(prop => props[prop].collection)
             .forEach((dbProp) => {
-                const propObj = props[dbProp];
-                let parameters = this[propObj.paramProperty];
-                if (!parameters) parameters = [];
-                this.dispatch('subscribe', parameters, propObj.collection, propObj.statePath);
-                this._createMethodObserver(`_arrayUpdate(${dbProp}.*)`);
-
-                // listen for filter changes
-                const filterListenerName = `_changeFilter_${propObj.statePath}`;
-                this[filterListenerName] = (params) => {
-                    this.dispatch('subscribe', params, propObj.collection, propObj.statePath);
-                };
-                this._createPropertyObserver(propObj.paramProperty, filterListenerName);
+                const property = this.constructor.properties[dbProp];
+                this._subscribeCollection(dbProp, property.collection, property.statePath, property.paramProperty);
             });
 
         // get automatically managed polymer properties
@@ -84,9 +77,33 @@ AdornisPolymerRedux = Parent => class AdornisPolymerRedux extends ReduxMixin(Par
             });
     }
 
-    _arrayUpdate(diff) { // eslint-disable-line class-methods-use-this
+    _subscribeCollection(propName, coll, statePath, paramWatchProp) {
+        let parameters = this[paramWatchProp];
+        if (!parameters) parameters = [];
+
+        this.dispatch(
+            'subscribe',
+            parameters,
+            coll,
+            statePath,
+        );
+        this._createMethodObserver(`_arrayUpdate("${coll}", ${propName}.*)`);
+
+        // listen for filter changes
+        const filterListenerName = `_changeFilter_${statePath}`;
+        this[filterListenerName] = (params) => {
+            this.dispatch(
+                'subscribe',
+                params,
+                coll,
+                statePath,
+            );
+        };
+        this._createPropertyObserver(paramWatchProp, filterListenerName);
+    }
+
+    _arrayUpdate(collName, diff) { // eslint-disable-line class-methods-use-this
         const propName = diff.path.split('.')[0];
-        const collName = this.constructor.properties[propName].collection;
 
         // this is for removals and additions
         if (diff.path.indexOf('.splices') > -1) {

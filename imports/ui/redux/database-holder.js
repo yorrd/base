@@ -1,5 +1,6 @@
 export default class DatabaseHolder {
     static getDatabase(coll) {
+        if (!coll) throw new Error('can\'t get collection undefined');
         if (!this.databases) this.databases = {};
         if (!this.databases[coll]) { this.databases[coll] = new Mongo.Collection(coll); }
         return this.databases[coll];

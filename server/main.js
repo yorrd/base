@@ -9,7 +9,7 @@ const MieterDaten = new Mongo.Collection('mieterdaten');
 
 Meteor.startup(() => {
     // code to run on server at startup
-    Meteor.publish('mongo-data', filtered => TestCollection.find(filtered ? { name: 'new dispatch cool shit stuff ' } : {}));
+    Meteor.publish('mongo-data', filtered => TestCollection.find(filtered ? { name: 'xxx' } : {}));
     Meteor.publish('spendings', () => SpendingsCollection.find());
     Meteor.publish('mieterdaten', () => {
         console.log('asdf');

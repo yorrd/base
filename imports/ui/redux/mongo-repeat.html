@@ -1,18 +1,4 @@
-<!-- dom repeat overwrite -->
-
-<!-- <dom-module id="mongo-repeat">
-  <template>
-      <template is="dom-repeat" items="{{todos}}" index-as="index">
-        <paper-input value={{item.name}}></paper-input>
-        <button on-click="_deleteItem">Delete Button</button>
-      </template>
-  </template>
-</dom-module> -->
-<!-- <dom-module id="mongo-repeat">
-    <template>
-        100%
-    </template>
-</dom-module> -->
+<!-- <link rel="import" href="/bower_components/polymer/lib/utils/flattened-nodes-observer.html"> -->
 
 <script>
 
@@ -23,22 +9,58 @@ class MongoRepeat extends AdornisPolymerRedux(Polymer.DomRepeat) {
 
     static get properties() {
         return {
-            items: { notify: true },
-            collection: { type: String, observer: '_setCollection' },
+            items: {
+                type: Array,
+                value: [],
+                // statepath and collection will be set later in the _setCollection
+                notify: true, // TODO I want to set this to notify, but then we'd have a notify property which is at the same time a redux property
+            },
+            subParams: Array,
+            debounceInterval: Number,
+            collection: { type: String, value: null, observer: '_setCollection' },
         };
-        // return super.properties;
+    }
+
+    static get template() {
+        // overarching template, work to be done here (add button)
+        return null;
+    }
+
+    constructor() {
+        super();
+
+        this.addEventListener('dom-change', () => {
+            Polymer.dom(this).parentNode.querySelectorAll('[slot=remove]').forEach((el) => {
+                el.addEventListener('tap', e => this.remove(this.modelForElement(e.currentTarget).index));
+            });
+        });
     }
 
     _setCollection(collection) {
-        // this.dispatch('subscribe', [], collection, `__${collection}`);
-        const coll = new Mongo.Collection(collection);
-        Meteor.subscribe(collection);
-        this.set('items', []);
-        coll.find().observe({ added: doc => this.push('items', doc) });
+        // could as well do the declarative stuff in the properties but we want this with a dynamic collection and params, so...
+        if (!collection) return;
+        // manual binding
+        this.addEventListener('state-changed', (e) => {
+            if (!e.detail[collection]) return;
+            if (this.debounceInterval) {
+                this._debouncer = Polymer.Debouncer.debounce(
+                    this._debouncer,
+                    Polymer.Async.timeOut.after(this.debounceInterval),
+                    () => this.set('items', e.detail[collection]),
+                );
+            } else {
+                this.set('items', e.detail[collection]);
+            }
+        });
+        this._subscribeCollection('items', collection, collection, 'subParams');
     }
 
-    _deleteItem(e) {
-        this.splice('todos', e.model.index, 1);
+    insert(obj) {
+        this.push('items', obj);
+    }
+
+    remove(i) {
+        this.splice('items', i, 1);
     }
 }
 

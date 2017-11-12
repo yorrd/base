@@ -44,6 +44,9 @@
         paper-input-container input {
             @apply(--paper-input-container-shared-input-style);
         }
+        hr {
+            margin: 3em 0;
+        }
     </style>
 
     <!--================== <Router> ================-->
@@ -54,17 +57,25 @@
 
     <!--================= </Router> ================-->
 
-    <app-header- class="fit layout vertical">
+    <app-header-layout class="fit layout vertical">
 
-        <mongo-repeat collection="spendings" items="{{xxx}}"><template>
-            <paper-card>{{item.usage}}</paper-card>
-        </template></mongo-repeat>
+        <mongo-repeat id="mdata" collection="mongo-data" sub-params="{{subParams}}" debounce-interval="100">
+            <template>
+                <paper-card>{{item.name}}</paper-card>
+            </template>
+        </mongo-repeat>
 
-        <!-- <paper-toggle-button on-checked-changed="_toggleFilter"></paper-toggle-button>
+        <paper-toggle-button on-checked-changed="_toggleFilter"></paper-toggle-button>
+        <paper-button on-tap="_add">add</paper-button>
+
+        <hr />
+
         <paper-button on-click="handleUpdateMessage">Insert Hallo Welt</paper-button>
         <mongo-data id="mongoData" filter="{{filter}}"></mongo-data>
 
-        <adornis-finance></adornis-finance> -->
+        <hr />
+
+        <adornis-finance></adornis-finance>
 
         <!-- <div>
             <div id="inputs">
@@ -100,28 +111,23 @@ class TestLayout extends AdornisPolymerRedux(MwcMixin(Polymer.Element)) {
         return {
             route: Object,
             routeData: Object,
-            messages: {
-                type: Array,
-                statePath: 'debugMessage',
-            },
 
             wasserKosten: {
                 type: Number, value: 2627.82, statePath: 'wasserKosten', dispatch: true,
             },
-            xxx: { type: Array, observer: '_print' },
+            subParams: {
+                type: Array,
+                value: [false],
+            },
         };
     }
 
-    static get observers() {
-        return ['_print(xxx.*)'];
-    }
-
     _toggleFilter(e) {
-        this.filter = [e.currentTarget.checked];
+        this.set('subParams', [e.detail.value]);
     }
 
-    _print(e) {
-        console.log(e, this.xxx);
+    _add() {
+        this.$.mdata.insert({ name: 'hihihi' });
     }
 
     handleUpdateMessage() {

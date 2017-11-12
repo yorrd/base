@@ -39,6 +39,10 @@ const reducer = (state = {}, action) => {
                 }
                 break;
             }
+            case 'RESET': {
+                object[action.statePath] = [...action.array];
+                break;
+            }
             default:
                 object = Object.assign({}, state);
     }
@@ -64,11 +68,16 @@ const mongoMiddleware = middlewareStore => next => (action) => {
                 break;
             case 'SUBSCRIBE': {
                 DatabaseHolder.stopObserverHandle(action.statePath);
+                middlewareStore.dispatch({
+                    type: 'RESET',
+                    collection: action.collection,
+                    statePath: action.statePath,
+                    array: [],
+                });
                 const obsHandle = DatabaseHolder.getDatabase(action.collection).find({}).observe({
                     added: (doc) => {
                         middlewareStore.dispatch({
                             type: 'ADDED_DOC',
-                            collection: action.collection,
                             statePath: action.statePath,
                             doc,
                         });
@@ -76,7 +85,6 @@ const mongoMiddleware = middlewareStore => next => (action) => {
                     changed: (doc) => {
                         middlewareStore.dispatch({
                             type: 'UPDATED_DOC',
-                            collection: action.collection,
                             statePath: action.statePath,
                             doc,
                         });
@@ -84,7 +92,6 @@ const mongoMiddleware = middlewareStore => next => (action) => {
                     removed: (doc) => {
                         middlewareStore.dispatch({
                             type: 'REMOVED_DOC',
-                            collection: action.collection,
                             statePath: action.statePath,
                             doc,
                         });
