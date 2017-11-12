@@ -2,8 +2,9 @@
 rm -rf bundle
 meteor build ./ --server-only --architecture os.linux.x86_64
 tar xf *.tar.gz
+mv bundle .bundle
 workingdir=`pwd`
-cd bundle/programs/server
+cd .bundle/programs/server
 npm install
 cd ../..
 export MONGO_URL="mongodb://localhost:27017/"
@@ -13,7 +14,7 @@ export PORT="8080"
 function cleanup {
     echo "\ncleaning up"
     cd $workingdir
-    rm -rf bundle
+    rm -rf .bundle
     rm *.tar.gz
 }
 trap cleanup EXIT
