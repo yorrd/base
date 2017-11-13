@@ -67,7 +67,6 @@ const mongoMiddleware = middlewareStore => next => (action) => {
                 DatabaseHolder.getDatabase(action.collection).remove({ _id: action.id });
                 break;
             case 'SUBSCRIBE': {
-                DatabaseHolder.stopObserverHandle(action.statePath);
                 middlewareStore.dispatch({
                     type: 'RESET',
                     collection: action.collection,
