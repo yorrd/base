@@ -6,6 +6,7 @@
     "weigh": "weigh --path imports/ui/index.html --depth 2",
     "testdeploy": "scripts/testDeploy.sh",
     "buildapp": "scripts/buildApp run http://localhost:3000/",
+    "testbuildapp": "scripts/buildApp run http://localhost:3000/",
     "deploy": "scripts/deploy.sh http://localhost:3000/ 3000"
   },
   "dependencies": {
