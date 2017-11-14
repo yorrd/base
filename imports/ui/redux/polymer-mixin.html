@@ -96,6 +96,21 @@ AdornisPolymerRedux = Parent => class AdornisPolymerRedux extends ReduxMixin(Par
                     value,
                 });
             });
+
+        Object.keys(props)
+            .filter(prop => props[prop].persistent)
+            .forEach((trackedProp) => {
+                if (!props[trackedProp].dispatch) throw new Error('when using persistent you have to use dispatch as well');
+                const { statePath } = props[trackedProp];
+                const value = localStorage.getItem(statePath);
+
+                // one time dispatch you have to use polymer-variables to change value
+                this.dispatch({
+                    type: 'LOAD_PERSISTENT',
+                    statePath,
+                    value,
+                });
+            });
     }
 
     _subscribeCollection(propName, coll, statePath, paramWatchProp, isPersistent) {
