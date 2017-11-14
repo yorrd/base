@@ -60,9 +60,11 @@
 
     <app-header-layout class="fit layout vertical">
 
-        <mongo-repeat id="mdata" collection="mongo-data" sub-params="{{subParams}}" debounce-interval="100">
+        heyho
+
+        <mongo-repeat id="mdata" collection="mongo-data" sub-params="{{subParams}}" debounce-interval="100" persistent-collection>
             <template>
-                <paper-card>{{item.name}}</paper-card>
+                <paper-card>CARD:{{item.name}}</paper-card>
             </template>
         </mongo-repeat>
 
@@ -76,6 +78,9 @@
 
         <hr />
 
+        {{wasserKosten}}
+
+        <paper-input value="{{wasserKosten}}"></paper-input>
         <!-- <div>
             <div id="inputs">
             </div>
@@ -92,6 +97,8 @@
                 <div class="print-break"></div>
             </template>
         </div> -->
+
+        <hr />
 
     </app-header-layout>
 
@@ -112,7 +119,7 @@ class TestLayout extends AdornisPolymerRedux(MwcMixin(Polymer.Element)) {
             routeData: Object,
 
             wasserKosten: {
-                type: Number, value: 2627.82, statePath: 'wasserKosten', dispatch: true,
+                type: Number, statePath: 'wasserKosten', dispatch: true, persistent: true,
             },
             subParams: {
                 type: Array,

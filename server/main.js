@@ -11,7 +11,9 @@ const MieterDaten = new Mongo.Collection('mieterdaten');
 
 Meteor.startup(() => {
     // code to run on server at startup
-    Meteor.publish('mongo-data', filtered => TestCollection.find(filtered ? { name: 'xxx' } : {}));
+    Meteor.publish('mongo-data', filtered => TestCollection.find(filtered ? { name: 'elias' } : {}));
+    if (TestCollection.find().fetch().length === 0) TestCollection.insert({ name: 'elias' });
+    console.log(TestCollection.find().fetch());
     Meteor.publish('spendings', () => SpendingsCollection.find());
     Meteor.publish('mieterdaten', () => {
         console.log('asdf');
