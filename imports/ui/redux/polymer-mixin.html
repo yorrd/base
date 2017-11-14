@@ -23,13 +23,14 @@ AdornisPolymerRedux = Parent => class AdornisPolymerRedux extends ReduxMixin(Par
                     id,
                 };
             },
-            subscribe(params, collection, statePath) {
+            subscribe(params, collection, statePath, isPersistent) {
                 if (!params || !collection || !statePath) throw new Error('no params, collection or statePath given');
                 return {
                     type: 'SUBSCRIBE',
                     parameters: params,
                     collection,
                     statePath,
+                    isPersistent,
                 };
             },
         };
