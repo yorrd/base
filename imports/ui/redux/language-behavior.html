@@ -1,0 +1,59 @@
+<script>
+LanguageBehavior = {
+
+    properties: {
+        translations: {
+            type: Array,
+            value: [],
+            notify: true,
+        },
+        language: {
+            type: String,
+            statePath: 'language',
+            dispatch: false,
+            observer: '_resubscribe',
+        },
+
+        l: {
+            type: Function,
+            computed: '_computeLocalize(translations)',
+        },
+    },
+
+    _resubscribe() {
+        // manual binding
+        this.addEventListener('state-changed', (e) => {
+            if (!e.detail.languages) return;
+            if (this.debounceInterval) {
+                this._debouncer = Polymer.Debouncer.debounce(
+                    this._debouncer,
+                    Polymer.Async.timeOut.after(this.debounceInterval),
+                    () => this.set('translations', e.detail.languages),
+                );
+            } else {
+                this.set('translations', e.detail.languages);
+            }
+            // console.log(e.detail.languages);
+        });
+        console.log(this.persistentCollection);
+        this._subscribeCollection('items', 'languages', 'languages', 'subParams', this.persistentCollection);
+    },
+
+    _computeLocalize(x) {
+        console.log('translations', this.translations);
+        return function y() {
+            const key = arguments[0];
+            console.log('localize', key, this.translations);
+            let value = '';
+            this.translations.filter((translation) => {
+                if (translation.key === key) {
+                    value = translation.value;
+                    return true;
+                }
+                return false;
+            });
+            return value;
+        };
+    },
+};
+</script>
