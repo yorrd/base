@@ -7,7 +7,8 @@
     "testdeploy": "scripts/testDeploy.sh",
     "buildapp": "scripts/buildApp run http://localhost:3000/",
     "testbuildapp": "scripts/buildApp run http://localhost:3000/",
-    "deploy": "scripts/deploy.sh http://localhost:3000/ 3000"
+    "deploy": "scripts/deploy.sh http://localhost:3000/ 3000",
+    "setup": "scripts/setup.sh"
   },
   "dependencies": {
     "babel-runtime": "^6.26.0",
