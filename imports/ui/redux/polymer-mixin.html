@@ -23,13 +23,14 @@ AdornisPolymerRedux = Parent => class AdornisPolymerRedux extends ReduxMixin(Par
                     id,
                 };
             },
-            subscribe(params, collection, statePath) {
+            subscribe(params, collection, statePath, isPersistent) {
                 if (!params || !collection || !statePath) throw new Error('no params, collection or statePath given');
                 return {
                     type: 'SUBSCRIBE',
                     parameters: params,
                     collection,
                     statePath,
+                    isPersistent,
                 };
             },
         };
@@ -45,7 +46,7 @@ AdornisPolymerRedux = Parent => class AdornisPolymerRedux extends ReduxMixin(Par
             .filter(prop => props[prop].collection)
             .forEach((dbProp) => {
                 const property = this.constructor.properties[dbProp];
-                this._subscribeCollection(dbProp, property.collection, property.statePath, property.paramProperty);
+                this._subscribeCollection(dbProp, property.collection, property.statePath, property.paramProperty, property.persistent);
             });
 
         // get automatically managed polymer properties
@@ -59,6 +60,11 @@ AdornisPolymerRedux = Parent => class AdornisPolymerRedux extends ReduxMixin(Par
 
                 this[listenerName] = (newVal) => {
                     if (!newVal) return;
+
+                    // handle persistency
+                    const { persistent } = props[trackedProp];
+                    if (persistent) { localStorage.setItem(statePath, newVal); }
+
                     this.dispatch({
                         type: 'UPDATE_POLYMER_VARIABLE',
                         statePath,
@@ -75,17 +81,35 @@ AdornisPolymerRedux = Parent => class AdornisPolymerRedux extends ReduxMixin(Par
             .forEach((trackedProp) => {
                 if (props[trackedProp].value) throw new Error(`there should be no value on the dispatch field ${trackedProp}`);
             });
+
+        Object.keys(props)
+            .filter(prop => props[prop].persistent)
+            .forEach((trackedProp) => {
+                if (!props[trackedProp].dispatch) throw new Error('when using persistent you have to use dispatch as well');
+                const { statePath } = props[trackedProp];
+                const value = localStorage.getItem(statePath);
+
+                // one time dispatch you have to use polymer-variables to change value
+                this.dispatch({
+                    type: 'LOAD_PERSISTENT',
+                    statePath,
+                    value,
+                });
+            });
     }
 
-    _subscribeCollection(propName, coll, statePath, paramWatchProp) {
+    _subscribeCollection(propName, coll, statePath, paramWatchProp, isPersistent) {
         let parameters = this[paramWatchProp];
         if (!parameters) parameters = [];
+
+        console.log('isPersistent: ', isPersistent);
 
         this.dispatch(
             'subscribe',
             parameters,
             coll,
             statePath,
+            isPersistent,
         );
         this._createMethodObserver(`_arrayUpdate("${coll}", ${propName}.*)`);
 
@@ -97,6 +121,7 @@ AdornisPolymerRedux = Parent => class AdornisPolymerRedux extends ReduxMixin(Par
                 params,
                 coll,
                 statePath,
+                isPersistent,
             );
         };
         this._createPropertyObserver(paramWatchProp, filterListenerName);
