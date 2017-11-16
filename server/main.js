@@ -1,9 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import { onPageLoad } from 'meteor/server-render';
 
-// import * as data from '../imports/jsonFile.js';
+require('@skatejs/ssr/register');
+const render = require('@skatejs/ssr');
 
-// const fs = require('fs');
 
 const TestCollection = new Mongo.Collection('mongo-data');
 const SpendingsCollection = new Mongo.Collection('spendings');
@@ -13,10 +13,7 @@ Meteor.startup(() => {
     // code to run on server at startup
     Meteor.publish('mongo-data', filtered => TestCollection.find(filtered ? { name: 'xxx' } : {}));
     Meteor.publish('spendings', () => SpendingsCollection.find());
-    Meteor.publish('mieterdaten', () => {
-        console.log('asdf');
-        return MieterDaten.find();
-    });
+    Meteor.publish('mieterdaten', () => MieterDaten.find());
     TestCollection.allow({
         insert: () => true,
         update: () => true,
@@ -32,12 +29,24 @@ Meteor.startup(() => {
         update: () => true,
         remove: () => true,
     });
-
-    // read initial data
-    // console.log(data);
-    // console.log(data.length);
 });
 
-// onPageLoad((sink) => {
-//     sink.appendToBody('<test-layout></test-layout>');
-// });
+class Hello extends HTMLElement {
+    static get is() { return 'x-hello'; }
+    connectedCallback() {
+        const shadowRoot = this.attachShadow({ mode: 'open' });
+        shadowRoot.innerHTML = '<span>Hello!</span>';
+    }
+}
+customElements.define('x-hello', Hello);
+
+// mit Hello funktionierts, jetzt polymer...
+// import { MyApp } from '../imports/ui/components/polymer-3-test.js';
+//
+// render(new MyApp(), true).then(console.log);
+
+onPageLoad(async (sink) => {
+    sink.appendToBody('<div id="app"></div>afaf<input type="text"/>');
+    const skateOut = await render(new Hello(), true);
+    sink.appendToBody(skateOut);
+});
