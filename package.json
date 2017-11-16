@@ -1,5 +1,6 @@
 {
   "name": "kickstart-meteor-polymer",
+  "version": "2.0.0-alpha",
   "private": true,
   "scripts": {
     "start": "meteor run",
