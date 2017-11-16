@@ -2,3 +2,4 @@ node_modules/
 imports/ui/bower_components
 .bundle
 *.tar.gz
+yarn-error.log
