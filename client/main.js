@@ -1,7 +1,4 @@
 
-console.log('asdf');
-import { Element as PolymerElement }
-    from '../node_modules/@polymer/polymer/polymer-element.js';
 import '../imports/startup/client/index.js';
 
 Meteor.startup(() => {
