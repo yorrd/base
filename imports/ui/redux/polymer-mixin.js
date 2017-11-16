@@ -1,8 +1,8 @@
-<script>
-
+import { Element } from '../../ui/node_links/@polymer/polymer/polymer-element.js';
+import ReduxMixin from './reducers.js';
 import DatabaseHolder from './database-holder';
 
-AdornisPolymerRedux = Parent => class AdornisPolymerRedux extends ReduxMixin(Parent) {
+export default class ReduxComponent extends ReduxMixin(Element) {
     static get actions() {
         return {
             insert(doc, collection, statePath) {
@@ -145,10 +145,7 @@ AdornisPolymerRedux = Parent => class AdornisPolymerRedux extends ReduxMixin(Par
         return args.slice(1).reduce((diff, curr) => diff - +curr, args[0]);
     }
 
-    f(val, digits = 2, unit) { // eslint-disable-line class-methods-use-this
-        if (!unit) unit = '';
-        if (!digits) digits = 0;
-
+    f(val, digits = 2, unit = '') { // eslint-disable-line class-methods-use-this
         const number = `${(+val).toFixed(digits)}`.replace('.', ',');
         const numArr = number.split(',');
         return `${numArr[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.')},${numArr[1]} ${unit}`;
@@ -163,5 +160,4 @@ AdornisPolymerRedux = Parent => class AdornisPolymerRedux extends ReduxMixin(Par
     print(...x) { // eslint-disable-line class-methods-use-this
         console.log(x);
     }
-};
-</script>
+}

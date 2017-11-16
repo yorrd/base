@@ -1,10 +1,11 @@
-import { Element } from '../../ui/node_links/@polymer/polymer/polymer-element.js';
+import ReduxComponent from '../redux/polymer-mixin.js';
+
 import '../node_links/@polymer/paper-input/paper-input.js';
 import '../node_links/@polymer/paper-button/paper-button.js';
 import '../node_links/@polymer/app-layout/app-header-layout/app-header-layout.js';
 import '../node_links/@polymer/app-layout/app-header/app-header.js';
 
-export class MyApp extends Element { // eslint-disable-line
+export class MyApp extends ReduxComponent { // eslint-disable-line
 
     static get template() {
         // need innerHTML for syntax highlighting. Need to disable the linter

@@ -1,6 +1,6 @@
 
-<script>
 import { createStore, applyMiddleware } from 'redux';
+import PolymerRedux from './polymer-redux.js';
 import DatabaseHolder from './database-holder';
 
 const reducer = (state = {}, action) => {
@@ -108,6 +108,4 @@ const mongoMiddleware = middlewareStore => next => (action) => {
 };
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || (x => x); // for the debugger in the browser
 const store = createStore(reducer, {/* SSR hydration!!! */}, composeEnhancers(applyMiddleware(mongoMiddleware)));
-ReduxMixin = PolymerRedux(store);
-
-</script>
+export default PolymerRedux(store);
