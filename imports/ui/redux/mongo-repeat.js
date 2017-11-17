@@ -19,6 +19,7 @@ class MongoRepeat extends ReduxComponent(DomRepeat) {
             subParams: { type: Array, value: [] },
             debounceInterval: Number,
             collection: { type: String, value: null, observer: '_setCollection' },
+            persistentCollection: { type: Boolean, value: false },
 
             // because of the database-nature of things, immediately change the defaults for initial count and target framerate
             // this SHOULD be overwritten, but it's better this way than not set at all
@@ -60,7 +61,7 @@ class MongoRepeat extends ReduxComponent(DomRepeat) {
                 this.set('items', e.detail[collection]);
             }
         });
-        this._subscribeCollection('items', collection, collection, 'subParams');
+        this._subscribeCollection('items', collection, collection, 'subParams', this.persistentCollection);
     }
 
     insert(obj) {
