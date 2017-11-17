@@ -95,7 +95,7 @@ hr {
     }
 }
 customElements.define('x-hello', Hello);
-render(new Hello(), true).then(console.log);
+// render(new Hello(), true).then(console.log);
 
 // mit Hello funktionierts, jetzt polymer...
 // import { MyApp } from '../imports/ui/components/polymer-3-test.js';
@@ -104,5 +104,5 @@ render(new Hello(), true).then(console.log);
 
 onPageLoad(async (sink) => {
     const skateOut = await render(new Hello(), true);
-    sink.appendToBody(`<div id="ssr">${skateOut}</div>`);
+    // sink.appendToBody(`<div id="ssr">${skateOut}</div>`);
 });

@@ -1,8 +1,7 @@
-import { Element } from '../../ui/node_links/@polymer/polymer/polymer-element.js';
 import ReduxMixin from './reducers.js';
 import DatabaseHolder from './database-holder';
 
-export default class ReduxComponent extends ReduxMixin(Element) {
+export default parent => class ReduxComponent extends ReduxMixin(parent) {
     static get actions() {
         return {
             insert(doc, collection, statePath) {
@@ -92,6 +91,7 @@ export default class ReduxComponent extends ReduxMixin(Element) {
         // listen for filter changes
         const filterListenerName = `_changeFilter_${statePath}`;
         this[filterListenerName] = (params) => {
+            console.log(this, params);
             this.dispatch(
                 'subscribe',
                 params,
@@ -160,4 +160,4 @@ export default class ReduxComponent extends ReduxMixin(Element) {
     print(...x) { // eslint-disable-line class-methods-use-this
         console.log(x);
     }
-}
+};

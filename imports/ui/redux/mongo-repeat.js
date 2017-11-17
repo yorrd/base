@@ -1,8 +1,9 @@
-<!-- <link rel="import" href="/bower_components/polymer/lib/utils/flattened-nodes-observer.html"> -->
+import ReduxComponent from '../redux/polymer-mixin.js';
+import { DomRepeat } from '../node_links/@polymer/polymer/lib/elements/dom-repeat.js';
+import { Debouncer } from '../node_links/@polymer/polymer/lib/utils/debounce.js';
+import Async from '../node_links/@polymer/polymer/lib/utils/async.js';
 
-<script>
-
-class MongoRepeat extends AdornisPolymerRedux(Polymer.DomRepeat) {
+class MongoRepeat extends ReduxComponent(DomRepeat) {
     static get is() {
         return 'mongo-repeat';
     }
@@ -15,7 +16,7 @@ class MongoRepeat extends AdornisPolymerRedux(Polymer.DomRepeat) {
                 // statepath and collection will be set later in the _setCollection
                 notify: true, // TODO I want to set this to notify, but then we'd have a notify property which is at the same time a redux property
             },
-            subParams: Array,
+            subParams: { type: Array, value: [] },
             debounceInterval: Number,
             collection: { type: String, value: null, observer: '_setCollection' },
 
@@ -35,7 +36,7 @@ class MongoRepeat extends AdornisPolymerRedux(Polymer.DomRepeat) {
         super();
 
         this.addEventListener('dom-change', () => {
-            Polymer.dom(this).parentNode.querySelectorAll('[slot=remove]').forEach((el) => {
+            this.parentNode.querySelectorAll('[slot=remove]').forEach((el) => {
                 el.addEventListener('tap', e => this.remove(this.modelForElement(e.currentTarget).index));
             });
         });
@@ -44,13 +45,15 @@ class MongoRepeat extends AdornisPolymerRedux(Polymer.DomRepeat) {
     _setCollection(collection) {
         // could as well do the declarative stuff in the properties but we want this with a dynamic collection and params, so...
         if (!collection) return;
+        console.log(this.subParams);
         // manual binding
+        // TODO do this with a function on statePath
         this.addEventListener('state-changed', (e) => {
             if (!e.detail[collection]) return;
             if (this.debounceInterval) {
-                this._debouncer = Polymer.Debouncer.debounce(
+                this._debouncer = Debouncer.debounce(
                     this._debouncer,
-                    Polymer.Async.timeOut.after(this.debounceInterval),
+                    Async.timeOut.after(this.debounceInterval),
                     () => this.set('items', e.detail[collection]),
                 );
             } else {
@@ -70,5 +73,3 @@ class MongoRepeat extends AdornisPolymerRedux(Polymer.DomRepeat) {
 }
 
 window.customElements.define(MongoRepeat.is, MongoRepeat);
-
-</script>

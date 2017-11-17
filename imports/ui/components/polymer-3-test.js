@@ -1,11 +1,13 @@
 import ReduxComponent from '../redux/polymer-mixin.js';
+import { Element } from '../node_links/@polymer/polymer/polymer-element.js';
+import '../redux/mongo-repeat.js';
 
 import '../node_links/@polymer/paper-input/paper-input.js';
 import '../node_links/@polymer/paper-button/paper-button.js';
 import '../node_links/@polymer/app-layout/app-header-layout/app-header-layout.js';
 import '../node_links/@polymer/app-layout/app-header/app-header.js';
 
-export class MyApp extends ReduxComponent { // eslint-disable-line
+export class MyApp extends ReduxComponent(Element) { // eslint-disable-line
 
     static get template() {
         // need innerHTML for syntax highlighting. Need to disable the linter
@@ -14,29 +16,6 @@ export class MyApp extends ReduxComponent { // eslint-disable-line
 
 <style is="custom-style" include="iron-flex iron-flex-alignment adornis"></style>
 <style>
-
-:root {font-family: sans-serif}
-.main{
-    @apply(--layout-horizontal);
-    @apply(--layout-center-center);
-}
-app-header {
-    background-color: var(--primary-color);
-    color: #fff;
-}
-app-header paper-icon-button {
-    --paper-icon-button-ink-color: white;
-}
-.print-break {
-    page-break-after: always;
-    page-break-inside: avoid;
-}
-paper-input-container input {
-    @apply(--paper-input-container-shared-input-style);
-}
-hr {
-    margin: 3em 0;
-}
 </style>
 
 <!--================== <Router> ================-->
@@ -49,7 +28,13 @@ hr {
 
 <app-header-layout class="fit layout vertical">
 
-<mongo-repeat id="mdata" collection="mongo-data" sub-params="{{subParams}}" debounce-interval="100">
+<mongo-repeat id="mdata" collection="mongo-data" sub-params="{{subParams1}}" debounce-interval="100">
+    <template>
+        <paper-card>{{item.name}}</paper-card>
+    </template>
+</mongo-repeat>
+
+<mongo-repeat id="mdata" collection="mongo-data" sub-params="{{subParams2}}" debounce-interval="100">
     <template>
         <paper-card>{{item.name}}</paper-card>
     </template>
@@ -67,25 +52,6 @@ hr {
 
 <input type="text" value="{{wasserKosten}}"></input>
 
-<hr />
-
-<!-- <div>
-<div id="inputs">
-</div>
-<div class="page-break"></div>
-<template is="dom-repeat" items="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]" index-as="index">
-<div class="layout vertical end" style="height: 60px"> -->
-<!-- TODO use svg logo -->
-<!-- <img src="/logo_neu.png" width="120" height="120" />
-</div>
-<adornis-nebenkosten-aufstellung mieter-id=""></adornis-nebenkosten-aufstellung>
-<adornis-nebenkosten></adornis-nebenkosten> -->
-<!-- <adornis-nebenkosten-zaehlerdetails mieter-id="0" style="page-break-after: always"></adornis-nebenkosten-zaehlerdetails> -->
-<!-- <adornis-nebenkosten-aufstellung mieter-id="{{item}}"></adornis-nebenkosten-aufstellung>
-<div class="print-break"></div>
-</template>
-</div> -->
-
 </app-header-layout>
 
 `;
@@ -99,9 +65,13 @@ hr {
             wasserKosten: {
                 type: Number, value: 2627.82, statePath: 'wasserKosten', dispatch: true,
             },
-            subParams: {
+            subParams1: {
                 type: Array,
                 value: [false],
+            },
+            subParams2: {
+                type: Array,
+                value: [true],
             },
         };
     }
@@ -115,7 +85,8 @@ hr {
     }
 
     _toggleFilter(e) {
-        this.set('subParams', [e.detail.value]);
+        this.set('subParams1', [e.detail.value]);
+        this.set('subParams2', [!e.detail.value]);
     }
 
     _add() {
