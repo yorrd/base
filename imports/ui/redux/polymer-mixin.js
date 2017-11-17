@@ -91,30 +91,33 @@ export default parent => class ReduxComponent extends ReduxMixin(parent) {
     }
 
     _subscribeCollection(propName, coll, statePath, paramWatchProp, isPersistent) {
-        let parameters = paramWatchProp ? this[paramWatchProp] : [];
-        if (!parameters) parameters = [];
+        if (!paramWatchProp) {
+            console.info(`${coll} at ${statePath} won't listen for param updates because there is no param property given`);
 
-        this.dispatch(
-            'subscribe',
-            parameters,
-            coll,
-            statePath,
-            isPersistent,
-        );
-        this._createMethodObserver(`_arrayUpdate("${coll}", ${propName}.*)`);
-
-        // listen for filter changes
-        const filterListenerName = `_changeFilter_${statePath}`;
-        this[filterListenerName] = (params) => {
             this.dispatch(
                 'subscribe',
-                params,
+                [],
                 coll,
                 statePath,
                 isPersistent,
             );
-        };
-        this._createPropertyObserver(paramWatchProp, filterListenerName);
+        } else {
+            // listen for filter changes
+            const filterListenerName = `_changeFilter_${statePath}`;
+            this[filterListenerName] = (params) => {
+                this.dispatch(
+                    'subscribe',
+                    params,
+                    coll,
+                    statePath,
+                    isPersistent,
+                );
+            };
+            this._createPropertyObserver(paramWatchProp, filterListenerName);
+        }
+
+        // in any case, listen for array changes (concerning the database)
+        this._createMethodObserver(`_arrayUpdate("${coll}", ${propName}.*)`);
     }
 
     _arrayUpdate(collName, diff) { // eslint-disable-line class-methods-use-this
