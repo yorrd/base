@@ -154,4 +154,4 @@ const persistentMiddleware = middlewareStore => next => (action) => {
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || (x => x); // for the debugger in the browser
 const store = createStore(reducer, {/* SSR hydration!!! */}, composeEnhancers(applyMiddleware(mongoMiddleware, persistentMiddleware)));
-ReduxMixin = PolymerRedux(store);
+export default PolymerRedux(store);
