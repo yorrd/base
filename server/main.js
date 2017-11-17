@@ -11,7 +11,7 @@ const MieterDaten = new Mongo.Collection('mieterdaten');
 
 Meteor.startup(() => {
     // code to run on server at startup
-    Meteor.publish('mongo-data', filtered => TestCollection.find(filtered ? { name: 'xxx' } : {}));
+    Meteor.publish('mongo-data', filtered => TestCollection.find(filtered ? { name: 'hihihi' } : {}));
     Meteor.publish('spendings', () => SpendingsCollection.find());
     Meteor.publish('mieterdaten', () => MieterDaten.find());
     TestCollection.allow({
@@ -105,4 +105,19 @@ customElements.define('x-hello', Hello);
 onPageLoad(async (sink) => {
     const skateOut = await render(new Hello(), true);
     // sink.appendToBody(`<div id="ssr">${skateOut}</div>`);
+    sink.appendToBody(`
+        <style>
+            @keyframes fadein {
+                from {opacity: 0;}
+                to {opacity: 1;}
+            }
+            img#loading {
+                position: absolute; left: 40vmin; right: 40vmin; bottom: 40vmin; top: 40vmin;
+                width: 20vmin; height: 20vmin;
+                animation: fadein 1s;
+                animation-delay: .5s;
+                animation-fill-mode: both;
+            }
+        </style>
+        <img id="loading" src="/loading.svg" />`);
 });

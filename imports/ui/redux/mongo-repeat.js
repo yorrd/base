@@ -37,8 +37,11 @@ class MongoRepeat extends ReduxComponent(DomRepeat) {
         super();
 
         this.addEventListener('dom-change', () => {
-            this.parentNode.querySelectorAll('[slot=remove]').forEach((el) => {
-                el.addEventListener('tap', e => this.remove(this.modelForElement(e.currentTarget).index));
+            this.parentNode.querySelectorAll('[remove]').forEach((el) => {
+                el.addEventListener('tap', (e) => {
+                    console.log(e);
+                    this.remove(this.modelForElement(e.currentTarget).index);
+                });
             });
         });
     }

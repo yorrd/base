@@ -22,4 +22,3 @@ mwc:synthesis-assets
 dynamic-import@0.2.0
 server-render@0.2.0
 static-html
-ground:db

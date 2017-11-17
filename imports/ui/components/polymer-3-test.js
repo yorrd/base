@@ -1,10 +1,10 @@
 import ReduxComponent from '../redux/polymer-mixin.js';
 import { Element } from '../node_links/@polymer/polymer/polymer-element.js';
-import '../redux/mongo-repeat.js';
-import '../redux/adornis-router.js';
+// import '../redux/mongo-repeat.js';
+// import '../redux/adornis-router.js';
+// import '../node_links/@polymer/paper-button/paper-button.js';
 
 import '../node_links/@polymer/paper-input/paper-input.js';
-import '../node_links/@polymer/paper-button/paper-button.js';
 import '../node_links/@polymer/app-layout/app-header-layout/app-header-layout.js';
 import '../node_links/@polymer/app-layout/app-header/app-header.js';
 
@@ -23,15 +23,17 @@ export class MyApp extends ReduxComponent(Element) { // eslint-disable-line
 
 <app-header-layout class="fit layout vertical">
 
-<mongo-repeat id="mdata" collection="mongo-data" sub-params="{{subParams1}}" debounce-interval="100">
+<mongo-repeat id="mdata1" collection="mongo-data" sub-params="{{subParams1}}" debounce-interval="100">
     <template>
         <paper-card>{{item.name}}</paper-card>
     </template>
 </mongo-repeat>
 
-<mongo-repeat id="mdata" collection="mongo-data" sub-params="{{subParams2}}" debounce-interval="100">
+<hr />
+
+<mongo-repeat id="mdata2" collection="spendings" sub-params="{{subParams2}}" debounce-interval="100">
     <template>
-        <paper-card>{{item.name}}</paper-card>
+        <paper-button remove>{{item.usage}}</paper-button>
     </template>
 </mongo-repeat>
 
@@ -73,10 +75,12 @@ export class MyApp extends ReduxComponent(Element) { // eslint-disable-line
 
     connectedCallback() {
         super.connectedCallback();
-        // TODO works, but with js
-        // import('./adornis-finance.html');
-        // import('./mongo-data.html');
-        // import('../bower_components/paper-button/paper-button.html');
+        setTimeout(() => {
+            import('../redux/adornis-router.js');
+            import('../redux/mongo-repeat.js');
+            import('../node_links/@polymer/paper-button/paper-button.js');
+            document.querySelector('#loading').style.display = 'none';
+        }, 1000);
     }
 
     _toggleFilter(e) {
@@ -85,12 +89,11 @@ export class MyApp extends ReduxComponent(Element) { // eslint-disable-line
     }
 
     _add() {
-        this.$.mdata.insert({ name: 'hihihi' });
+        this.$.mdata1.insert({ name: 'hihihi' });
     }
 
     handleUpdateMessage() {
-        this.$.mongoData.push('todos', { name: 'inserted via array modification' });
-        this.$.mongoData.dispatch('insert', { name: 'inserted via dispatch' }, 'mongo-data', 'mongodata_unfiltered');
+        this.$.mdata2.insert({ usage: 'afsdjlk' });
     }
 }
 

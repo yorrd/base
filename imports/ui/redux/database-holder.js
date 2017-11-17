@@ -6,7 +6,7 @@ export default class DatabaseHolder {
             if (persistent) {
                 this.databases[coll] = new Mongo.Collection(coll);
             } else {
-                this.databases[coll] = new Ground.Collection(coll);
+                this.databases[coll] = new Mongo.Collection(coll);
             }
         }
         return this.databases[coll];
