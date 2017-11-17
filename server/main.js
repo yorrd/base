@@ -40,6 +40,6 @@ Meteor.startup(() => {
     // console.log(data.length);
 });
 
-onPageLoad((sink) => {
-    sink.appendToBody('<test-layout></test-layout>');
-});
+// onPageLoad((sink) => {
+//     sink.appendToBody('<test-layout></test-layout>');
+// });
