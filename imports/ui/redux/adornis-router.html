@@ -1,0 +1,82 @@
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../redux/import-all.html">
+
+<dom-module id="adornis-router">
+    <template>
+        <app-location id="applocation" route="{{_route}}"></app-location>
+    </template>
+</dom-module>
+
+<script>
+
+class AdornisRouter extends AdornisPolymerRedux(Polymer.Element) {
+    static get is() {
+        return 'adornis-router';
+    }
+
+    static get properties() {
+        return {
+            routeObj: {
+                type: Object,
+                statePath: 'route',
+                dispatch: true,
+                persistent: true,
+                computed: '_handleRoute(_route.path)',
+            },
+            router: {
+                type: Object,
+                statePath: 'router',
+                dispatch: true,
+            },
+
+            pattern: String,
+
+            _route: Object,
+        };
+    }
+
+    ready() {
+        super.ready();
+        this.router = this;
+    }
+
+    go(location) {
+        if (location) { this.set('_route.path', location); } else {
+            this.set('_route.path', '/');
+        }
+    }
+
+    _handleRoute(path) { // eslint-disable-line class-methods-use-this
+        if (!path) return {};
+        const pathParts = path.split('/');
+        console.log(pathParts);
+        const toplevel = pathParts[1];
+        let pageType = 'home';
+        if (toplevel) {
+            switch (toplevel) {
+                    case 'search':
+                    case 'settings':
+                    case 'notes':
+                    case 'license':
+                    case 'change-languages':
+                        pageType = toplevel;
+                        break;
+                    default:
+                        if (pathParts.length > 2) pageType = 'manual';
+                        else pageType = 'manualindex';
+            }
+        }
+
+        const routeObj = {
+            manual: toplevel,
+            page: pathParts[pathParts.indexOf(toplevel) + 1],
+            pageType,
+        };
+
+        return routeObj;
+    }
+}
+
+window.customElements.define(AdornisRouter.is, AdornisRouter);
+
+</script>
