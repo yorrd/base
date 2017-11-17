@@ -39,6 +39,21 @@ const reducer = (state = {}, action) => {
                 }
                 break;
             }
+            case 'UPDATE_PAGE': {
+                if (!object.route) object.route = {};
+                object.route.page = action.value;
+                break;
+            }
+            case 'UPDATE_PAGETYPE': {
+                if (!object.route) object.route = {};
+                object.route.pagetype = action.value;
+                break;
+            }
+            case 'UPDATE_MANUAL': {
+                if (!object.route) object.route = {};
+                object.route.manual = action.value;
+                break;
+            }
             case 'RESET': {
                 object[action.statePath] = [...action.array];
                 break;
@@ -116,7 +131,7 @@ const mongoMiddleware = middlewareStore => next => (action) => {
 const persistentMiddleware = middlewareStore => next => (action) => {
     switch (action.type) {
             case 'UPDATE_POLYMER_VARIABLE': {
-                const { persistent } = action.persistent;
+                const { persistent } = action;
                 if (persistent) { localStorage.setItem(action.statePath, typeof action.value === 'string' ? action.value : JSON.stringify(action.value)); }
                 break;
             }
@@ -138,5 +153,5 @@ const persistentMiddleware = middlewareStore => next => (action) => {
 };
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || (x => x); // for the debugger in the browser
-const store = createStore(reducer, {/* SSR hydration!!! */}, composeEnhancers(applyMiddleware([mongoMiddleware, persistentMiddleware])));
+const store = createStore(reducer, {/* SSR hydration!!! */}, composeEnhancers(applyMiddleware(mongoMiddleware, persistentMiddleware)));
 ReduxMixin = PolymerRedux(store);
