@@ -1,7 +1,7 @@
 import ReduxComponent from '../redux/polymer-mixin.js';
 import { DomRepeat } from '../node_links/@polymer/polymer/lib/elements/dom-repeat.js';
 import { Debouncer } from '../node_links/@polymer/polymer/lib/utils/debounce.js';
-import Async from '../node_links/@polymer/polymer/lib/utils/async.js';
+import { timeOut } from '../node_links/@polymer/polymer/lib/utils/async.js';
 
 class MongoRepeat extends ReduxComponent(DomRepeat) {
     static get is() {
@@ -46,7 +46,6 @@ class MongoRepeat extends ReduxComponent(DomRepeat) {
     _setCollection(collection) {
         // could as well do the declarative stuff in the properties but we want this with a dynamic collection and params, so...
         if (!collection) return;
-        console.log(this.subParams);
         // manual binding
         // TODO do this with a function on statePath
         this.addEventListener('state-changed', (e) => {
@@ -54,7 +53,7 @@ class MongoRepeat extends ReduxComponent(DomRepeat) {
             if (this.debounceInterval) {
                 this._debouncer = Debouncer.debounce(
                     this._debouncer,
-                    Async.timeOut.after(this.debounceInterval),
+                    timeOut.after(this.debounceInterval),
                     () => this.set('items', e.detail[collection]),
                 );
             } else {

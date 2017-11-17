@@ -106,7 +106,6 @@ export default parent => class ReduxComponent extends ReduxMixin(parent) {
         // listen for filter changes
         const filterListenerName = `_changeFilter_${statePath}`;
         this[filterListenerName] = (params) => {
-            console.log(this, params);
             this.dispatch(
                 'subscribe',
                 params,
