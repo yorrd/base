@@ -79,7 +79,7 @@ AdornisPolymerRedux = Parent => class AdornisPolymerRedux extends ReduxMixin(Par
         Object.keys(props)
             .filter(prop => !props[prop].dispatch && props[prop].statePath)
             .forEach((trackedProp) => {
-                if (props[trackedProp].value) throw new Error(`there should be no value on the dispatch field ${trackedProp}`);
+                if (props[trackedProp].value) throw new Error(`there should be no value on the non dispatch field ${trackedProp}`);
             });
 
         Object.keys(props)
@@ -146,7 +146,7 @@ AdornisPolymerRedux = Parent => class AdornisPolymerRedux extends ReduxMixin(Par
 
         // this should only run if there are deeper level updates in an object within the array from the database
         if (diff.path.indexOf('.') === -1 || diff.path.indexOf('.splices') > -1) return;
-        const id = (diff.path.split('.')[1]);
+        const id = (diff.path.split('localize.')[1]);
         const dbObj = diff.base[id];
         // will automatically trigger the mongo observer which will then update the data in the store
         DatabaseHolder.getDatabase(collName).update({ _id: dbObj._id }, { $set: dbObj });
