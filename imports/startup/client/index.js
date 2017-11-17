@@ -9,3 +9,4 @@ window.addEventListener('WebComponentsReady', () => {
 });
 
 import('./web-worker.js');
+import('./receive-ssr.js');

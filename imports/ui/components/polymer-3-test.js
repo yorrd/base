@@ -65,7 +65,7 @@ hr {
 
 <hr />
 
-<adornis-finance></adornis-finance>
+<input type="text" value="{{wasserKosten}}"></input>
 
 <hr />
 
