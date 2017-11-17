@@ -66,6 +66,10 @@ export default class ReduxComponent extends ReduxMixin(Element) {
                     });
                 };
 
+                // handle persistency
+                const { persistent } = props[trackedProp];
+                if (persistent) { localStorage.setItem(statePath, typeof newVal === 'string' ? newVal : JSON.stringify(newVal)); }
+
                 this._createPropertyObserver(trackedProp, listenerName);
             });
 
@@ -74,6 +78,21 @@ export default class ReduxComponent extends ReduxMixin(Element) {
             .filter(prop => !props[prop].dispatch && props[prop].statePath)
             .forEach((trackedProp) => {
                 if (props[trackedProp].value) throw new Error(`there should be no value on the dispatch field ${trackedProp}`);
+            });
+
+        Object.keys(props)
+            .filter(prop => props[prop].persistent)
+            .forEach((trackedProp) => {
+                if (!props[trackedProp].dispatch) throw new Error('when using persistent you have to use dispatch as well');
+                const { statePath } = props[trackedProp];
+                const value = localStorage.getItem(statePath);
+
+                // one time dispatch you have to use polymer-variables to change value
+                this.dispatch({
+                    type: 'LOAD_PERSISTENT',
+                    statePath,
+                    value,
+                });
             });
     }
 

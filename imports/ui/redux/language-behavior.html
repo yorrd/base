@@ -4,8 +4,8 @@ LanguageBehavior = {
     properties: {
         translations: {
             type: Array,
+            statePath: 'translations',
             value: [],
-            notify: true,
         },
         language: {
             type: String,
@@ -14,6 +14,10 @@ LanguageBehavior = {
             observer: '_resubscribe',
         },
 
+        subParams2: {
+            type: Array,
+            computed: '_computeSubParams(language)',
+        },
         l: {
             type: Function,
             computed: '_computeLocalize(translations)',
@@ -22,38 +26,28 @@ LanguageBehavior = {
 
     _resubscribe() {
         // manual binding
-        this.addEventListener('state-changed', (e) => {
-            if (!e.detail.languages) return;
-            if (this.debounceInterval) {
-                this._debouncer = Polymer.Debouncer.debounce(
-                    this._debouncer,
-                    Polymer.Async.timeOut.after(this.debounceInterval),
-                    () => this.set('translations', e.detail.languages),
-                );
-            } else {
-                this.set('translations', e.detail.languages);
-            }
-            // console.log(e.detail.languages);
-        });
-        console.log(this.persistentCollection);
-        this._subscribeCollection('items', 'languages', 'languages', 'subParams', this.persistentCollection);
+        this._subscribeCollection('translations', 'translations', 'translations', 'subParams2', this.persistentCollection);
     },
 
-    _computeLocalize(x) {
-        console.log('translations', this.translations);
+    _computeLocalize(language) {
         return function y() {
             const key = arguments[0];
-            console.log('localize', key, this.translations);
             let value = '';
-            this.translations.filter((translation) => {
-                if (translation.key === key) {
-                    value = translation.value;
-                    return true;
-                }
-                return false;
-            });
+            if (this.translations) {
+                this.translations.filter((translation) => {
+                    if (translation.key === key) {
+                        value = translation.value;
+                        return true;
+                    }
+                    return false;
+                });
+            }
             return value;
         };
+    },
+
+    _computeSubParams(lang) {
+        return [lang];
     },
 };
 </script>

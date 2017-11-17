@@ -52,6 +52,11 @@ const reducer = (state = {}, action) => {
         object[action.statePath] = action.value;
     }
 
+    // insert polymer tracked variables
+    if (action.type === 'UPDATE_POLYMER_VARIABLE') {
+        object[action.statePath] = action.value;
+    }
+
     // TODO could / should use combineReducers here
     return Object.assign(object, {
     });
@@ -73,7 +78,7 @@ const mongoMiddleware = middlewareStore => next => (action) => {
                     statePath: action.statePath,
                     array: [],
                 });
-                const obsHandle = DatabaseHolder.getDatabase(action.collection).find({}).observe({
+                const obsHandle = DatabaseHolder.getDatabase(action.collection, action.isPersistent).find({}).observe({
                     added: (doc) => {
                         middlewareStore.dispatch({
                             type: 'ADDED_DOC',

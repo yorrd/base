@@ -1,8 +1,14 @@
 export default class DatabaseHolder {
-    static getDatabase(coll) {
+    static getDatabase(coll, persistent) {
         if (!coll) throw new Error('can\'t get collection undefined');
         if (!this.databases) this.databases = {};
-        if (!this.databases[coll]) { this.databases[coll] = new Mongo.Collection(coll); }
+        if (!this.databases[coll]) {
+            if (persistent) {
+                this.databases[coll] = new Mongo.Collection(coll);
+            } else {
+                this.databases[coll] = new Ground.Collection(coll);
+            }
+        }
         return this.databases[coll];
     }
     static setObserverHandle(statePath, handle, collection, params) {
