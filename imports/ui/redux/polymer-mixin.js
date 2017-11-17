@@ -95,8 +95,8 @@ export default parent => class ReduxComponent extends ReduxMixin(parent) {
             });
     }
 
-    _subscribeCollection(propName, coll, statePath, paramWatchProp) {
-        let parameters = this[paramWatchProp];
+    _subscribeCollection(propName, coll, statePath, paramWatchProp, isPersistent) {
+        let parameters = paramWatchProp ? this[paramWatchProp] : [];
         if (!parameters) parameters = [];
 
         this.dispatch(
@@ -104,6 +104,7 @@ export default parent => class ReduxComponent extends ReduxMixin(parent) {
             parameters,
             coll,
             statePath,
+            isPersistent,
         );
         this._createMethodObserver(`_arrayUpdate("${coll}", ${propName}.*)`);
 
@@ -116,6 +117,7 @@ export default parent => class ReduxComponent extends ReduxMixin(parent) {
                 params,
                 coll,
                 statePath,
+                isPersistent,
             );
         };
         this._createPropertyObserver(paramWatchProp, filterListenerName);
