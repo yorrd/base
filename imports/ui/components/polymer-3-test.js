@@ -1,6 +1,7 @@
 import ReduxComponent from '../redux/polymer-mixin.js';
 import { Element } from '../node_links/@polymer/polymer/polymer-element.js';
 import '../redux/mongo-repeat.js';
+import '../redux/adornis-router.js';
 
 import '../node_links/@polymer/paper-input/paper-input.js';
 import '../node_links/@polymer/paper-button/paper-button.js';
@@ -18,13 +19,7 @@ export class MyApp extends ReduxComponent(Element) { // eslint-disable-line
 <style>
 </style>
 
-<!--================== <Router> ================-->
-
-<app-location route="{{route}}"></app-location>
-
-<app-route route="{{route}}" pattern="/:page" data="{{routeData}}"></app-route>
-
-<!--================= </Router> ================-->
+<adornis-router></adornis-router>
 
 <app-header-layout class="fit layout vertical">
 
