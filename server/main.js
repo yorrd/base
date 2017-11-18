@@ -12,7 +12,7 @@ const MieterDaten = new Mongo.Collection('mieterdaten');
 Meteor.startup(() => {
     // code to run on server at startup
     Meteor.publish('mongo-data', filtered => TestCollection.find(filtered ? { name: 'hihihi' } : {}));
-    Meteor.publish('spendings', () => SpendingsCollection.find());
+    Meteor.publish('spendings', usage => SpendingsCollection.find({ usage }));
     Meteor.publish('mieterdaten', () => MieterDaten.find());
     TestCollection.allow({
         insert: () => true,
@@ -112,7 +112,8 @@ onPageLoad(async (sink) => {
                 to {opacity: 1;}
             }
             img#loading {
-                position: absolute; left: 40vmin; right: 40vmin; bottom: 40vmin; top: 40vmin;
+                position: absolute;
+                left: 40vmin; right: 40vmin; bottom: 40vmin; top: 40vmin;
                 width: 20vmin; height: 20vmin;
                 animation: fadein 1s;
                 animation-delay: .5s;

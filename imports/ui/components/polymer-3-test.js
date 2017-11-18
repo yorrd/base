@@ -68,19 +68,17 @@ export class MyApp extends ReduxComponent(Element) { // eslint-disable-line
             },
             subParams2: {
                 type: Array,
-                value: [true],
+                value: ['useful usage'],
             },
         };
     }
 
     connectedCallback() {
         super.connectedCallback();
-        setTimeout(() => {
-            import('../redux/adornis-router.js');
-            import('../redux/mongo-repeat.js');
-            import('../node_links/@polymer/paper-button/paper-button.js');
-            document.querySelector('#loading').style.display = 'none';
-        }, 1000);
+        import('../redux/adornis-router.js');
+        import('../redux/mongo-repeat.js');
+        import('../node_links/@polymer/paper-button/paper-button.js');
+        document.querySelector('#loading').style.display = 'none';
     }
 
     _toggleFilter(e) {
@@ -93,7 +91,7 @@ export class MyApp extends ReduxComponent(Element) { // eslint-disable-line
     }
 
     handleUpdateMessage() {
-        this.$.mdata2.insert({ usage: 'afsdjlk' });
+        this.$.mdata2.insert({ usage: 'useful usage' });
     }
 }
 
