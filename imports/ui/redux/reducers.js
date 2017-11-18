@@ -54,6 +54,11 @@ const reducer = (state = {}, action) => {
                 object.route.manual = action.value;
                 break;
             }
+            case 'UPDATE_TAIL': {
+                if (!object.route) object.route = {};
+                object.route.tail = action.value;
+                break;
+            }
             case 'RESET': {
                 object[action.statePath] = [...action.array];
                 break;
