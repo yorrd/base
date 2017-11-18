@@ -1,8 +1,5 @@
 import ReduxComponent from '../redux/polymer-mixin.js';
 import { Element } from '../node_links/@polymer/polymer/polymer-element.js';
-// import '../redux/mongo-repeat.js';
-// import '../redux/adornis-router.js';
-// import '../node_links/@polymer/paper-button/paper-button.js';
 
 import '../node_links/@polymer/paper-input/paper-input.js';
 import '../node_links/@polymer/app-layout/app-header-layout/app-header-layout.js';
@@ -23,7 +20,7 @@ export class MyApp extends ReduxComponent(Element) { // eslint-disable-line
 
 <app-header-layout class="fit layout vertical">
 
-<mongo-repeat id="mdata1" collection="mongo-data" sub-params="{{subParams1}}" debounce-interval="100">
+<mongo-repeat id="mdata1" collection="mongo-data" sub-params="{{subParams1}}">
     <template>
         <paper-card>{{item.name}}</paper-card>
     </template>
@@ -31,7 +28,7 @@ export class MyApp extends ReduxComponent(Element) { // eslint-disable-line
 
 <hr />
 
-<mongo-repeat id="mdata2" collection="spendings" sub-params="{{subParams2}}" debounce-interval="100">
+<mongo-repeat id="mdata2" collection="spendings" sub-params="{{subParams2}}">
     <template>
         <paper-button remove>{{item.usage}}</paper-button>
     </template>
