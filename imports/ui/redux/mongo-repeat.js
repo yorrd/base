@@ -16,7 +16,6 @@ class MongoRepeat extends ReduxComponent(DomRepeat) {
                 // collection will be set later in the _setCollection
                 statePath(state) { return state[this.collection]; },
                 notify: true, // exception for the redux paradigm of not binding to the parent, this is only because it's a "builtin"
-                observer: 'print',
             },
             subParams: { type: Array, value: [] },
             debounceInterval: Number,
