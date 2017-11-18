@@ -1,7 +1,6 @@
 import ReduxComponent from '../redux/polymer-mixin.js';
 import { DomRepeat } from '../node_links/@polymer/polymer/lib/elements/dom-repeat.js';
-import { Debouncer } from '../node_links/@polymer/polymer/lib/utils/debounce.js';
-import { timeOut } from '../node_links/@polymer/polymer/lib/utils/async.js';
+import { afterNextRender } from '../node_links/@polymer/polymer/lib/utils/render-status.js';
 
 class MongoRepeat extends ReduxComponent(DomRepeat) {
     static get is() {
@@ -16,10 +15,8 @@ class MongoRepeat extends ReduxComponent(DomRepeat) {
                 // collection will be set later in the _setCollection
                 statePath(state) { return state[this.collection]; },
                 notify: true, // exception for the redux paradigm of not binding to the parent, this is only because it's a "builtin"
-                observer: 'print',
             },
             subParams: { type: Array, value: [] },
-            debounceInterval: Number,
             collection: { type: String, value: null, observer: '_setCollection' },
             persistentCollection: { type: Boolean, value: false },
 
@@ -38,11 +35,13 @@ class MongoRepeat extends ReduxComponent(DomRepeat) {
     constructor() {
         super();
 
-        const f = e => this.remove(this.modelForElement(e.currentTarget).index);
-        this.addEventListener('dom-change', () => {
-            this.parentNode.querySelectorAll('[remove]').forEach((el) => {
-                el.removeEventListener('tap', f);
-                el.addEventListener('tap', f);
+        afterNextRender(this, () => {
+            const f = e => this.remove(this.modelForElement(e.currentTarget).index);
+            this.addEventListener('dom-change', () => {
+                this.parentNode.querySelectorAll('[remove]').forEach((el) => {
+                    el.removeEventListener('tap', f);
+                    el.addEventListener('tap', f);
+                });
             });
         });
     }
