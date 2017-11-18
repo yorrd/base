@@ -93,10 +93,8 @@ const mongoMiddleware = middlewareStore => next => (action) => {
                     statePath: action.statePath,
                     array: [],
                 });
-                console.log('sub', action);
                 const obsHandle = DatabaseHolder.getDatabase(action.collection, action.isPersistent).find({}).observe({
                     added: (doc) => {
-                        console.log('add');
                         middlewareStore.dispatch({
                             type: 'ADDED_DOC',
                             statePath: action.statePath,
@@ -111,7 +109,6 @@ const mongoMiddleware = middlewareStore => next => (action) => {
                         });
                     },
                     removed: (doc) => {
-                        console.log('remove');
                         middlewareStore.dispatch({
                             type: 'REMOVED_DOC',
                             statePath: action.statePath,
@@ -119,7 +116,6 @@ const mongoMiddleware = middlewareStore => next => (action) => {
                         });
                     },
                 });
-                console.log(obsHandle);
                 DatabaseHolder.setObserverHandle(action.statePath, obsHandle, action.collection, action.parameters);
                 break;
             }
