@@ -1,5 +1,5 @@
-<script>
-LanguageBehavior = {
+
+const LanguageBehavior = {
 
     properties: {
         translations: {
@@ -29,9 +29,9 @@ LanguageBehavior = {
         this._subscribeCollection('translations', 'translations', 'translations', 'subParams2', this.persistentCollection);
     },
 
-    _computeLocalize(language) {
-        return function y() {
-            const key = arguments[0];
+    _computeLocalize() {
+        return function y(...args) {
+            const key = args[0];
             let value = '';
             if (this.translations) {
                 this.translations.filter((translation) => {
@@ -50,4 +50,4 @@ LanguageBehavior = {
         return [lang];
     },
 };
-</script>
+export default LanguageBehavior;
