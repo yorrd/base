@@ -70,11 +70,11 @@ export default parent => class ReduxComponent extends ReduxMixin(parent) {
             });
 
         // if there is no dispatch but a statepath, don't allow a value, would be overridden instantly anyways
-        Object.keys(props)
-            .filter(prop => !props[prop].dispatch && props[prop].statePath)
-            .forEach((trackedProp) => {
-                if (props[trackedProp].value) throw new Error(`there should be no value on the dispatch field ${trackedProp}`);
-            });
+        // Object.keys(props)
+        //     .filter(prop => !props[prop].dispatch && props[prop].statePath)
+        //     .forEach((trackedProp) => {
+        //         if (props[trackedProp].value) throw new Error(`there should be no value on the dispatch field ${trackedProp}`);
+        //     });
 
         Object.keys(props)
             .filter(prop => props[prop].persistent)

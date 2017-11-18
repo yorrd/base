@@ -13,8 +13,10 @@ class MongoRepeat extends ReduxComponent(DomRepeat) {
             items: {
                 type: Array,
                 value: [],
-                // statepath and collection will be set later in the _setCollection
-                notify: true, // TODO I want to set this to notify, but then we'd have a notify property which is at the same time a redux property
+                // collection will be set later in the _setCollection
+                statePath(state) { return state[this.collection]; },
+                notify: true, // exception for the redux paradigm of not binding to the parent, this is only because it's a "builtin"
+                observer: 'print',
             },
             subParams: { type: Array, value: [] },
             debounceInterval: Number,
@@ -46,22 +48,7 @@ class MongoRepeat extends ReduxComponent(DomRepeat) {
     }
 
     _setCollection(collection) {
-        // could as well do the declarative stuff in the properties but we want this with a dynamic collection and params, so...
         if (!collection) return;
-        // manual binding
-        // TODO do this with a function on statePath
-        this.addEventListener('state-changed', (e) => {
-            if (!e.detail[collection]) return;
-            if (this.debounceInterval) {
-                this._debouncer = Debouncer.debounce(
-                    this._debouncer,
-                    timeOut.after(this.debounceInterval),
-                    () => this.set('items', e.detail[collection]),
-                );
-            } else {
-                this.set('items', e.detail[collection]);
-            }
-        });
         this._subscribeCollection('items', collection, collection, 'subParams', this.persistentCollection);
     }
 
