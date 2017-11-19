@@ -6,7 +6,6 @@ import './polymer-mixin.js';
 
 class AdornisRouter extends ReduxComponent(Element) {
     static get template() {
-        // eslint-disable-next-line
         return innerHTML = `
             <app-location id="applocation" route="{{_route}}"></app-location>
         `;
@@ -23,8 +22,12 @@ class AdornisRouter extends ReduxComponent(Element) {
             },
             routePageType: {
                 type: String,
-                statePath: 'route.pageType',
-                observer: '_print',
+                statePath: 'route.pagetype',
+                observer: 'print',
+            },
+            routeTail: {
+                type: String,
+                statePath: 'route.tail',
             },
             goToRoute: {
                 type: String,
@@ -42,11 +45,6 @@ class AdornisRouter extends ReduxComponent(Element) {
         };
     }
 
-    ready() {
-        super.ready();
-        this.router = this;
-    }
-
     go(location) {
         if (location) { this.set('_route.path', location); } else {
             this.set('_route.path', '/');
@@ -58,6 +56,7 @@ class AdornisRouter extends ReduxComponent(Element) {
         if (!path) return;
         const pathParts = path.split('/');
         const toplevel = pathParts[1];
+        const tail = pathParts.slice(3).join('/');
         let pageType = 'home';
         if (toplevel) {
             switch (toplevel) {
@@ -74,9 +73,10 @@ class AdornisRouter extends ReduxComponent(Element) {
             }
         }
 
-        this.dispatch({ type: 'UPDATE_PAGE', value: toplevel });
-        this.dispatch({ type: 'UPDATE_MANUAL', value: pathParts[pathParts.indexOf(toplevel) + 1] });
+        this.dispatch({ type: 'UPDATE_MANUAL', value: toplevel });
+        this.dispatch({ type: 'UPDATE_PAGE', value: pathParts[pathParts.indexOf(toplevel) + 1] });
         this.dispatch({ type: 'UPDATE_PAGETYPE', value: pageType });
+        this.dispatch({ type: 'UPDATE_TAIL', value: tail });
     }
 }
 
