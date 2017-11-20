@@ -169,6 +169,10 @@ export default parent => class ReduxComponent extends ReduxMixin(parent) {
         return `${numArr[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.')},${numArr[1]} ${unit}`;
     }
 
+    num(val, digits = Infinity) { // eslint-disable-line class-methods-use-this
+        return +(+val).toFixed(digits);
+    }
+
     date(date) { // eslint-disable-line class-methods-use-this
         const monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
         const d = new Date(date);

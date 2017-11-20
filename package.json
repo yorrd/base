@@ -8,6 +8,7 @@
     "testdeploy": "scripts/testDeploy.sh"
   },
   "dependencies": {
+    "@adornis/polymerredux": "ssh://gogs@adornis.de:Components/PolymerRedux.git",
     "@polymer/app-layout": "^3.0.0-pre.1",
     "@polymer/app-route": "^3.0.0-pre.1",
     "@polymer/paper-button": "^3.0.0-pre.1",
