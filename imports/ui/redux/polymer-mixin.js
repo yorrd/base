@@ -105,13 +105,17 @@ export default parent => class ReduxComponent extends ReduxMixin(parent) {
             // listen for filter changes
             const filterListenerName = `_changeFilter_${statePath}`;
             this[filterListenerName] = (params) => {
-                this.dispatch(
-                    'subscribe',
-                    params,
-                    coll,
-                    statePath,
-                    isPersistent,
-                );
+                // set timeout here because we don't want to execute this before the actual change has been committed
+                // otherwise, we're taking an old value
+                setTimeout(() => {
+                    this.dispatch(
+                        'subscribe',
+                        params,
+                        coll,
+                        statePath,
+                        isPersistent,
+                    );
+                });
             };
             this._createPropertyObserver(paramWatchProp, filterListenerName);
         }
