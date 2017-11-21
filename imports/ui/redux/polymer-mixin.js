@@ -179,7 +179,11 @@ export default parent => class ReduxComponent extends ReduxMixin(parent) {
         return `${d.getDay()}. ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
     }
 
-    print(...x) { // eslint-disable-line class-methods-use-this
+    log(...x) { // eslint-disable-line class-methods-use-this
         console.log(x);
+    }
+
+    print(x) { // eslint-disable-line class-methods-use-this
+        return JSON.stringify(x);
     }
 };
