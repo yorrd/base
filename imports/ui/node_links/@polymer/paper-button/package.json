@@ -1,11 +1,48 @@
 {
-  "name": "@polymer/paper-button",
-  "flat": true,
-  "version": "3.0.0-pre.1",
-  "description": "Material design button",
-  "contributors": [
-    "The Polymer Authors"
+  "_from": "@polymer/paper-button@^3.0.0-pre.1",
+  "_id": "@polymer/paper-button@3.0.0-pre.1",
+  "_inBundle": false,
+  "_integrity": "sha512-W/zKAsbqGg6h1Ob2dM9qH28K216Eea4nXenOf3RugBU8JkEK95w2ul25fRQP5Fq153B6BxNi9osoCXMmdehsJA==",
+  "_location": "/@polymer/paper-button",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "@polymer/paper-button@^3.0.0-pre.1",
+    "name": "@polymer/paper-button",
+    "escapedName": "@polymer%2fpaper-button",
+    "scope": "@polymer",
+    "rawSpec": "^3.0.0-pre.1",
+    "saveSpec": null,
+    "fetchSpec": "^3.0.0-pre.1"
+  },
+  "_requiredBy": [
+    "/"
   ],
+  "_resolved": "https://registry.npmjs.org/@polymer/paper-button/-/paper-button-3.0.0-pre.1.tgz",
+  "_shasum": "3376fb2fc543d9b09f752d8da856c80292de0e6a",
+  "_spec": "@polymer/paper-button@^3.0.0-pre.1",
+  "_where": "/home/yorrd/PhpstormProjects/basePolymer2Proj",
+  "bugs": {
+    "url": "https://github.com/PolymerElements/paper-button/issues"
+  },
+  "bundleDependencies": false,
+  "contributors": [
+    {
+      "name": "The Polymer Authors"
+    }
+  ],
+  "dependencies": {
+    "@polymer/iron-flex-layout": "^3.0.0-pre.1",
+    "@polymer/paper-behaviors": "^3.0.0-pre.1",
+    "@polymer/paper-styles": "^3.0.0-pre.1",
+    "@polymer/polymer": "^3.0.0-pre.1"
+  },
+  "deprecated": false,
+  "description": "Material design button",
+  "devDependencies": {},
+  "flat": true,
+  "homepage": "https://github.com/PolymerElements/paper-button",
   "keywords": [
     "web-components",
     "web-component",
@@ -13,18 +50,12 @@
     "paper",
     "button"
   ],
+  "license": "http://polymer.github.io/LICENSE.txt",
   "main": "paper-button.html",
+  "name": "@polymer/paper-button",
   "repository": {
     "type": "git",
     "url": "git://github.com/PolymerElements/paper-button.git"
   },
-  "license": "http://polymer.github.io/LICENSE.txt",
-  "homepage": "https://github.com/PolymerElements/paper-button",
-  "dependencies": {
-    "@polymer/polymer": "^3.0.0-pre.1",
-    "@polymer/iron-flex-layout": "^3.0.0-pre.1",
-    "@polymer/paper-behaviors": "^3.0.0-pre.1",
-    "@polymer/paper-styles": "^3.0.0-pre.1"
-  },
-  "devDependencies": {}
+  "version": "3.0.0-pre.1"
 }

@@ -17,6 +17,7 @@ class MongoRepeat extends AdornisMongoMixin(DomRepeat) {
                 notify: true, // exception for the redux paradigm of not binding to the parent, this is only because it's a "builtin"
             },
             subParams: { type: Array, value: [] },
+            subFilter: { type: Object, value: {} },
             collection: { type: String, value: null, observer: '_setCollection' },
             persistentCollection: { type: Boolean, value: false },
 
@@ -36,7 +37,14 @@ class MongoRepeat extends AdornisMongoMixin(DomRepeat) {
         super();
 
         afterNextRender(this, () => {
-            const f = e => this.remove(this.modelForElement(e.currentTarget).index);
+            const f = (e) => {
+                if (this.modelForElement(e.currentTarget)) {
+                    this.remove(this.modelForElement(e.currentTarget).index);
+                } else {
+                    // I'm guessing this is because of concurrency. Can actually ignore it
+                    console.warn('trying to remove an element with this event, but there is no currentTarget in there', e.currentTarget);
+                }
+            };
             this.addEventListener('dom-change', () => {
                 this.parentNode.querySelectorAll('[remove]').forEach((el) => {
                     el.removeEventListener('tap', f);
@@ -48,7 +56,7 @@ class MongoRepeat extends AdornisMongoMixin(DomRepeat) {
 
     _setCollection(collection) {
         if (!collection) return;
-        this._subscribeCollection('items', collection, collection, 'subParams', this.persistentCollection);
+        this._subscribeCollection('items', collection, collection, 'subParams', this.persistentCollection, 'subFilter');
     }
 
     insert(obj) {

@@ -2,6 +2,7 @@ import AdornisMongoMixin from '../redux/adornis-mongo-mixin.js';
 import { Element } from '../node_links/@polymer/polymer/polymer-element.js';
 
 import '../node_links/@polymer/paper-input/paper-input.js';
+import '../node_links/@polymer/paper-toggle-button/paper-toggle-button.js';
 import '../node_links/@polymer/app-layout/app-header-layout/app-header-layout.js';
 import '../node_links/@polymer/app-layout/app-header/app-header.js';
 
@@ -20,11 +21,13 @@ export class MyApp extends AdornisMongoMixin(Element) { // eslint-disable-line
 
 <app-header-layout class="fit layout vertical">
 
-<mongo-repeat id="mdata1" collection="mongo-data" sub-params="{{subParams1}}">
+<mongo-repeat id="mdata1" collection="mongo-data" sub-params="{{subParams1}}" sub-filter="{{filter}}">
     <template>
         <paper-card>{{item.name}}</paper-card>
     </template>
 </mongo-repeat>
+<paper-toggle-button on-checked-changed="_switchFilter"></paper-toggle-button> toggle filter
+{{print(filter)}}
 
 <hr />
 
@@ -34,13 +37,13 @@ export class MyApp extends AdornisMongoMixin(Element) { // eslint-disable-line
     </template>
 </mongo-repeat>
 
-<paper-toggle-button on-checked-changed="_toggleFilter"></paper-toggle-button>
+<paper-toggle-button on-checked-changed="_toggleParams"></paper-toggle-button> toggle params
 <paper-button on-tap="_add">add</paper-button>
 
 <hr />
 
 <paper-button on-click="handleUpdateMessage">Insert Hallo Welt</paper-button>
-<mongo-data id="mongoData" filter="{{filter}}"></mongo-data>
+<mongo-data id="mongoData" filter="{{params}}"></mongo-data>
 
 <hr />
 
@@ -71,6 +74,10 @@ multiplied 3 and 4 {{mul(3, 4)}}
                 type: Array,
                 value: ['useful usage'],
             },
+            filter: {
+                type: Object,
+                value: {name: 'hihihi'}
+            }
         };
     }
 
@@ -82,17 +89,20 @@ multiplied 3 and 4 {{mul(3, 4)}}
         document.querySelector('#loading').style.display = 'none';
     }
 
-    _toggleFilter(e) {
-        this.set('subParams1', [e.detail.value]);
-        this.set('subParams2', [!e.detail.value]);
+    _toggleParams(e) {
+        this.set('subParams2', e.detail.value ? ['useful usage'] : []);
     }
 
     _add() {
-        this.$.mdata1.insert({ name: 'hihihi' });
+        this.$.mdata1.insert({ name: 'hihihi' + Math.floor(Math.random() * 10) });
     }
 
     handleUpdateMessage() {
         this.$.mdata2.insert({ usage: 'useful usage' });
+    }
+
+    _switchFilter(e) {
+        this.filter = !e.detail.value ? {} : {name: 'hihihi'};
     }
 }
 

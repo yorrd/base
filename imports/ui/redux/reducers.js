@@ -101,7 +101,7 @@ const mongoMiddleware = middlewareStore => next => (action) => {
                 statePath: action.statePath,
                 array: [],
             });
-            const obsHandle = DatabaseHolder.getDatabase(action.collection, action.isPersistent).find({}).observe({
+            const obsHandle = DatabaseHolder.getDatabase(action.collection, action.isPersistent).find(action.filter).observe({
                 added: (doc) => {
                     middlewareStore.dispatch({
                         type: 'ADDED_DOC',

@@ -22,13 +22,15 @@ export default parent => class AdornisMongoMixin extends AdornisMixin(parent) {
                     id,
                 };
             },
-            subscribe(params, collection, statePath) {
+            subscribe(params, collection, statePath, isPersistent, filter) {
                 if (!params || !collection || !statePath) throw new Error('no params, collection or statePath given');
                 return {
                     type: 'SUBSCRIBE',
                     parameters: params,
                     collection,
                     statePath,
+                    isPersistent,
+                    filter,
                 };
             },
         };
@@ -91,9 +93,10 @@ export default parent => class AdornisMongoMixin extends AdornisMixin(parent) {
             });
     }
 
-    _subscribeCollection(propName, coll, statePath, paramWatchProp, isPersistent) {
-        if (!paramWatchProp) {
+    _subscribeCollection(propName, coll, statePath, paramWatchProp, isPersistent, filterWatchProp) {
+        if (!paramWatchProp && !filterWatchProp) {
             console.info(`${coll} at ${statePath} won't listen for param updates because there is no param property given`);
+            console.info(`${coll} at ${statePath} won't listen for filter updates because there is no filter property given`);
 
             this.dispatch(
                 'subscribe',
@@ -101,11 +104,12 @@ export default parent => class AdornisMongoMixin extends AdornisMixin(parent) {
                 coll,
                 statePath,
                 isPersistent,
+                {},
             );
-        } else {
+        } else if (paramWatchProp && !filterWatchProp) {
             // listen for filter changes
-            const filterListenerName = `_changeFilter_${statePath}`;
-            this[filterListenerName] = (params) => {
+            const paramListenerName = `_changeParam_${statePath}`;
+            this[paramListenerName] = (params) => {
                 // set timeout here because we don't want to execute this before the actual change has been committed
                 // otherwise, we're taking an old value
                 setTimeout(() => {
@@ -115,10 +119,49 @@ export default parent => class AdornisMongoMixin extends AdornisMixin(parent) {
                         coll,
                         statePath,
                         isPersistent,
+                        {},
                     );
                 });
             };
-            this._createPropertyObserver(paramWatchProp, filterListenerName);
+            this._createPropertyObserver(paramWatchProp, paramListenerName);
+        } else if (!paramWatchProp && filterWatchProp) {
+            // listen for filter changes
+            const filterListenerName = `_changeFilter_${statePath}`;
+            this[filterListenerName] = (filter) => {
+                // set timeout here because we don't want to execute this before the actual change has been committed
+                // otherwise, we're taking an old value
+                setTimeout(() => {
+                    this.dispatch(
+                        'subscribe',
+                        [],
+                        coll,
+                        statePath,
+                        isPersistent,
+                        filter,
+                    );
+                });
+            };
+            this._createPropertyObserver(filterWatchProp, filterListenerName);
+        } else if (paramWatchProp && filterWatchProp) {
+            const paramFilterListenerName = `_changeParamOrFilter_${statePath}`;
+            // set timeout here because we don't want to execute this before the actual change has been committed
+            // otherwise, we're taking an old value
+            this[paramFilterListenerName] = () => {
+                // set timeout here because we don't want to execute this before the actual change has been committed
+                // otherwise, we're taking an old value
+                setTimeout(() => {
+                    this.dispatch(
+                        'subscribe',
+                        this[paramWatchProp],
+                        coll,
+                        statePath,
+                        isPersistent,
+                        this[filterWatchProp],
+                    );
+                });
+            };
+            this._createPropertyObserver(paramWatchProp, paramFilterListenerName);
+            this._createPropertyObserver(filterWatchProp, paramFilterListenerName);
         }
 
         // in any case, listen for array changes (concerning the database)

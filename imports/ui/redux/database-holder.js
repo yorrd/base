@@ -14,13 +14,12 @@ export default class DatabaseHolder {
     static setObserverHandle(statePath, handle, collection, params) {
         if (!this.observerHandles) this.observerHandles = [];
         DatabaseHolder.stopObserverHandle(statePath);
-        this.observerHandles[statePath] = { obs: handle, sub: Meteor.subscribe(collection, ...params) };
+        Meteor.subscribe(collection, ...params);
+        this.observerHandles[statePath] = handle;
     }
     static stopObserverHandle(statePath) {
         if (!this.observerHandles) this.observerHandles = [];
-        if (this.observerHandles[statePath]) {
-            this.observerHandles[statePath].obs.stop();
-            this.observerHandles[statePath].sub.stop();
-        }
+        // we don't need to stop the meteor subscription because they're made to combine, not to reset when you resubscribe
+        if (this.observerHandles[statePath]) { this.observerHandles[statePath].stop(); }
     }
 }
