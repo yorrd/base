@@ -66,7 +66,8 @@ export default parent => class ReduxComponent extends ReduxMixin(parent) {
                     });
                 };
 
-                this._createPropertyObserver(trackedProp, listenerName);
+                // this._createPropertyObserver(trackedProp, listenerName);
+                this._createMethodObserver(`${listenerName}(${trackedProp}, ${trackedProp}.*)`);
             });
 
         // if there is no dispatch but a statepath, don't allow a value, would be overridden instantly anyways
@@ -105,13 +106,17 @@ export default parent => class ReduxComponent extends ReduxMixin(parent) {
             // listen for filter changes
             const filterListenerName = `_changeFilter_${statePath}`;
             this[filterListenerName] = (params) => {
-                this.dispatch(
-                    'subscribe',
-                    params,
-                    coll,
-                    statePath,
-                    isPersistent,
-                );
+                // set timeout here because we don't want to execute this before the actual change has been committed
+                // otherwise, we're taking an old value
+                setTimeout(() => {
+                    this.dispatch(
+                        'subscribe',
+                        params,
+                        coll,
+                        statePath,
+                        isPersistent,
+                    );
+                });
             };
             this._createPropertyObserver(paramWatchProp, filterListenerName);
         }
@@ -169,13 +174,21 @@ export default parent => class ReduxComponent extends ReduxMixin(parent) {
         return `${numArr[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.')},${numArr[1]} ${unit}`;
     }
 
+    num(val, digits = Infinity) { // eslint-disable-line class-methods-use-this
+        return +(+val).toFixed(digits);
+    }
+
     date(date) { // eslint-disable-line class-methods-use-this
         const monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
         const d = new Date(date);
         return `${d.getDay()}. ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
     }
 
-    print(...x) { // eslint-disable-line class-methods-use-this
+    log(...x) { // eslint-disable-line class-methods-use-this
         console.log(x);
+    }
+
+    print(x) { // eslint-disable-line class-methods-use-this
+        return JSON.stringify(x);
     }
 };

@@ -8,6 +8,7 @@
     "testdeploy": "scripts/testDeploy.sh"
   },
   "dependencies": {
+    "@adornis/polymerredux": "git+ssh://gogs@adornis.de:components/PolymerRedux.git",
     "@polymer/app-layout": "^3.0.0-pre.1",
     "@polymer/app-route": "^3.0.0-pre.1",
     "@polymer/paper-button": "^3.0.0-pre.1",
@@ -21,6 +22,9 @@
     "window": "^4.2.2"
   },
   "devDependencies": {
-    "polymer-weight": "^1.0.3"
+    "polymer-weight": "^1.0.3",
+    "tslint": "^5.8.0",
+    "tslint-eslint-rules": "^4.1.1",
+    "typescript": "^2.6.2"
   }
 }

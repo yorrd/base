@@ -1,0 +1,41 @@
+{
+  "_from": "git+ssh://gogs@adornis.de:components/PolymerRedux.git",
+  "_id": "@adornis/polymerredux@1.0.0",
+  "_inBundle": false,
+  "_location": "/@adornis/polymerredux",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "git+ssh://gogs@adornis.de:components/PolymerRedux.git",
+    "rawSpec": "git+ssh://gogs@adornis.de:components/PolymerRedux.git",
+    "saveSpec": "git+ssh://gogs@adornis.de:components/PolymerRedux.git",
+    "fetchSpec": "gogs@adornis.de:components/PolymerRedux.git",
+    "gitCommittish": null
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "git+ssh://gogs@adornis.de:components/PolymerRedux.git#50b5f635d1b9615722614f0a1b143337cf281fe3",
+  "_spec": "git+ssh://gogs@adornis.de:components/PolymerRedux.git",
+  "_where": "/home/yorrd/PhpstormProjects/basePolymer2Proj",
+  "bundleDependencies": false,
+  "dependencies": {
+    "@polymer/polymer": "^3.0.0-pre.1"
+  },
+  "deprecated": false,
+  "devDependencies": {
+    "tslint": "^5.8.0",
+    "tslint-eslint-rules": "^4.1.1",
+    "typescript": "^2.6.2"
+  },
+  "name": "@adornis/polymerredux",
+  "repository": {
+    "type": "git",
+    "url": "gogs@adornis.de:Components/PolymerRedux.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.0"
+}
