@@ -77,7 +77,7 @@ const reducer = (state = {}, action) => {
             object = Object.assign({}, state);
     }
     // persistent handling
-    if (action.type === 'LOAD_PERSISTENT') {
+    if (action.type === 'LOAD_PERSISTENT_VALUE') {
         object[action.statePath] = action.value;
     }
     // insert polymer tracked variables
@@ -143,7 +143,12 @@ const persistentMiddleware = middlewareStore => next => (action) => {
             break;
         }
         case 'LOAD_PERSISTENT': {
-            const value = localStorage.getItem(action.statePath);
+            let value;
+            try {
+                value = JSON.parse(localStorage.getItem(action.statePath));
+            } catch (e) {
+                value = localStorage.getItem(action.statePath);
+            }
             middlewareStore.dispatch({
                 type: 'LOAD_PERSISTENT_VALUE',
                 statePath: action.statePath,
