@@ -66,7 +66,8 @@ export default parent => class ReduxComponent extends ReduxMixin(parent) {
                     });
                 };
 
-                this._createPropertyObserver(trackedProp, listenerName);
+                // this._createPropertyObserver(trackedProp, listenerName);
+                this._createMethodObserver(`${listenerName}(${trackedProp}, ${trackedProp}.*)`);
             });
 
         // if there is no dispatch but a statepath, don't allow a value, would be overridden instantly anyways
