@@ -1,5 +1,4 @@
 import { createStore, applyMiddleware } from 'redux';
-// import PolymerRedux from './polymer-redux.js';
 import PolymerRedux from '../node_links/@adornis/polymerredux/polymer-redux';
 import DatabaseHolder from './database-holder';
 const reducer = (state = {}, action) => {
@@ -77,7 +76,7 @@ const reducer = (state = {}, action) => {
             object = Object.assign({}, state);
     }
     // persistent handling
-    if (action.type === 'LOAD_PERSISTENT_VALUE') {
+    if (action.type === 'LOAD_PERSISTENT') {
         object[action.statePath] = action.value;
     }
     // insert polymer tracked variables
@@ -143,12 +142,7 @@ const persistentMiddleware = middlewareStore => next => (action) => {
             break;
         }
         case 'LOAD_PERSISTENT': {
-            let value;
-            try {
-                value = JSON.parse(localStorage.getItem(action.statePath));
-            } catch (e) {
-                value = localStorage.getItem(action.statePath);
-            }
+            const value = localStorage.getItem(action.statePath);
             middlewareStore.dispatch({
                 type: 'LOAD_PERSISTENT_VALUE',
                 statePath: action.statePath,

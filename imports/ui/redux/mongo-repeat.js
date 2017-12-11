@@ -1,8 +1,8 @@
-import ReduxComponent from '../redux/polymer-mixin.js';
+import AdornisMongoMixin from '../redux/adornis-mongo-mixin.js';
 import { DomRepeat } from '../node_links/@polymer/polymer/lib/elements/dom-repeat.js';
 import { afterNextRender } from '../node_links/@polymer/polymer/lib/utils/render-status.js';
 
-class MongoRepeat extends ReduxComponent(DomRepeat) {
+class MongoRepeat extends AdornisMongoMixin(DomRepeat) {
     static get is() {
         return 'mongo-repeat';
     }

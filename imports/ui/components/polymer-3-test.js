@@ -1,11 +1,11 @@
-import ReduxComponent from '../redux/polymer-mixin.js';
+import AdornisMongoMixin from '../redux/adornis-mongo-mixin.js';
 import { Element } from '../node_links/@polymer/polymer/polymer-element.js';
 
 import '../node_links/@polymer/paper-input/paper-input.js';
 import '../node_links/@polymer/app-layout/app-header-layout/app-header-layout.js';
 import '../node_links/@polymer/app-layout/app-header/app-header.js';
 
-export class MyApp extends ReduxComponent(Element) { // eslint-disable-line
+export class MyApp extends AdornisMongoMixin(Element) { // eslint-disable-line
 
     static get template() {
         // need innerHTML for syntax highlighting. Need to disable the linter
@@ -45,6 +45,10 @@ export class MyApp extends ReduxComponent(Element) { // eslint-disable-line
 <hr />
 
 <input type="text" value="{{wasserKosten}}"></input>
+
+<hr />
+
+multiplied 3 and 4 {{mul(3, 4)}}
 
 </app-header-layout>
 

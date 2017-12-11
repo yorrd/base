@@ -1,10 +1,9 @@
-import ReduxComponent from './polymer-mixin.js';
+import AdornisMongoMixin from './adornis-mongo-mixin.js';
 import { Element } from '../node_links/@polymer/polymer/polymer-element.js';
 
 import '../node_links/@polymer/app-route/app-location.js';
-import './polymer-mixin.js';
 
-class AdornisRouter extends ReduxComponent(Element) {
+class AdornisRouter extends AdornisMongoMixin(Element) {
     static get template() {
         return innerHTML = `
             <app-location id="applocation" route="{{_route}}"></app-location>
