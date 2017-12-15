@@ -1,12 +1,6 @@
 import AdornisMongoMixin from '../redux/adornis-mongo-mixin.js';
-import '../redux/mongo-repeat.js';
-import '../redux/mongo-bind.js';
 import { Element } from '../node_links/@polymer/polymer/polymer-element.js';
-
-import '../node_links/@polymer/paper-input/paper-input.js';
-import '../node_links/@polymer/paper-toggle-button/paper-toggle-button.js';
-import '../node_links/@polymer/app-layout/app-header-layout/app-header-layout.js';
-import '../node_links/@polymer/app-layout/app-header/app-header.js';
+import { afterNextRender } from '../node_links/@polymer/polymer/lib/utils/render-status.js';
 import '../node_links/@polymer/iron-flex-layout/iron-flex-layout-classes.js';
 
 export class MyApp extends AdornisMongoMixin(Element) { // eslint-disable-line
@@ -94,8 +88,17 @@ multiplied 3 and 4: {{mul(3, 4)}}
 
     connectedCallback() {
         super.connectedCallback();
-        import('../redux/adornis-router.js');
-        import('../node_links/@polymer/paper-button/paper-button.js');
+        afterNextRender(this, () => {
+            import('../redux/adornis-router.js');
+            import('../node_links/@polymer/paper-button/paper-button.js');
+            import '../redux/mongo-repeat.js';
+            import '../redux/mongo-bind.js';
+
+            import '../node_links/@polymer/paper-input/paper-input.js';
+            import '../node_links/@polymer/paper-toggle-button/paper-toggle-button.js';
+            import '../node_links/@polymer/app-layout/app-header-layout/app-header-layout.js';
+            import '../node_links/@polymer/app-layout/app-header/app-header.js';
+        });
         document.querySelector('#loading').style.display = 'none';
     }
 
