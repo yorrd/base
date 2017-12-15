@@ -57,10 +57,10 @@ multiplied 3 and 4: {{mul(3, 4)}}
 
 <hr />
 
-<mongo-bind collection="spendings" selector="{}">
+<mongo-bind collection="mongo-data" selector="{}">
     <template>
         {{print(item)}}
-        <paper-input value="{{item.usage}}"><paper-input>
+        <paper-input value="{{item.name}}"><paper-input>
     </template>
 </mongo-bind>
 
@@ -100,7 +100,7 @@ multiplied 3 and 4: {{mul(3, 4)}}
     }
 
     _toggleParams(e) {
-        this.set('subParams2', e.detail.value ? ['useful usage'] : []);
+        this.set('subParams2', e.detail.value ? [] : ['useful usage']);
     }
 
     _add() {
