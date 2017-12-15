@@ -18,7 +18,7 @@ class MongoBind extends AdornisMongoMixin(Element) {
                 value() {
                     return function update(newValue, diff) {
                         if (!this.watch) return;
-                        if (!newValue._id) return;
+                        if (!newValue || !newValue._id) return;
                         const key = diff.path.split('.')[1];
                         const setObj = {};
                         setObj[key] = diff.value;
@@ -50,8 +50,12 @@ class MongoBind extends AdornisMongoMixin(Element) {
         this.subscribe(coll, 'subParams');
 
         if (this._obs) this._obs.stop();
+        console.log('observing');
         this._obs = this.getCollection(this.collection).find(this.selector).observe({
-            added: this.updateResults, removed: this.updateResults, changed: this.updateResults, movedTo: this.updateResults,
+            added: this._updateResults.bind(this),
+            removed: this._updateResults.bind(this),
+            changed: this._updateResults.bind(this),
+            movedTo: this._updateResults.bind(this),
         });
     }
 
