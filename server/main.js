@@ -12,7 +12,10 @@ const MieterDaten = new Mongo.Collection('mieterdaten');
 Meteor.startup(() => {
     // code to run on server at startup
     Meteor.publish('mongo-data', filtered => TestCollection.find(filtered ? { name: 'hihihi' } : {}));
-    Meteor.publish('spendings', usage => SpendingsCollection.find({ usage }));
+    Meteor.publish('spendings', (usage) => {
+        console.log(usage);
+        return SpendingsCollection.find(usage ? { usage } : {});
+    });
     Meteor.publish('mieterdaten', () => MieterDaten.find());
     TestCollection.allow({
         insert: () => true,

@@ -1,10 +1,13 @@
 import AdornisMongoMixin from '../redux/adornis-mongo-mixin.js';
+import '../redux/mongo-repeat.js';
+import '../redux/mongo-bind.js';
 import { Element } from '../node_links/@polymer/polymer/polymer-element.js';
 
 import '../node_links/@polymer/paper-input/paper-input.js';
 import '../node_links/@polymer/paper-toggle-button/paper-toggle-button.js';
 import '../node_links/@polymer/app-layout/app-header-layout/app-header-layout.js';
 import '../node_links/@polymer/app-layout/app-header/app-header.js';
+import '../node_links/@polymer/iron-flex-layout/iron-flex-layout-classes.js';
 
 export class MyApp extends AdornisMongoMixin(Element) { // eslint-disable-line
 
@@ -21,13 +24,16 @@ export class MyApp extends AdornisMongoMixin(Element) { // eslint-disable-line
 
 <app-header-layout class="fit layout vertical">
 
-<mongo-repeat id="mdata1" collection="mongo-data" sub-params="{{subParams1}}" sub-filter="{{filter}}">
-    <template>
-        <paper-card>{{item.name}}</paper-card>
-    </template>
-</mongo-repeat>
+<div class="layout horizontal wrap">
+    <mongo-repeat id="mdata1" collection="mongo-data" sub-params="{{subParams1}}" sub-filter="{{filter}}">
+        <template>
+            <paper-input style="width: 100px" value="{{item.name}}"></paper-input>
+        </template>
+    </mongo-repeat>
+</div>
 <paper-toggle-button on-checked-changed="_switchFilter"></paper-toggle-button> toggle filter
 {{print(filter)}}
+<paper-button on-tap="_add">add</paper-button>
 
 <hr />
 
@@ -38,12 +44,8 @@ export class MyApp extends AdornisMongoMixin(Element) { // eslint-disable-line
 </mongo-repeat>
 
 <paper-toggle-button on-checked-changed="_toggleParams"></paper-toggle-button> toggle params
-<paper-button on-tap="_add">add</paper-button>
-
-<hr />
-
-<paper-button on-click="handleUpdateMessage">Insert Hallo Welt</paper-button>
-<mongo-data id="mongoData" filter="{{params}}"></mongo-data>
+switches between 'useful usage' and no params: {{subParams2}}
+<paper-button on-click="handleUpdateMessage">Insert random (50/50)</paper-button>
 
 <hr />
 
@@ -51,7 +53,16 @@ export class MyApp extends AdornisMongoMixin(Element) { // eslint-disable-line
 
 <hr />
 
-multiplied 3 and 4 {{mul(3, 4)}}
+multiplied 3 and 4: {{mul(3, 4)}}
+
+<hr />
+
+<mongo-bind collection="spendings" selector="{}">
+    <template>
+        {{print(item)}}
+        <paper-input value="{{item.usage}}"><paper-input>
+    </template>
+</mongo-bind>
 
 </app-header-layout>
 
@@ -84,7 +95,6 @@ multiplied 3 and 4 {{mul(3, 4)}}
     connectedCallback() {
         super.connectedCallback();
         import('../redux/adornis-router.js');
-        import('../redux/mongo-repeat.js');
         import('../node_links/@polymer/paper-button/paper-button.js');
         document.querySelector('#loading').style.display = 'none';
     }
@@ -98,7 +108,7 @@ multiplied 3 and 4 {{mul(3, 4)}}
     }
 
     handleUpdateMessage() {
-        this.$.mdata2.insert({ usage: 'useful usage' });
+        this.$.mdata2.insert({ usage: Math.random() < .5 ? 'wat anderes' : 'useful usage' });
     }
 
     _switchFilter(e) {

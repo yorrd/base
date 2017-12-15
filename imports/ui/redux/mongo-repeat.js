@@ -12,20 +12,24 @@ class MongoRepeat extends AdornisMongoMixin(DomRepeat) {
             items: {
                 type: Array,
                 value: [],
-                // collection will be set later in the _setCollection
-                statePath(state) { return state[this.collection]; },
-                notify: true, // exception for the redux paradigm of not binding to the parent, this is only because it's a "builtin"
             },
             subParams: { type: Array, value: [] },
-            subFilter: { type: Object, value: {} },
+            subFilter: { type: Object, value: {}, observer: '_observe' },
             collection: { type: String, value: null, observer: '_setCollection' },
             persistentCollection: { type: Boolean, value: false },
+            watch: { type: Boolean, value: true },
 
             // because of the database-nature of things, immediately change the defaults for initial count and target framerate
             // this SHOULD be overwritten, but it's better this way than not set at all
             initialCount: { type: Number, value: 50 },
             targetFramerate: { type: Number, value: 60 },
         };
+    }
+
+    static get observers() {
+        return [
+            '_arrayUpdate(items.*, items.*.*)',
+        ];
     }
 
     static get template() {
@@ -56,7 +60,59 @@ class MongoRepeat extends AdornisMongoMixin(DomRepeat) {
 
     _setCollection(collection) {
         if (!collection) return;
-        this._subscribeCollection('items', collection, collection, 'subParams', this.persistentCollection, 'subFilter');
+        this.subscribe(collection, 'subParams');
+        this._observe();
+        // TODO observeChanges + initial load instead
+    }
+
+    _observe() {
+        // TODO animate, don't reset the array every time
+        // TODO when changed, only change those properties
+        if (this._obs) this._obs.stop();
+        this.set('items', []);
+        // TODO use ids, not the indices. The sorting won't work otherwise, if dom-repeat resorts things
+        this._obs = this.getCollection(this.collection).find(this.subFilter).observe({
+            addedAt: (doc, i) => {
+                const wasWatchingBefore = this.watch;
+                this.watch = false;
+
+                this.splice('items', i, 0, doc);
+                // remove the temporary item
+                this.items.forEach((item, index) => { if (!item._id) this.splice('items', index, 1); });
+
+                this.watch = wasWatchingBefore;
+            },
+            changedAt: (newDoc, oldDoc, i) => {
+                const wasWatchingBefore = this.watch;
+                this.watch = false;
+
+                Object.keys(newDoc).forEach((newKey) => {
+                    if (oldDoc[newKey] && newDoc[newKey] !== oldDoc[newKey]) this.set(`items.${i}.${newKey}`, newDoc[newKey]);
+                });
+                Object.keys(oldDoc).forEach((oldKey) => {
+                    if (!newDoc[oldKey]) this.set(`items.${i}.${oldKey}`, null);
+                });
+
+                this.watch = wasWatchingBefore;
+            },
+            removedAt: (doc, i) => {
+                const wasWatchingBefore = this.watch;
+                this.watch = false;
+
+                this.splice('items', i, 1);
+
+                this.watch = wasWatchingBefore;
+            },
+            movedTo: (doc, fromIndex, toIndex) => {
+                const wasWatchingBefore = this.watch;
+                this.watch = false;
+
+                this.splice('items', fromIndex, 1);
+                this.splice('items', toIndex, 0, doc);
+
+                this.watch = wasWatchingBefore;
+            },
+        });
     }
 
     insert(obj) {
@@ -65,6 +121,43 @@ class MongoRepeat extends AdornisMongoMixin(DomRepeat) {
 
     remove(i) {
         this.splice('items', i, 1);
+    }
+
+    change() {
+        throw new Error('not implemented yet, no use case?');
+    }
+
+    _arrayUpdate(diff) { // eslint-disable-line class-methods-use-this
+        // when receiving from the database or when watching just isn't wanted, don't do this observer's logic
+        if (!this.watch) return;
+
+        const cursor = this.getCollection(this.collection);
+
+        // this is for removals and additions
+        if (diff.path.indexOf('.splices') > -1) {
+            diff.value.indexSplices.forEach((id) => {
+                id.removed.forEach((obj) => {
+                    cursor.remove(obj._id);
+                });
+                if (id.addedCount === 1) {
+                    const docId = id.object[id.index]._id;
+                    if (!cursor.findOne(docId)) cursor.insert(id.object[id.index]);
+                    // else console.log('skipping entry, already in the database');
+                    // upserting doesn't work on the client and would be inappropriate anyways, becaue the update events are not handled here but below
+                }
+                if (id.addedCount > 1) throw new Error('multiple additions in splice are not yet supported');
+            });
+        }
+
+        // this should only run if there are deeper level updates in an object within the array from the database
+        if (diff.path.indexOf('.') === -1 || diff.path.indexOf('.splices') > -1 || diff.path.indexOf('.length') > -1) return;
+        const id = (diff.path.split('.')[1]);
+        const dbObj = diff.base[id];
+        // will automatically trigger the mongo observer which will then update the data in the store
+        const key = diff.path.split('.')[2];
+        const setObj = {};
+        setObj[key] = diff.value;
+        cursor.update(dbObj._id, { $set: setObj });
     }
 }
 
