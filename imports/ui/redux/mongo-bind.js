@@ -41,6 +41,7 @@ class MongoBind extends AdornisMongoMixin(Element) {
 
     connectedCallback() {
         super.connectedCallback();
+        this.hidden = true;
         const template = this.querySelector('template');
         this.__instance = this._stampTemplate(template);
         this.root.appendChild(this.__instance);
