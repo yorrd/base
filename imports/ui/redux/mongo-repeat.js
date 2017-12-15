@@ -37,6 +37,11 @@ class MongoRepeat extends AdornisMongoMixin(DomRepeat) {
         return null;
     }
 
+    connectedCallback() {
+        super.connectedCallback();
+        this.hidden = true;
+    }
+
     constructor() {
         super();
 
