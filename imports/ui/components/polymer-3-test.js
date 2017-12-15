@@ -43,7 +43,7 @@ switches between 'useful usage' and no params: {{subParams2}}
 
 <hr />
 
-<input type="text" value="{{wasserKosten}}"></input>
+<paper-input value="{{wasserKosten}}"></paper-input>
 
 <hr />
 

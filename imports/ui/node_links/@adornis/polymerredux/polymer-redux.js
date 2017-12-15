@@ -1,5 +1,4 @@
-// Expose globals
-import { get as polymerGetPath } from "../../@polymer/polymer/lib/utils/path";
+import { get } from '../../@polymer/polymer/lib/utils/path.js';
 /**
  * Polymer Redux
  *
@@ -12,10 +11,10 @@ import { get as polymerGetPath } from "../../@polymer/polymer/lib/utils/path";
  */
 export default function PolymerRedux(store) {
     if (!store) {
-        throw new TypeError("PolymerRedux: expecting a redux store.");
+        throw new TypeError('PolymerRedux: expecting a redux store.');
     }
-    else if (!["getState", "dispatch", "subscribe"].every((k) => typeof store[k] === "function")) {
-        throw new TypeError("PolymerRedux: invalid store object.");
+    else if (!['getState', 'dispatch', 'subscribe'].every(k => typeof store[k] === 'function')) {
+        throw new TypeError('PolymerRedux: invalid store object.');
     }
     const subscribers = new Map();
     /**
@@ -32,12 +31,11 @@ export default function PolymerRedux(store) {
      */
     const bind = (element, properties) => {
         const bindings = Object.keys(properties)
-            .filter((name) => {
+            .filter(name => {
             const property = properties[name];
-            if (Object.prototype.hasOwnProperty.call(property, "statePath")) {
+            if (Object.prototype.hasOwnProperty.call(property, 'statePath')) {
                 if (!property.readOnly && property.notify) {
-                    // tslint:disable-next-line
-                    console.warn(`PolymerRedux: <${element.constructor.is}>.${name} has "notify" enabled, wo-way bindings goes against Redux's paradigm`);
+                    console.warn(`PolymerRedux: <${element.constructor.is}>.${name} has "notify" enabled, two-way bindings goes against Redux's paradigm`);
                 }
                 return true;
             }
@@ -49,13 +47,13 @@ export default function PolymerRedux(store) {
          * @private
          * @param {Object} state
          */
-        const update = (state) => {
+        const update = state => {
             let propertiesChanged = false;
-            bindings.forEach((name) => {
+            bindings.forEach(name => {
                 const { statePath } = properties[name];
-                const value = (typeof statePath === "function") ?
+                const value = (typeof statePath === 'function') ?
                     statePath.call(element, state) :
-                    polymerGetPath(state, statePath);
+                    get(state, statePath);
                 const changed = element._setPendingPropertyOrPath(name, value, true);
                 propertiesChanged = propertiesChanged || changed;
             });
@@ -67,7 +65,7 @@ export default function PolymerRedux(store) {
         const unsubscribe = store.subscribe(() => {
             const detail = store.getState();
             update(detail);
-            element.dispatchEvent(new CustomEvent("state-changed", { detail }));
+            element.dispatchEvent(new CustomEvent('state-changed', { detail }));
         });
         subscribers.set(element, unsubscribe);
         update(store.getState());
@@ -79,9 +77,9 @@ export default function PolymerRedux(store) {
      * @private
      * @param {HTMLElement} element
      */
-    const unbind = (element) => {
+    const unbind = element => {
         const off = subscribers.get(element);
-        if (typeof off === "function") {
+        if (typeof off === 'function') {
             off();
         }
     };
@@ -110,21 +108,23 @@ export default function PolymerRedux(store) {
      *
      * @polymerMixinClass
      *
+     * @param {Polymer.Element} parent The polymer parent element.
+     * @return {Function} PolymerRedux mixed class.
      */
-    return (parent) => class ReduxMixin extends parent {
+    return parent => class ReduxMixin extends parent {
         constructor() {
             super();
             // Collect the action creators first as property changes trigger
             // dispatches from observers, see #65, #66, #67
-            const actions = collect(this.constructor, "actions");
-            Object.defineProperty(this, "_reduxActions", {
+            const actions = collect(this.constructor, 'actions');
+            Object.defineProperty(this, '_reduxActions', {
                 configurable: true,
-                value: actions,
+                value: actions
             });
         }
         connectedCallback() {
             super.connectedCallback();
-            const properties = collect(this.constructor, "properties");
+            const properties = collect(this.constructor, 'properties');
             bind(this, properties);
         }
         disconnectedCallback() {
@@ -152,23 +152,25 @@ export default function PolymerRedux(store) {
             const actions = this._reduxActions;
             // Action creator
             let [action] = args;
-            if (typeof action === "string") {
-                if (typeof actions[action] !== "function") {
+            if (typeof action === 'string') {
+                if (typeof actions[action] !== 'function') {
                     throw new TypeError(`PolymerRedux: <${this.constructor.is}> invalid action creator "${action}"`);
                 }
                 action = actions[action](...args.slice(1));
             }
             // Proxy async dispatch
-            if (typeof action === "function") {
+            if (typeof action === 'function') {
                 const originalAction = action;
-                action = (...actionArgs) => {
+                action = (...args) => {
                     // Replace redux dispatch
-                    actionArgs.splice(0, 1, (...newActionArgs) => this.dispatch(...newActionArgs));
-                    return originalAction(...actionArgs);
+                    args.splice(0, 1, (...args) => {
+                        return this.dispatch(...args);
+                    });
+                    return originalAction(...args);
                 };
                 // Copy props from the original action to the proxy.
                 // see https://github.com/tur-nr/polymer-redux/issues/98
-                Object.keys(originalAction).forEach((prop) => {
+                Object.keys(originalAction).forEach(prop => {
                     action[prop] = originalAction[prop];
                 });
             }

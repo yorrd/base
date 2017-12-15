@@ -41,7 +41,6 @@ class MongoBind extends AdornisMongoMixin(Element) {
 
     connectedCallback() {
         super.connectedCallback();
-        this.hidden = true;
         const template = this.querySelector('template');
         this.__instance = this._stampTemplate(template);
         this.root.appendChild(this.__instance);
@@ -51,7 +50,6 @@ class MongoBind extends AdornisMongoMixin(Element) {
         this.subscribe(coll, 'subParams');
 
         if (this._obs) this._obs.stop();
-        console.log('observing');
         this._obs = this.getCollection(this.collection).find(this.selector).observe({
             added: this._updateResults.bind(this),
             removed: this._updateResults.bind(this),
