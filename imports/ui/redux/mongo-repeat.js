@@ -99,7 +99,8 @@ class MongoRepeat extends AdornisMongoMixin(DomRepeat) {
                 const wasWatchingBefore = this.watch;
                 this.watch = false;
 
-                this.splice('items', i, 1);
+                const index = this.items.findIndex(item => item._id === doc._id);
+                if (index >= 0) this.splice('items', index, 1);
 
                 this.watch = wasWatchingBefore;
             },
