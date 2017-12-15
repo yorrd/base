@@ -11,7 +11,7 @@ class MongoBind extends AdornisMongoMixin(Element) {
             item: { type: Object, value: {} },
             collection: { type: String, observer: '_collectionChanged' },
             subParams: { type: Array, value: [] },
-            selector: { type: Object, value: {} },
+            selector: { type: Object, value: {}, observer: '_updateResults' },
             watch: { type: Boolean, value: true },
             update: {
                 type: Function,
@@ -50,17 +50,18 @@ class MongoBind extends AdornisMongoMixin(Element) {
         this.subscribe(coll, 'subParams');
 
         if (this._obs) this._obs.stop();
-        const f = () => {
-            const didIWatchBefore = this.watch;
-            this.watch = false;
-
-            this.set('item', this.getCollection(coll).findOne(this.selector));
-
-            this.watch = didIWatchBefore;
-        };
         this._obs = this.getCollection(this.collection).find(this.selector).observe({
-            added: f, removed: f, changed: f, movedTo: f,
+            added: this.updateResults, removed: this.updateResults, changed: this.updateResults, movedTo: this.updateResults,
         });
+    }
+
+    _updateResults() {
+        const didIWatchBefore = this.watch;
+        this.watch = false;
+
+        this.set('item', this.getCollection(this.collection).findOne(this.selector));
+
+        this.watch = didIWatchBefore;
     }
 }
 
