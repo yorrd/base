@@ -4,6 +4,7 @@ import CollectionHolder from './collection-holder';
 export default parent => class AdornisMongoMixin extends AdornisMixin(parent) {
     constructor() {
         super();
+        // TODO clean up here
 
         const props = this.constructor.properties;
 
@@ -57,7 +58,7 @@ export default parent => class AdornisMongoMixin extends AdornisMixin(parent) {
             console.info(`${coll} won't listen for param updates because there is no param property given`);
 
             this._subscribe([], coll);
-        } {
+        } else {
             // listen for filter changes
             const paramListenerName = `_changeParam_${coll}`;
             this[paramListenerName] = (params) => {
