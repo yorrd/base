@@ -1,4 +1,4 @@
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import PolymerRedux from '../node_links/@adornis/polymerredux/polymer-redux';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
@@ -44,7 +44,7 @@ const persistConfig = {
     key: 'root', storage: storage,
 };
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || (x => x); // for the debugger in the browser
-const storeCreate = createStore(persistReducer(persistConfig, reducer), {});
+const storeCreate = createStore(persistReducer(persistConfig, reducer), {}, composeEnhancers(applyMiddleware()));
 persistStore(storeCreate);
 export const store = storeCreate;
 export default PolymerRedux(storeCreate);

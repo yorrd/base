@@ -48,7 +48,7 @@ const persistConfig = {
 }
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || (x => x); // for the debugger in the browser
-const storeCreate = createStore(persistReducer(persistConfig, reducer), {/* SSR hydration!!! */});
+const storeCreate = createStore(persistReducer(persistConfig, reducer), {/* SSR hydration!!! */}, composeEnhancers(applyMiddleware()));
 persistStore(storeCreate);
 export const store = storeCreate;
 export default PolymerRedux(storeCreate);
