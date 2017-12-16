@@ -7,18 +7,19 @@ const reducer = (state = {}, action) => {
     // insert polymer tracked variables
     if (action.type.includes('update/')) {
         let storePart = object;
-        action.statePath.split('.').slice(0, -2).forEach(key => {
+        const parts = action.statePath.split('.');
+        parts.slice(0, -2).forEach(key => {
             if (!storePart[key])
                 storePart[key] = {};
             storePart = storePart[key];
         });
-        storePart[action.statePath.split('.').slice(-1)] = action.value;
+        storePart[parts.slice(-1)] = action.value;
     }
     // TODO could / should use combineReducers here
     return Object.assign(object, {});
 };
 const persistConfig = {
-    key: 'root', storage: storage,
+    key: 'root', storage,
 };
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || (x => x); // for the debugger in the browser
 const storeCreate = createStore(persistReducer(persistConfig, reducer), {}, composeEnhancers());
