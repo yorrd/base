@@ -9,7 +9,7 @@ const reducer = (state = {}, action) => {
     let object = Object.assign({}, state);
 
     // insert polymer tracked variables
-    if (action.type.includes('UPDATE/')) {
+    if (action.type.includes('update/')) {
         let storePart = object;
         action.statePath.split('.').slice(0, -2).forEach(key => {
             if(!storePart[key]) storePart[key] = {};

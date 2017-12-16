@@ -17,7 +17,7 @@ export default parent => class AdornisMixin extends ReduxMixin(parent) {
                 this[listenerName] = (newVal) => {
                     if (!newVal) return;
                     this.dispatch({
-                        type: `UPDATE/${statePath}`,
+                        type: `update/${statePath}`,
                         statePath,
                         value: newVal,
                     });
