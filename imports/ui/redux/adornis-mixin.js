@@ -1,6 +1,33 @@
 import ReduxMixin from './reducers.js';
 
 export default parent => class AdornisMixin extends ReduxMixin(parent) {
+    constructor() {
+        super();
+
+        const props = this.constructor.properties;
+
+        // get automatically managed polymer properties
+        Object.keys(props)
+            .filter(prop => props[prop].dispatch)
+            .forEach((trackedProp) => {
+                const { statePath } = props[trackedProp];
+                const listenerName = `_trackedPropChanged__${statePath.replace('.', '_')}`;
+                if (!statePath) throw new Error(`dispatch given but not statePath for property ${trackedProp}`);
+
+                this[listenerName] = (newVal) => {
+                    if (!newVal) return;
+                    this.dispatch({
+                        type: `UPDATE/${statePath}`,
+                        statePath,
+                        value: newVal,
+                    });
+                };
+
+                // this._createPropertyObserver(trackedProp, listenerName);
+                this._createMethodObserver(`${listenerName}(${trackedProp}, ${trackedProp}.*)`);
+            });
+    }
+
     div(a, b) { // eslint-disable-line class-methods-use-this
         return +a / +b;
     }
