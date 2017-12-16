@@ -28,51 +28,19 @@ const reducer = (state = {}, action) => {
                 object.route.tail = action.value;
                 break;
             }
-            case 'RESET': {
-                object[action.statePath] = [...action.array];
-                break;
-            }
             default:
                 object = Object.assign({}, state);
     }
 
-    // persistent handling
-    if (action.type === 'LOAD_PERSISTENT') {
-        object[action.statePath] = action.value;
-    }
-
     // insert polymer tracked variables
-    if (action.type === 'UPDATE_POLYMER_VARIABLE') {
+    if (action.type.includes('__UPDATE_')) {
+        // const statePath = 
         object[action.statePath] = action.value;
     }
 
     // TODO could / should use combineReducers here
     return Object.assign(object, {
     });
-};
-
-const persistentMiddleware = middlewareStore => next => (action) => {
-    switch (action.type) {
-            case 'UPDATE_POLYMER_VARIABLE': {
-                const { persistent } = action;
-                if (persistent) { localStorage.setItem(action.statePath, typeof action.value === 'string' ? action.value : JSON.stringify(action.value)); }
-                break;
-            }
-            case 'LOAD_PERSISTENT': {
-                const value = localStorage.getItem(action.statePath);
-                middlewareStore.dispatch({
-                    type: 'LOAD_PERSISTENT_VALUE',
-                    statePath: action.statePath,
-                    value,
-                });
-                break;
-            }
-            default:
-    }
-
-    const returnValue = next(action);
-
-    return returnValue;
 };
 
 const persistConfig = {
