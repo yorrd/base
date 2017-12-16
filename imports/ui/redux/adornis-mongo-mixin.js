@@ -38,19 +38,6 @@ export default parent => class AdornisMongoMixin extends AdornisMixin(parent) {
                 // this._createPropertyObserver(trackedProp, listenerName);
                 this._createMethodObserver(`${listenerName}(${trackedProp}, ${trackedProp}.*)`);
             });
-
-        Object.keys(props)
-            .filter(prop => props[prop].persistent)
-            .forEach((trackedProp) => {
-                if (!props[trackedProp].dispatch) throw new Error('when using persistent you have to use dispatch as well');
-                const { statePath } = props[trackedProp];
-
-                // one time dispatch you have to use polymer-variables to change value
-                this.dispatch({
-                    type: 'LOAD_PERSISTENT',
-                    statePath,
-                });
-            });
     }
 
     subscribe(coll, paramWatchProp) {
