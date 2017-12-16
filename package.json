@@ -20,6 +20,7 @@
     "es6-promise": "^4.1.0",
     "meteor-node-stubs": "~0.2.0",
     "redux": "^3.7.2",
+    "redux-persist": "^5.4.0",
     "window": "^4.2.2"
   },
   "devDependencies": {
