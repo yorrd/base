@@ -78,10 +78,9 @@ const persistentMiddleware = middlewareStore => next => (action) => {
 const persistConfig = {
     key: 'root', storage: storage,
 }
-const reducerPersist = combineReducers({ root: persistReducer(persistConfig, reducer)});
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || (x => x); // for the debugger in the browser
-const storeCreate = createStore(reducerPersist, {/* SSR hydration!!! */}, composeEnhancers(applyMiddleware(persistentMiddleware)));
+const storeCreate = createStore(persistReducer(persistConfig, reducer), {/* SSR hydration!!! */}, composeEnhancers(applyMiddleware(persistentMiddleware)));
 persistStore(storeCreate);
 export const store = storeCreate;
 export default PolymerRedux(storeCreate);
