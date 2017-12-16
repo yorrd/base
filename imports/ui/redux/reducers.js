@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware } from 'redux';
+import { createStore } from 'redux';
 import PolymerRedux from '../node_links/@adornis/polymerredux/polymer-redux';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
@@ -34,7 +34,7 @@ const reducer = (state = {}, action) => {
     }
     // insert polymer tracked variables
     if (action.type.includes('__UPDATE_')) {
-        // const statePath = 
+        // const statePath =
         object[action.statePath] = action.value;
     }
     // TODO could / should use combineReducers here
@@ -44,7 +44,7 @@ const persistConfig = {
     key: 'root', storage: storage,
 };
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || (x => x); // for the debugger in the browser
-const storeCreate = createStore(persistReducer(persistConfig, reducer), {}, composeEnhancers(applyMiddleware(persistentMiddleware)));
+const storeCreate = createStore(persistReducer(persistConfig, reducer), {});
 persistStore(storeCreate);
 export const store = storeCreate;
 export default PolymerRedux(storeCreate);

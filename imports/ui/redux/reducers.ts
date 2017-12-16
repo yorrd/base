@@ -34,7 +34,7 @@ const reducer = (state = {}, action) => {
 
     // insert polymer tracked variables
     if (action.type.includes('__UPDATE_')) {
-        // const statePath = 
+        // const statePath =
         object[action.statePath] = action.value;
     }
 
@@ -48,7 +48,7 @@ const persistConfig = {
 }
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || (x => x); // for the debugger in the browser
-const storeCreate = createStore(persistReducer(persistConfig, reducer), {/* SSR hydration!!! */}, composeEnhancers(applyMiddleware(persistentMiddleware)));
+const storeCreate = createStore(persistReducer(persistConfig, reducer), {/* SSR hydration!!! */});
 persistStore(storeCreate);
 export const store = storeCreate;
 export default PolymerRedux(storeCreate);
