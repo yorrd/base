@@ -12,13 +12,10 @@ const reducer = (state = {}, action) => {
     if (action.type.includes('UPDATE/')) {
         let storePart = object;
         action.statePath.split('.').slice(0, -2).forEach(key => {
-            // console.log('=-========');
-            // console.log()
             if(!storePart[key]) storePart[key] = {};
             storePart = storePart[key];
         });
         storePart[action.statePath.split('.').slice(-1)] = action.value;
-        console.log(object);
     }
 
     // TODO could / should use combineReducers here
@@ -31,7 +28,7 @@ const persistConfig = {
 }
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || (x => x); // for the debugger in the browser
-const storeCreate = createStore(persistReducer(persistConfig, reducer), {}, composeEnhancers());
+const storeCreate = createStore(persistReducer(persistConfig, reducer), {/* SSR hydration!!! */}, composeEnhancers());
 persistStore(storeCreate);
 export const store = storeCreate;
 export default PolymerRedux(storeCreate);
