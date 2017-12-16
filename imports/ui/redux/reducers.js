@@ -15,7 +15,6 @@ const reducer = (state = {}, action) => {
             storePart = storePart[key];
         });
         storePart[action.statePath.split('.').slice(-1)] = action.value;
-        console.log(object);
     }
     // TODO could / should use combineReducers here
     return Object.assign(object, {});
