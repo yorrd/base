@@ -30,12 +30,4 @@ export default parent => class AdornisMongoMixin extends AdornisMixin(parent) {
     getCollection(name) { // eslint-disable-line class-methods-use-this
         return CollectionHolder.getCollection(name);
     }
-
-    _setObserverHandle(statePath, handle, collection, params) { // eslint-disable-line class-methods-use-this
-        return CollectionHolder.setObserverHandle(statePath, handle, collection, params);
-    }
-
-    _stopObserverHandle(statePath) { // eslint-disable-line class-methods-use-this
-        return CollectionHolder.stopObserverHandle(statePath);
-    }
 };

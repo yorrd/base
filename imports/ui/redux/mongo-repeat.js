@@ -67,12 +67,9 @@ class MongoRepeat extends AdornisMongoMixin(DomRepeat) {
         if (!collection) return;
         this.subscribe(collection, 'subParams');
         this._observe();
-        // TODO observeChanges + initial load instead
     }
 
     _observe() {
-        // TODO animate, don't reset the array every time
-        // TODO when changed, only change those properties
         if (this._obs) this._obs.stop();
         this.set('items', []);
         // TODO use ids, not the indices. The sorting won't work otherwise, if dom-repeat resorts things
