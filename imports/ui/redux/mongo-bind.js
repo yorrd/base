@@ -1,5 +1,7 @@
 import AdornisMongoMixin from '../redux/adornis-mongo-mixin.js';
 import { Element } from '../node_links/@polymer/polymer/polymer-element.js';
+import { Templatize } from '../node_links/@polymer/polymer/lib/utils/templatize.js';
+import { root } from '../node_links/@polymer/polymer/lib/utils/path.js';
 
 class MongoBind extends AdornisMongoMixin(Element) {
     static get is() {
@@ -18,14 +20,26 @@ class MongoBind extends AdornisMongoMixin(Element) {
                 value() {
                     return function update(newValue, diff) {
                         if (!this.watch) return;
-                        if (!newValue || !newValue._id) return;
-                        const key = diff.path.split('.')[1];
-                        const setObj = {};
-                        setObj[key] = diff.value;
-                        this.getCollection(this.collection).update({ _id: newValue._id }, { $set: setObj });
+                        if (!newValue) return;
+                        if (!Object.keys(this.item).length === 0) return;
+
+                        let setObj = {};
+                        if (diff && diff.path.includes('.')) {
+                            const key = diff.path.split('.')[1];
+                            setObj[key] = diff.value;
+                        } else {
+                            setObj = this.item;
+                        }
+
+                        if (newValue._id) this.getCollection(this.collection).update({ _id: newValue._id }, { $set: setObj });
+                        else {
+                            this.getCollection(this.collection).insert(setObj);
+                            this._updateResults(this.selector);
+                        }
                     };
                 },
             },
+            default: { type: Object, value: {} },
         };
     }
 
@@ -40,10 +54,25 @@ class MongoBind extends AdornisMongoMixin(Element) {
     }
 
     connectedCallback() {
-        super.connectedCallback();
         const template = this.querySelector('template');
-        this.__instance = this._stampTemplate(template);
-        this.root.appendChild(this.__instance);
+
+        this.__ctor = Templatize.templatize(template, this, {
+            mutableData: true,
+            forwardHostProp(prop, value) {
+                // handling item updates
+                this.set(prop, value);
+                this.update(this.item);
+            },
+            notifyInstanceProp(inst, prop, val) {
+                console.log('notiinstanceprop', inst, prop, val);
+            },
+        });
+
+        this.__instance = new this.__ctor();
+
+        super.connectedCallback();
+
+        this.root.appendChild(this.__instance.root);
     }
 
     _collectionChanged(coll) {
@@ -51,18 +80,20 @@ class MongoBind extends AdornisMongoMixin(Element) {
 
         if (this._obs) this._obs.stop();
         this._obs = this.getCollection(this.collection).find(this.selector).observe({
-            added: this._updateResults.bind(this),
-            removed: this._updateResults.bind(this),
-            changed: this._updateResults.bind(this),
-            movedTo: this._updateResults.bind(this),
+            added: this._updateResults.call(this, this.selector),
+            removed: this._updateResults.call(this, this.selector),
+            changed: this._updateResults.call(this, this.selector),
+            movedTo: this._updateResults.call(this, this.selector),
         });
     }
 
-    _updateResults() {
+    _updateResults(selector) {
         const didIWatchBefore = this.watch;
         this.watch = false;
 
-        this.set('item', this.getCollection(this.collection).findOne(this.selector));
+        const result = this.getCollection(this.collection).findOne(selector);
+        if (!this.__instance) return;
+        this.__instance.set('item', result || this.default);
 
         this.watch = didIWatchBefore;
     }
