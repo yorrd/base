@@ -1,7 +1,6 @@
 import AdornisMongoMixin from '../redux/adornis-mongo-mixin.js';
 import { Element } from '../node_links/@polymer/polymer/polymer-element.js';
 import { Templatize } from '../node_links/@polymer/polymer/lib/utils/templatize.js';
-import { root } from '../node_links/@polymer/polymer/lib/utils/path.js';
 
 class MongoBind extends AdornisMongoMixin(Element) {
     static get is() {
@@ -13,7 +12,7 @@ class MongoBind extends AdornisMongoMixin(Element) {
             item: { type: Object, value: {} },
             collection: { type: String, observer: '_collectionChanged' },
             subParams: { type: Array, value: [] },
-            selector: { type: Object, value: {}, observer: '_updateResults' },
+            selector: { type: Object, value: {}, observer: '_collectionChanged' },
             watch: { type: Boolean, value: true },
             update: {
                 type: Function,
@@ -24,12 +23,15 @@ class MongoBind extends AdornisMongoMixin(Element) {
                         if (!Object.keys(this.item).length === 0) return;
 
                         let setObj = {};
-                        if (diff && diff.path.includes('.')) {
+                        if (diff) {
+                            if (!diff.path.includes('.')) return;
                             const key = diff.path.split('.')[1];
                             setObj[key] = diff.value;
                         } else {
                             setObj = this.item;
                         }
+
+                        if (Object.keys(setObj).length === 0) return;
 
                         if (newValue._id) this.getCollection(this.collection).update({ _id: newValue._id }, { $set: setObj });
                         else {
@@ -75,15 +77,16 @@ class MongoBind extends AdornisMongoMixin(Element) {
         this.root.appendChild(this.__instance.root);
     }
 
-    _collectionChanged(coll) {
-        this.subscribe(coll, 'subParams');
+    _collectionChanged() {
+        if (!this.selector || !this.collection) return;
+        this.subscribe(this.collection, 'subParams');
 
         if (this._obs) this._obs.stop();
         this._obs = this.getCollection(this.collection).find(this.selector).observe({
-            added: this._updateResults.call(this, this.selector),
-            removed: this._updateResults.call(this, this.selector),
-            changed: this._updateResults.call(this, this.selector),
-            movedTo: this._updateResults.call(this, this.selector),
+            added: () => this._updateResults(this.selector),
+            removed: () => this._updateResults(this.selector),
+            changed: () => this._updateResults(this.selector),
+            movedTo: () => this._updateResults(this.selector),
         });
     }
 
