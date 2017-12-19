@@ -14,7 +14,8 @@ export class MyApp extends AdornisMongoMixin(Element) { // eslint-disable-line
 <style>
 </style>
 
-<adornis-router></adornis-router>
+<adornis-router patterns="{{_routerPatterns}}"></adornis-router>
+<adornis-loader id="loader" background="grey" fade-out></adornis-loader>
 
 <app-header-layout class="fit layout vertical">
 
@@ -58,6 +59,10 @@ multiplied 3 and 4: {{mul(3, 4)}}
     </template>
 </mongo-bind>
 
+<hr />
+
+<paper-input value="{{route}}"></paper-input>
+
 </app-header-layout>
 
 `;
@@ -82,6 +87,20 @@ multiplied 3 and 4: {{mul(3, 4)}}
             filter: {
                 type: Object,
                 value: {name: 'hihihi'}
+            },
+            testPersistValue: {
+                type: String,
+                statePath: 'testPersist.deeplevelshit2',
+            },
+            _routerPatterns: {
+                type: Array,
+                value: function() {
+                    return ["/settings", "/:a/:b", "/:a"];
+                }
+            },
+            route: {
+                type: String,
+                statePath: 'router.path',
             }
         };
     }
@@ -93,6 +112,7 @@ multiplied 3 and 4: {{mul(3, 4)}}
             import('../node_links/@polymer/paper-button/paper-button.js');
             import '../redux/mongo-repeat.js';
             import '../redux/mongo-bind.js';
+            import('../redux/adornis-loader.js');
 
             import '../node_links/@polymer/paper-input/paper-input.js';
             import '../node_links/@polymer/paper-toggle-button/paper-toggle-button.js';
