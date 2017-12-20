@@ -12,11 +12,12 @@ const reducer = (state = {subReady: {}}, action) => {
     if (action.type.includes('update/')) {
         let storePart = object;
         const parts = action.statePath.split('.');
-        parts.slice(0, -2).forEach(key => {
+        parts.slice(0, -1).forEach(key => {
             if(!storePart[key]) storePart[key] = {};
             storePart = storePart[key];
         });
         storePart[parts.slice(-1)] = action.value;
+        console.log(object);
     }
 
     if(action.type === 'SUB_STATUS')
