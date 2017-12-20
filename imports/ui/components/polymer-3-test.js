@@ -15,7 +15,7 @@ export class MyApp extends AdornisMongoMixin(Element) { // eslint-disable-line
 </style>
 
 <adornis-router patterns="{{_routerPatterns}}"></adornis-router>
-<adornis-loader id="loader" background="grey" fade-out></adornis-loader>
+<adornis-loader background="grey" fade-out></adornis-loader>
 
 <app-header-layout class="fit layout vertical">
 
