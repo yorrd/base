@@ -70,9 +70,6 @@ multiplied 3 and 4: {{mul(3, 4)}}
 
     static get properties() {
         return {
-            route: Object,
-            routeData: Object,
-
             wasserKosten: {
                 type: Number, value: 2627.82, statePath: 'wasserKosten.test', dispatch: true,
             },
