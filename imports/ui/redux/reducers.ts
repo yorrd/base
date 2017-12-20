@@ -17,7 +17,6 @@ const reducer = (state = {subReady: {}}, action) => {
             storePart = storePart[key];
         });
         storePart[parts.slice(-1)] = action.value;
-        console.log(object);
     }
 
     if(action.type === 'SUB_STATUS')
