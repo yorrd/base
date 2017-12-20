@@ -33,15 +33,24 @@ class MongoBind extends AdornisMongoMixin(Element) {
 
                         if (Object.keys(setObj).length === 0) return;
 
+                        console.log(newValue._id, newValue, this.selector);
                         if (newValue._id) this.getCollection(this.collection).update({ _id: newValue._id }, { $set: setObj });
                         else {
                             this.getCollection(this.collection).insert(setObj);
-                            this._updateResults(this.selector);
+                            this._updateResults();
                         }
                     };
                 },
             },
             default: { type: Object, value: {} },
+            subReady: {
+                type: Boolean,
+                value: false,
+                statePath(state) {
+                    if (!state.subReady) return false;
+                    return state.subReady[this.collection];
+                },
+            },
         };
     }
 
@@ -78,24 +87,31 @@ class MongoBind extends AdornisMongoMixin(Element) {
     }
 
     _collectionChanged() {
+        console.log('changed', JSON.stringify(this.selector));
         if (!this.selector || !this.collection) return;
         this.subscribe(this.collection, 'subParams');
 
         if (this._obs) this._obs.stop();
+        this._updateResults(this.selector);
         this._obs = this.getCollection(this.collection).find(this.selector).observe({
-            added: () => this._updateResults(this.selector),
-            removed: () => this._updateResults(this.selector),
-            changed: () => this._updateResults(this.selector),
-            movedTo: () => this._updateResults(this.selector),
+            added: () => this._updateResults(),
+            removed: () => this._updateResults(),
+            changed: () => this._updateResults(),
+            movedTo: () => this._updateResults(),
         });
     }
 
-    _updateResults(selector) {
+    _updateResults() {
         const didIWatchBefore = this.watch;
         this.watch = false;
 
-        const result = this.getCollection(this.collection).findOne(selector);
+        if (this.getCollection(this.collection).find(this.selector).count(this.selector) === 0
+            && this.subReady) {
+            this.getCollection(this.collection).insert(this.default);
+        }
+        const result = this.getCollection(this.collection).findOne(this.selector);
         if (!this.__instance) return;
+        console.log(this.selector);
         this.__instance.set('item', result || this.default);
 
         this.watch = didIWatchBefore;
