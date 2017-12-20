@@ -74,7 +74,7 @@ multiplied 3 and 4: {{mul(3, 4)}}
             routeData: Object,
 
             wasserKosten: {
-                type: Number, value: 2627.82, statePath: 'wasserKosten', dispatch: true,
+                type: Number, value: 2627.82, statePath: 'wasserKosten.test', dispatch: true,
             },
             subParams1: {
                 type: Array,
