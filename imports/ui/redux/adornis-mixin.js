@@ -11,6 +11,7 @@ export default parent => class AdornisMixin extends ReduxMixin(parent) {
             .filter(prop => !!props[prop].statePath)
             .forEach((trackedProp) => {
                 const { statePath } = props[trackedProp];
+                if (typeof statePath === 'function') return;
                 const listenerName = `_trackedPropChanged__${statePath.replace('.', '_')}`;
                 if (!statePath) throw new Error(`dispatch given but not statePath for property ${trackedProp}`);
 
