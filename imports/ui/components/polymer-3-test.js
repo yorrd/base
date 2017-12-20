@@ -95,7 +95,7 @@ multiplied 3 and 4: {{mul(3, 4)}}
             _routerPatterns: {
                 type: Array,
                 value: function() {
-                    return ["/settings", "/:a/:b", "/:a"];
+                    return ["/:manual/search/:term", "/search/:term", "/:a/:b", "/:pageType"];
                 }
             },
             route: {
