@@ -52,7 +52,7 @@ multiplied 3 and 4: {{mul(3, 4)}}
 
 <hr />
 
-<mongo-bind collection="mongo-data" selector="{}">
+<mongo-bind collection="mongo-data" selector="{{filter}}">
     <template>
         {{print(item)}}
         <paper-input value="{{item.name}}"><paper-input>
@@ -98,7 +98,7 @@ multiplied 3 and 4: {{mul(3, 4)}}
             route: {
                 type: String,
                 statePath: 'router.path',
-            }
+            },
         };
     }
 

@@ -33,7 +33,6 @@ class MongoBind extends AdornisMongoMixin(Element) {
 
                         if (Object.keys(setObj).length === 0) return;
 
-                        console.log(newValue._id, newValue, this.selector);
                         if (newValue._id) this.getCollection(this.collection).update({ _id: newValue._id }, { $set: setObj });
                         else {
                             this.getCollection(this.collection).insert(setObj);
@@ -87,7 +86,6 @@ class MongoBind extends AdornisMongoMixin(Element) {
     }
 
     _collectionChanged() {
-        console.log('changed', JSON.stringify(this.selector));
         if (!this.selector || !this.collection) return;
         this.subscribe(this.collection, 'subParams');
 
@@ -111,7 +109,6 @@ class MongoBind extends AdornisMongoMixin(Element) {
         }
         const result = this.getCollection(this.collection).findOne(this.selector);
         if (!this.__instance) return;
-        console.log(this.selector);
         this.__instance.set('item', result || this.default);
 
         this.watch = didIWatchBefore;
