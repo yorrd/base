@@ -22,13 +22,20 @@ class MongoBind extends AdornisMongoMixin(Element) {
                         if (!newValue) return;
                         if (!Object.keys(this.item).length === 0) return;
 
+                        const forbiddenKeys = Object.keys(this.selector);
+
                         let setObj = {};
                         if (diff) {
                             if (!diff.path.includes('.')) return;
                             const key = diff.path.split('.')[1];
+                            if (forbiddenKeys.includes(key)) throw new Error('cant update a field which is used in the selector');
                             setObj[key] = diff.value;
                         } else {
-                            setObj = this.item;
+                            // filter out forbidden keys
+                            setObj = Object.keys(this.item)
+                                .reduce((newSetObj, key) => (forbiddenKeys.includes(key) ?
+                                    newSetObj :
+                                    Object.assign(newSetObj, { key: this.item[key] })), {});
                         }
 
                         if (Object.keys(setObj).length === 0) return;
