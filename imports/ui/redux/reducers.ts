@@ -28,7 +28,9 @@ const reducer = (state = {subReady: {}}, action) => {
 };
 
 const persistConfig = {
-    key: 'root', storage,
+    key: 'root',
+    storage,
+    blacklist: ['subReady']
 }
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || (x => x); // for the debugger in the browser

@@ -3,10 +3,6 @@ import { Element } from '../node_links/@polymer/polymer/polymer-element.js';
 import { Templatize } from '../node_links/@polymer/polymer/lib/utils/templatize.js';
 
 class MongoBind extends AdornisMongoMixin(Element) {
-    static get is() {
-        return 'mongo-bind';
-    }
-
     static get properties() {
         return {
             item: { type: Object, value: {} },
@@ -24,19 +20,14 @@ class MongoBind extends AdornisMongoMixin(Element) {
 
                         const forbiddenKeys = Object.keys(this.selector);
 
-                        let setObj = {};
+                        const setObj = {};
                         if (diff) {
                             if (!diff.path.includes('.')) return;
                             const key = diff.path.split('.')[1];
                             if (forbiddenKeys.includes(key)) throw new Error('cant update a field which is used in the selector');
                             setObj[key] = diff.value;
                         } else {
-                            // filter out forbidden keys
-                            // essentially using this.item here.
-                            setObj = Object.keys(this.item)
-                                .reduce((newSetObj, key) => (forbiddenKeys.includes(key) ?
-                                    newSetObj :
-                                    Object.assign(newSetObj, { key: this.item[key] })), {});
+                            throw new Error('diff missing');
                         }
 
                         if (Object.keys(setObj).length === 0) return;
@@ -79,7 +70,8 @@ class MongoBind extends AdornisMongoMixin(Element) {
             forwardHostProp(prop, value) {
                 // handling item updates
                 this.set(prop, value);
-                this.update(this.item);
+                // construct our own diff object. Not entirely sure if this is complete
+                this.update(this.item, { base: this.item, path: prop, value });
             },
             notifyInstanceProp(inst, prop, val) {
                 console.log('notiinstanceprop', inst, prop, val);
@@ -111,8 +103,10 @@ class MongoBind extends AdornisMongoMixin(Element) {
         const didIWatchBefore = this.watch;
         this.watch = false;
 
-        if (this.getCollection(this.collection).find(this.selector).count(this.selector) === 0
+        if (this.getCollection(this.collection).find(this.selector).count() === 0
             && this.subReady) {
+            console.log(this.default, this.getCollection(this.collection).find(this.selector).count());
+            setTimeout(() => console.log(this.default, this.getCollection(this.collection).find(this.selector).count()), 1000);
             this.getCollection(this.collection).insert(this.default);
         }
         const result = this.getCollection(this.collection).findOne(this.selector);
@@ -123,4 +117,4 @@ class MongoBind extends AdornisMongoMixin(Element) {
     }
 }
 
-window.customElements.define(MongoBind.is, MongoBind);
+window.customElements.define('mongo-bind', MongoBind);

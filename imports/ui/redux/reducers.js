@@ -21,7 +21,9 @@ const reducer = (state = { subReady: {} }, action) => {
     return Object.assign(object, {});
 };
 const persistConfig = {
-    key: 'root', storage,
+    key: 'root',
+    storage,
+    blacklist: ['subReady']
 };
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || (x => x); // for the debugger in the browser
 const storeCreate = createStore(persistReducer(persistConfig, reducer), undefined /* SSR rehydration */, composeEnhancers());
