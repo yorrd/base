@@ -52,7 +52,7 @@ multiplied 3 and 4: {{mul(3, 4)}}
 
 <hr />
 
-<mongo-bind collection="mongo-data" selector="{{filter}}">
+<mongo-bind collection="mongo-data" selector="{{filter}}" default="{}">
     <template>
         {{print(item)}}
         <paper-input value="{{item.editField}}"><paper-input>

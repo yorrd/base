@@ -38,7 +38,8 @@ class MongoBind extends AdornisMongoMixin(Element) {
                     };
                 },
             },
-            default: { type: Object, value: {} },
+            // default must include the selector, so that when inserting the default case, the selector is satisfied
+            default: { type: Object, value: null },
             subReady: {
                 type: Boolean,
                 value: false,
@@ -88,7 +89,7 @@ class MongoBind extends AdornisMongoMixin(Element) {
         this.subscribe(this.collection, 'subParams');
 
         if (this._obs) this._obs.stop();
-        this._updateResults(this.selector);
+        this._updateResults();
         this._obs = this.getCollection(this.collection).find(this.selector).observe({
             added: () => this._updateResults(),
             removed: () => this._updateResults(),
@@ -97,19 +98,29 @@ class MongoBind extends AdornisMongoMixin(Element) {
         });
     }
 
-    _updateResults() {
+    _updateResults(justInsertedDefaultWithThisId) {
         const didIWatchBefore = this.watch;
         this.watch = false;
 
-        if (this.getCollection(this.collection).find(this.selector).count() === 0
-            && this.subReady) {
-            console.log(this.default, this.getCollection(this.collection).find(this.selector).count());
-            setTimeout(() => console.log(this.default, this.getCollection(this.collection).find(this.selector).count()), 1000);
-            this.getCollection(this.collection).insert(this.default);
-        }
         const result = this.getCollection(this.collection).findOne(this.selector);
         if (!this.__instance) return;
-        this.__instance.set('item', result || this.default);
+
+        if (result) {
+            // just set it, if we have a valid result
+            this.__instance.set('item', result);
+        } else if (this.subReady) {
+            if (justInsertedDefaultWithThisId) {
+                throw new Error('Your default case is inserting objects which dont satisfy your filter. ' +
+                                'This would lead to useless object creation');
+            }
+
+            // if we don't and the sub is ready, insert the default case
+            const def = this.default || this.selector; // if we don't have a default case, assume the selector
+            const newId = this.getCollection(this.collection).insert(def);
+            // and re-evaluate
+            this._updateResults(newId);
+        }
+        this.__instance.set('item', !result && this.subReady ? (this.default || this.selector) : result);
 
         this.watch = didIWatchBefore;
     }
