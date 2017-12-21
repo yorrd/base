@@ -26,9 +26,7 @@ class MongoBind extends AdornisMongoMixin(Element) {
                             const key = diff.path.split('.')[1];
                             if (forbiddenKeys.includes(key)) throw new Error('cant update a field which is used in the selector');
                             setObj[key] = diff.value;
-                        } else {
-                            throw new Error('diff missing');
-                        }
+                        } else throw new Error('diff missing');
 
                         if (Object.keys(setObj).length === 0) return;
 
