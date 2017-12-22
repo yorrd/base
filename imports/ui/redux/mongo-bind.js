@@ -11,6 +11,7 @@ class MongoBind extends AdornisMongoMixin(Element) {
             subParams: { type: Array, value: [] },
             selector: { type: Object, value: {}, observer: '_collectionChanged' },
             watch: { type: Boolean, value: true },
+            createNew: { type: Boolean, value: false },
             update: {
                 type: Function,
                 value() {
@@ -32,10 +33,7 @@ class MongoBind extends AdornisMongoMixin(Element) {
                         if (Object.keys(setObj).length === 0) return;
 
                         if (newValue._id) this.getCollection(this.collection).update({ _id: newValue._id }, { $set: setObj });
-                        else {
-                            this.getCollection(this.collection).insert(setObj);
-                            this._updateResults();
-                        }
+                        else throw new Error('should never get here, creation should happen at the bottom of the file');
                     };
                 },
             },
@@ -109,6 +107,7 @@ class MongoBind extends AdornisMongoMixin(Element) {
         this.watch = false;
 
         const result = this.getCollection(this.collection).findOne(this.selector);
+        console.log(this.getCollection(this.collection).find().fetch());
 
         if (result) {
             // just set it, if we have a valid result
@@ -117,6 +116,12 @@ class MongoBind extends AdornisMongoMixin(Element) {
             if (justInsertedDefaultWithThisId) {
                 throw new Error('Your default case is inserting objects which dont satisfy your filter. ' +
                                 'This would lead to useless object creation');
+            }
+
+            if (!this.createNew) {
+                console.error('You dont want me to create a new element (this.createNew) and there is nothing in the collection');
+                console.log('This could be because youre setting the wrong sub-params (temporarily?)');
+                return;
             }
 
             // if we don't and the sub is ready, insert the default case
