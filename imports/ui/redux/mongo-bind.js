@@ -107,7 +107,6 @@ class MongoBind extends AdornisMongoMixin(Element) {
         this.watch = false;
 
         const result = this.getCollection(this.collection).findOne(this.selector);
-        console.log(this.getCollection(this.collection).find().fetch());
 
         if (result) {
             // just set it, if we have a valid result
