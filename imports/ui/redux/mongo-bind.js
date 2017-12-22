@@ -1,6 +1,7 @@
 import AdornisMongoMixin from '../redux/adornis-mongo-mixin.js';
 import { Element } from '../node_links/@polymer/polymer/polymer-element.js';
 import { Templatize } from '../node_links/@polymer/polymer/lib/utils/templatize.js';
+import { _stampTemplate } from '../node_links/@polymer/polymer/lib/mixins/template-stamp.js';
 
 class MongoBind extends AdornisMongoMixin(Element) {
     static get properties() {
@@ -47,6 +48,7 @@ class MongoBind extends AdornisMongoMixin(Element) {
                     if (!state.subReady) return false;
                     return state.subReady[this.collection];
                 },
+                observer: '_collectionChanged',
             },
         };
     }
@@ -65,15 +67,15 @@ class MongoBind extends AdornisMongoMixin(Element) {
         const template = this.querySelector('template');
 
         this.__ctor = Templatize.templatize(template, this, {
-            mutableData: true,
+            mutableData: this.mutableData,
+            parentModel: true,
+            instanceProps: { item: true },
             forwardHostProp(prop, value) {
-                // handling item updates
-                this.set(prop, value);
-                // construct our own diff object. Not entirely sure if this is complete
-                this.update(this.item, { base: this.item, path: prop, value });
+                this.__instance.forwardHostProp(prop, value);
             },
-            notifyInstanceProp(inst, prop, val) {
-                console.log('notiinstanceprop', inst, prop, val);
+            notifyInstanceProp(inst, prop, value) {
+                this.set(prop, value);
+                this.notifyPath(prop);
             },
         });
 
@@ -84,9 +86,13 @@ class MongoBind extends AdornisMongoMixin(Element) {
         this.root.appendChild(this.__instance.root);
     }
 
-    _collectionChanged() {
+    // is also called from the subReady observer, so there can be a boolean property
+    _collectionChanged(undefinedOrSubStatus) {
+        if (undefinedOrSubStatus === false) return; // if undefined, this has been called by a different observer
         if (!this.selector || !this.collection) return;
-        this.subscribe(this.collection, 'subParams');
+        if (undefinedOrSubStatus === undefined) { // means that we actually changed something so that we need to resubscribe
+            this.subscribe(this.collection, 'subParams');
+        }
 
         if (this._obs) this._obs.stop();
         this._updateResults();
@@ -103,7 +109,6 @@ class MongoBind extends AdornisMongoMixin(Element) {
         this.watch = false;
 
         const result = this.getCollection(this.collection).findOne(this.selector);
-        if (!this.__instance) return;
 
         if (result) {
             // just set it, if we have a valid result
@@ -120,7 +125,6 @@ class MongoBind extends AdornisMongoMixin(Element) {
             // and re-evaluate
             this._updateResults(newId);
         }
-        this.__instance.set('item', !result && this.subReady ? (this.default || this.selector) : result);
 
         this.watch = didIWatchBefore;
     }
