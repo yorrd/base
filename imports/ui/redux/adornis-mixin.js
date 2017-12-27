@@ -8,11 +8,11 @@ export default parent => class AdornisMixin extends ReduxMixin(parent) {
 
         // get automatically managed polymer properties
         Object.keys(props)
-            .filter(prop => props[prop].dispatch)
+            .filter(prop => !!props[prop].statePath)
             .forEach((trackedProp) => {
                 const { statePath } = props[trackedProp];
+                if (typeof statePath === 'function') return;
                 const listenerName = `_trackedPropChanged__${statePath.replace('.', '_')}`;
-                if (!statePath) throw new Error(`dispatch given but not statePath for property ${trackedProp}`);
 
                 this[listenerName] = (newVal) => {
                     if (!newVal) return;
@@ -61,7 +61,7 @@ export default parent => class AdornisMixin extends ReduxMixin(parent) {
     }
 
     log(...x) { // eslint-disable-line class-methods-use-this
-        console.log(x);
+        if (this.__debug) { console.log(x); }
     }
 
     print(x) { // eslint-disable-line class-methods-use-this

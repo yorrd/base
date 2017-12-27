@@ -3,14 +3,17 @@ export default parent => class LanguageBehavior extends parent {
         return {
             translations: {
                 type: Array,
-                statePath: 'translations',
-                value: [],
+                computed: '_computeTranslations(collReady)',
             },
             language: {
                 type: String,
                 statePath: 'language',
                 dispatch: false,
                 // observer: '_resubscribe',
+            },
+            collReady: {
+                type: Boolean,
+                statePath: 'subReady.translations',
             },
 
             subParams2: {
@@ -32,28 +35,29 @@ export default parent => class LanguageBehavior extends parent {
     ready() {
         super.ready();
 
-        this._subscribeCollection('translations', 'translations', 'translations', '', this.persistentCollection);
+        // this._subscribeCollection('translations', 'translations', 'translations', '', this.persistentCollection);
+        if (typeof (this.collReady) === 'undefined' || this.collReady == null) { this.subscribe('translations'); }
     }
 
-    _computeLocalize() {
+    _computeTranslations(ready) {
+        if (!ready) return [];
+        return this.getCollection('translations').find().fetch();
+    }
+
+    _computeLocalize() { // eslint-disable-line class-methods-use-this
         return function y(...args) {
             const key = args[0];
             let value = '...';
+            if (key === '') return '';
             if (this.translations) {
-                this.translations.filter((translation) => {
-                    if (translation.key === key && translation.language === this.language) {
-                        value = translation.value;
-                        return true;
-                    }
-                    return false;
-                });
+                const valueTmp = this.translations.find(translation => translation.key === key && translation.language === this.language);
+                if (valueTmp) value = valueTmp.value;
             }
-            if (key === '') value = '';
             return value;
         };
     }
 
-    _computeSubParams(lang) {
+    _computeSubParams(lang) { // eslint-disable-line class-methods-use-this
         return [lang];
     }
 };
