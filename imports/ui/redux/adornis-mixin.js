@@ -61,7 +61,9 @@ export default parent => class AdornisMixin extends ReduxMixin(parent) {
     }
 
     log(...x) { // eslint-disable-line class-methods-use-this
-        if (this.__debug) { console.log(x); }
+        setTimeout(() => {
+            if (this.getState().__debug) { console.log(`${Date.now()}:: ${x}`); }
+        });
     }
 
     print(x) { // eslint-disable-line class-methods-use-this
