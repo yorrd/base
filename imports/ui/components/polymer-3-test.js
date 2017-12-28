@@ -2,6 +2,7 @@ import AdornisMongoMixin from '../redux/adornis-mongo-mixin.js';
 import { Element } from '../node_links/@polymer/polymer/polymer-element.js';
 import { afterNextRender } from '../node_links/@polymer/polymer/lib/utils/render-status.js';
 import '../node_links/@polymer/iron-flex-layout/iron-flex-layout-classes.js';
+import '../redux/adornis-styles.js';
 
 export class MyApp extends AdornisMongoMixin(Element) { // eslint-disable-line
 
@@ -12,6 +13,9 @@ export class MyApp extends AdornisMongoMixin(Element) { // eslint-disable-line
 
 <style is="custom-style" include="iron-flex iron-flex-alignment adornis"></style>
 <style>
+    hr {
+        margin: var(--space-xl) 0;
+    }
 </style>
 
 <adornis-router patterns="{{_routerPatterns}}"></adornis-router>

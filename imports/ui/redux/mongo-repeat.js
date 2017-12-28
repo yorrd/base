@@ -162,6 +162,11 @@ class MongoRepeat extends AdornisMongoMixin(DomRepeat) {
         setObj[key] = diff.value;
         cursor.update(dbObj._id, { $set: setObj });
     }
+
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this._obs) this._obs.stop();
+    }
 }
 
 window.customElements.define(MongoRepeat.is, MongoRepeat);

@@ -11,6 +11,7 @@ export default parent => class AdornisMongoMixin extends AdornisMixin(parent) {
             // listen for filter changes
             const paramListenerName = `_changeParam_${coll}`;
             this[paramListenerName] = (params) => {
+                if (!(params instanceof Array)) throw new Error(`Need an array as subParams, got ${params}`);
                 // set timeout here because we don't want to execute this before the actual change has been committed
                 // otherwise, we're taking an old value
                 setTimeout(() => this._subscribe(params, coll));

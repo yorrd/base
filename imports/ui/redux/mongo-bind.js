@@ -132,6 +132,11 @@ class MongoBind extends AdornisMongoMixin(Element) {
 
         this.watch = didIWatchBefore;
     }
+
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this._obs) this._obs.stop();
+    }
 }
 
 window.customElements.define('mongo-bind', MongoBind);
