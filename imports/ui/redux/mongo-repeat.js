@@ -74,20 +74,22 @@ class MongoRepeat extends AdornisMongoMixin(DomRepeat) {
         this.set('items', []);
         // TODO use ids, not the indices. The sorting won't work otherwise, if dom-repeat resorts things
         this._obs = this.getCollection(this.collection).find(this.subFilter).observe({
-            addedAt: (doc, i) => {
+            addedAt: (doc) => {
                 const wasWatchingBefore = this.watch;
                 this.watch = false;
 
+                const i = this.items.findIndex(item => item._id === doc._id);
                 this.splice('items', i, 0, doc);
                 // remove the temporary item
                 this.items.forEach((item, index) => { if (!item._id) this.splice('items', index, 1); });
 
                 this.watch = wasWatchingBefore;
             },
-            changedAt: (newDoc, oldDoc, i) => {
+            changedAt: (newDoc, oldDoc) => {
                 const wasWatchingBefore = this.watch;
                 this.watch = false;
 
+                const i = this.items.findIndex(item => item._id === oldDoc._id);
                 Object.keys(newDoc).forEach((newKey) => {
                     if (oldDoc[newKey] && newDoc[newKey] !== oldDoc[newKey]) this.set(`items.${i}.${newKey}`, newDoc[newKey]);
                 });
@@ -97,12 +99,12 @@ class MongoRepeat extends AdornisMongoMixin(DomRepeat) {
 
                 this.watch = wasWatchingBefore;
             },
-            removedAt: (doc, i) => {
+            removedAt: (doc) => {
                 const wasWatchingBefore = this.watch;
                 this.watch = false;
 
-                const index = this.items.findIndex(item => item._id === doc._id);
-                if (index >= 0) this.splice('items', index, 1);
+                const i = this.items.findIndex(item => item._id === doc._id);
+                if (i >= 0) this.splice('items', i, 1);
 
                 this.watch = wasWatchingBefore;
             },
@@ -110,6 +112,7 @@ class MongoRepeat extends AdornisMongoMixin(DomRepeat) {
                 const wasWatchingBefore = this.watch;
                 this.watch = false;
 
+                // TODO can I use fromIndex / toIndex here?
                 this.splice('items', fromIndex, 1);
                 this.splice('items', toIndex, 0, doc);
 
