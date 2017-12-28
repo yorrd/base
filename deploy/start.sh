@@ -8,5 +8,6 @@ export MONGO_URL="mongodb://localhost:27017/finance"
 export ROOT_URL="http://localhost:10000"
 export PORT="10000"
 
-forever stop Finance
-nohup forever --watchDirectory ./bundle --uid Finance bundle/main.js &
+pm2 stop Finance
+pm2 delete Finance
+pm2 start bundle/main.js --name Finance --watch

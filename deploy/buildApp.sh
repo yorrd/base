@@ -10,7 +10,7 @@ echo "Building Application..."
 echo "Finished Building!"
 echo "Signing Application..."
     cd ../qrcodeextension_build/android
-    jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 release-unsigned.apk elearningapp
+    jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 release-unsigned.apk elearningapp #--keystore ../../BaseProject/deploy/yaskawa.keystore
 echo "Finished Signing!"
 echo "Zipalign Application..."
     /opt/android-sdk/build-tools/25.0.3/zipalign 4 release-unsigned.apk elearning_qr.apk
