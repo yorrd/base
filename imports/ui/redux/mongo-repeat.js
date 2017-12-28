@@ -72,7 +72,6 @@ class MongoRepeat extends AdornisMongoMixin(DomRepeat) {
     _observe() {
         if (this._obs) this._obs.stop();
         this.set('items', []);
-        // TODO use ids, not the indices. The sorting won't work otherwise, if dom-repeat resorts things
         this._obs = this.getCollection(this.collection).find(this.subFilter).observe({
             addedAt: (doc) => {
                 const wasWatchingBefore = this.watch;
