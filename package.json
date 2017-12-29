@@ -5,7 +5,9 @@
   "scripts": {
     "start": "yarn install && meteor run",
     "weigh": "weigh --path imports/ui/index.html --depth 2",
-    "testdeploy": "scripts/testDeploy.sh"
+    "testdeploy": "deploy/testDeploy.sh",
+    "rundeploy": "deploy/start.sh",
+    "upload": "deploy/upload.sh BaseProject git@adornis.de:/srv/node/BaseProjectDeploy 30"
   },
   "dependencies": {
     "@adornis/polymerredux": "git+ssh://gogs@adornis.de:components/PolymerRedux.git",
