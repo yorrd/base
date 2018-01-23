@@ -67,14 +67,18 @@ class MongoBind extends AdornisMongoMixin(Element) {
         this.__ctor = Templatize.templatize(template, this, {
             mutableData: this.mutableData,
             parentModel: true,
-            instanceProps: { item: true },
             forwardHostProp(prop, value) {
-                setTimeout(() => this.__instance.forwardHostProp(prop, value));
+                this.__instance.forwardHostProp(prop, value);
+                if (prop.substring(0, 4) === 'item') {
+                    this.set(prop, value);
+                    this.notifyPath(prop);
+                }
             },
-            notifyInstanceProp(inst, prop, value) {
-                this.set(prop, value);
-                this.notifyPath(prop);
-            },
+            // notifyInstanceProp(inst, prop, value) {
+            //     console.log('notify instance prop', inst, prop, value);
+            //     this.set(prop, value);
+            //     this.notifyPath(prop);
+            // },
         });
 
         this.__instance = new this.__ctor();

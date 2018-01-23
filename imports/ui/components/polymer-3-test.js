@@ -56,6 +56,7 @@ multiplied 3 and 4: {{mul(3, 4)}}
 
 <hr />
 
+filter: {{print(filter)}}
 <mongo-bind collection="mongo-data" selector="{{filter}}" default="{}">
     <template>
         {{print(item)}}
