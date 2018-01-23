@@ -69,7 +69,7 @@ class MongoBind extends AdornisMongoMixin(Element) {
             parentModel: true,
             instanceProps: { item: true },
             forwardHostProp(prop, value) {
-                this.__instance.forwardHostProp(prop, value);
+                setTimeout(() => this.__instance.forwardHostProp(prop, value));
             },
             notifyInstanceProp(inst, prop, value) {
                 this.set(prop, value);
