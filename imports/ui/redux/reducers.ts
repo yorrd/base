@@ -30,7 +30,7 @@ const reducer = (state = {subReady: {}}, action) => {
 const persistConfig = {
     key: 'root',
     storage,
-    blacklist: ['subReady'] // this should not be loaded because it will set collections ready before they are actually ready 
+    blacklist: ['subReady', 'router'] // this should not be loaded because it will set collections ready before they are actually ready 
 }
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || (x => x); // for the debugger in the browser
