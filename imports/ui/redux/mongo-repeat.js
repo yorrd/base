@@ -12,6 +12,7 @@ class MongoRepeat extends AdornisMongoMixin(DomRepeat) {
             items: {
                 type: Array,
                 value: [],
+                notify: true,
             },
             subParams: { type: Array, value: [] },
             subFilter: { type: Object, value: {}, observer: '_observe' },

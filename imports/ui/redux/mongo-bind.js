@@ -6,7 +6,9 @@ import { _stampTemplate } from '../node_links/@polymer/polymer/lib/mixins/templa
 class MongoBind extends AdornisMongoMixin(Element) {
     static get properties() {
         return {
-            item: { type: Object, value: {} },
+            item: {
+                type: Object, value: {}, notify: true,
+            },
             collection: { type: String, observer: '_collectionChanged' },
             subParams: { type: Array, value: [] },
             selector: { type: Object, value: {}, observer: '_collectionChanged' },
@@ -85,7 +87,7 @@ class MongoBind extends AdornisMongoMixin(Element) {
 
         super.connectedCallback();
 
-        this.root.appendChild(this.__instance.root);
+        this.parentNode.insertBefore(this.__instance.root, template.parentNode);
     }
 
     // is also called from the subReady observer, so there can be a boolean property
