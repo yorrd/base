@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@adornis/polymerredux": "git+ssh://gogs@adornis.de:components/PolymerRedux.git",
+    "@babel/runtime": "^7.0.0-beta.38",
     "@polymer/app-layout": "^3.0.0-pre.1",
     "@polymer/app-route": "^3.0.0-pre.1",
     "@polymer/paper-button": "^3.0.0-pre.1",
