@@ -81,13 +81,13 @@ filter: {{print(filter)}}
     static get properties() {
         return {
             debug: {
-                value: Boolean,
+                type: Boolean,
                 statePath: '__debug',
                 value: true,
             },
 
             wasserKosten: {
-                type: Number, value: 2627.82, statePath: 'wasserKosten.test', dispatch: true,
+                type: Number, value: 2627.82, statePath: 'wasserKosten.test',
             },
             subParams1: {
                 type: Array,
