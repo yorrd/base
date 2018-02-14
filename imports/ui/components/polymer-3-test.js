@@ -104,6 +104,11 @@ filter: {{print(filter)}}
                 type: String,
                 statePath: 'router.path',
             },
+            test: {
+                type: String,
+                statePath: '__test',
+                computed: '_computeTest(route)',
+            }
         };
     }
 
@@ -138,6 +143,11 @@ filter: {{print(filter)}}
 
     _switchFilter(e) {
         this.filter = !e.detail.value ? {} : {name: 'hihihi'};
+    }
+
+    _computeTest(route) {
+        this.log("hallo welt");
+        return "hallo welt";
     }
 }
 
