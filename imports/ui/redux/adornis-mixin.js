@@ -8,12 +8,16 @@ export default parent => class AdornisMixin extends ReduxMixin(parent) {
 
         // get automatically managed polymer properties
         Object.keys(props)
-            .filter(prop => !!props[prop].statePath)
+            .filter(prop => {
+                const hasStatePath = !!props[prop].statePath;
+                const doesntHaveComputed = !props[prop].computed;
+                if(doesntHaveComputed) throw new Error('cant have computed on a statePath-bound variable atm. Coming soon, see the issue on gogs');
+                return hasStatePath && doesntHaveComputed;
+            })
             .forEach((trackedProp) => {
                 const { statePath } = props[trackedProp];
                 if (typeof statePath === 'function') return;
                 const listenerName = `_trackedPropChanged__${statePath.replace('.', '_')}`;
-
                 this[listenerName] = (newVal) => {
                     if (!newVal) return;
                     this.dispatch({

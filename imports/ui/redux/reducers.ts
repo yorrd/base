@@ -10,6 +10,7 @@ const reducer = (state = {subReady: {}}, action) => {
 
     // insert polymer tracked variables
     if (action.type.includes('update/')) {
+        console.log(action);
         let storePart = object;
         const parts = action.statePath.split('.');
         parts.slice(0, -1).forEach(key => {
@@ -30,7 +31,7 @@ const reducer = (state = {subReady: {}}, action) => {
 const persistConfig = {
     key: 'root',
     storage,
-    blacklist: ['subReady', 'router'] // this should not be loaded because it will set collections ready before they are actually ready 
+    blacklist: ['subReady', 'router', '__test'] // this should not be loaded because it will set collections ready before they are actually ready 
 }
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || (x => x); // for the debugger in the browser

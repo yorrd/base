@@ -68,6 +68,11 @@ filter: {{print(filter)}}
 
 <paper-input value="{{route}}"></paper-input>
 
+<hr />
+
+{{test}}
+<paper-input value="{{test}}"></paper-input>
+
 </app-header-layout>
 
 `;
@@ -75,6 +80,12 @@ filter: {{print(filter)}}
 
     static get properties() {
         return {
+            debug: {
+                value: Boolean,
+                statePath: '__debug',
+                value: true,
+            },
+
             wasserKosten: {
                 type: Number, value: 2627.82, statePath: 'wasserKosten.test', dispatch: true,
             },
@@ -106,9 +117,9 @@ filter: {{print(filter)}}
             },
             test: {
                 type: String,
-                statePath: '__test',
-                computed: '_computeTest(route)',
-            }
+                statePath: 'teststatepath',
+                //computed: '_computeTest(wasserKosten)', geht grad net
+            },
         };
     }
 
