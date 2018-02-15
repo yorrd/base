@@ -11,7 +11,7 @@ export default parent => class AdornisMixin extends ReduxMixin(parent) {
             .filter(prop => {
                 const hasStatePath = !!props[prop].statePath;
                 const doesntHaveComputed = !props[prop].computed;
-                if(!doesntHaveComputed) throw new Error('cant have computed on a statePath-bound variable atm. Coming soon, see the issue on gogs');
+                if(hasStatePath && !doesntHaveComputed) throw new Error('cant have computed on a statePath-bound variable ' + prop + ' atm. Coming soon, see the issue on gogs');
                 return hasStatePath && doesntHaveComputed;
             })
             .forEach((trackedProp) => {
@@ -79,6 +79,7 @@ export default parent => class AdornisMixin extends ReduxMixin(parent) {
     }
 
     bool(arg) {
+        console.log(arg, !!arg);
         return !!arg;
     }
 };
