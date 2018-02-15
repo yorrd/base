@@ -77,4 +77,8 @@ export default parent => class AdornisMixin extends ReduxMixin(parent) {
     string(...args) { // eslint-disable-line class-methods-use-this
         return args.join('');
     }
+
+    bool(arg) {
+        return !!arg;
+    }
 };
