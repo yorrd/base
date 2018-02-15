@@ -79,7 +79,6 @@ export default parent => class AdornisMixin extends ReduxMixin(parent) {
     }
 
     bool(arg) {
-        console.log(arg, !!arg);
         return !!arg;
     }
 };
