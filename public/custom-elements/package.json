@@ -1,0 +1,72 @@
+{
+  "_from": "github:webcomponents/custom-elements",
+  "_id": "@webcomponents/custom-elements@1.0.8",
+  "_inBundle": false,
+  "_location": "/@webcomponents/custom-elements",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "webcomponents/custom-elements",
+    "rawSpec": "webcomponents/custom-elements",
+    "saveSpec": "github:webcomponents/custom-elements",
+    "fetchSpec": null,
+    "gitCommittish": null
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "github:webcomponents/custom-elements#4f7072c0dbda4beb505d16967acfffd33337b325",
+  "_spec": "webcomponents/custom-elements",
+  "_where": "/home/yorrd/PhpstormProjects/basePolymer2Proj",
+  "author": {
+    "name": "The Polymer Authors"
+  },
+  "bugs": {
+    "url": "https://github.com/webcomponents/custom-elements/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "HTML Custom Elements Polyfill",
+  "devDependencies": {
+    "@webcomponents/html-imports": "^1.0.0",
+    "@webcomponents/template": "^1.0.0",
+    "@webcomponents/webcomponents-platform": "^1.0.0",
+    "bower": "^1.8.0",
+    "es6-promise": "4.1.1",
+    "google-closure-compiler": "^20170409.0.0",
+    "gulp": "^3.8.8",
+    "gulp-sourcemaps": "^1.6.0",
+    "rollup-stream": "^1.14.0",
+    "vinyl-source-stream": "^1.1.0",
+    "web-component-tester": "^6.0.0"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "homepage": "https://webcomponents.org/polyfills",
+  "keywords": [
+    "custom-elements",
+    "customelements",
+    "web-components",
+    "webcomponents",
+    "polyfill",
+    "shim"
+  ],
+  "license": "BSD-3-Clause",
+  "main": "custom-elements.min.js",
+  "name": "@webcomponents/custom-elements",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webcomponents/custom-elements.git"
+  },
+  "scripts": {
+    "bower-install": "$(npm bin)/bower install",
+    "build": "gulp",
+    "test": "wct"
+  },
+  "version": "1.0.8"
+}
