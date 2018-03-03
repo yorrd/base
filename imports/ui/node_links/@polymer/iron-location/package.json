@@ -1,55 +1,38 @@
 {
-  "_from": "@polymer/iron-location@^3.0.0-pre.1",
-  "_id": "@polymer/iron-location@3.0.0-pre.1",
-  "_inBundle": false,
-  "_integrity": "sha512-+81iu+eNlytCWQIos6Qm9XZfsI7l5Bv09Wh9vrxPgzSupHFcW6QrtDXOthLp5M7Uko1M/0HO/e9sx4OQYXhhAw==",
-  "_location": "/@polymer/iron-location",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "range",
-    "registry": true,
-    "raw": "@polymer/iron-location@^3.0.0-pre.1",
-    "name": "@polymer/iron-location",
-    "escapedName": "@polymer%2firon-location",
-    "scope": "@polymer",
-    "rawSpec": "^3.0.0-pre.1",
-    "saveSpec": null,
-    "fetchSpec": "^3.0.0-pre.1"
-  },
-  "_requiredBy": [
-    "/@polymer/app-route"
-  ],
-  "_resolved": "https://registry.npmjs.org/@polymer/iron-location/-/iron-location-3.0.0-pre.1.tgz",
-  "_shasum": "e2fb5f817729102fcb1838f14a67c7da57d939fe",
-  "_spec": "@polymer/iron-location@^3.0.0-pre.1",
-  "_where": "/home/yorrd/PhpstormProjects/basePolymer2Proj/node_modules/@polymer/app-route",
-  "bugs": {
-    "url": "https://github.com/PolymerElements/iron-location/issues"
-  },
-  "bundleDependencies": false,
-  "contributors": [
-    {
-      "name": "The Polymer Authors"
-    }
-  ],
-  "dependencies": {
-    "@polymer/polymer": "^3.0.0-pre.1"
-  },
-  "deprecated": false,
-  "description": "Bidirectional data binding into the page's URL.",
-  "devDependencies": {},
+  "name": "@polymer/iron-location",
   "flat": true,
-  "homepage": "https://github.com/PolymerElements/iron-location",
+  "version": "3.0.0-pre.10",
+  "description": "Bidirectional data binding into the page's URL.",
+  "contributors": [
+    "The Polymer Authors"
+  ],
   "keywords": [
     "web-components",
     "polymer",
     "routing"
   ],
-  "license": "http://polymer.github.io/LICENSE.txt",
-  "name": "@polymer/iron-location",
   "repository": {
     "type": "git",
     "url": "git://github.com/PolymerElements/iron-location.git"
   },
-  "version": "3.0.0-pre.1"
+  "license": "BSD-3-Clause",
+  "homepage": "https://github.com/PolymerElements/iron-location",
+  "dependencies": {
+    "@polymer/polymer": "^3.0.0-pre.10"
+  },
+  "devDependencies": {
+    "@polymer/iron-flex-layout": "^3.0.0-pre.10",
+    "@polymer/iron-demo-helpers": "^3.0.0-pre.10",
+    "@polymer/iron-component-page": "^3.0.0-pre.10",
+    "@polymer/promise-polyfill": "^3.0.0-pre.10",
+    "@webcomponents/webcomponentsjs": "^1.0.0",
+    "@polymer/test-fixture": "^3.0.0-pre.10",
+    "wct-browser-legacy": "0.0.1-pre.11"
+  },
+  "resolutions": {
+    "inherits": "2.0.3",
+    "samsam": "1.1.3",
+    "supports-color": "3.1.2",
+    "type-detect": "1.0.0"
+  }
 }

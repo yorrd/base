@@ -1,61 +1,42 @@
 {
-  "_from": "@polymer/paper-toggle-button@next",
-  "_id": "@polymer/paper-toggle-button@3.0.0-pre.1",
-  "_inBundle": false,
-  "_integrity": "sha512-qI4PPunl0O4cWHqYtNR6yeI2FA9/dQy2zDmNnWQBJGfMOoANVPvt6IEtkKmhvlBr6+VCCBQBj2rttFwFEP9uBA==",
-  "_location": "/@polymer/paper-toggle-button",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "tag",
-    "registry": true,
-    "raw": "@polymer/paper-toggle-button@next",
-    "name": "@polymer/paper-toggle-button",
-    "escapedName": "@polymer%2fpaper-toggle-button",
-    "scope": "@polymer",
-    "rawSpec": "next",
-    "saveSpec": null,
-    "fetchSpec": "next"
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "_resolved": "https://registry.npmjs.org/@polymer/paper-toggle-button/-/paper-toggle-button-3.0.0-pre.1.tgz",
-  "_shasum": "c26046def2e2db1c3d7d668bb1ba0979fa8d85f2",
-  "_spec": "@polymer/paper-toggle-button@next",
-  "_where": "/home/yorrd/PhpstormProjects/basePolymer2Proj",
-  "bugs": {
-    "url": "https://github.com/PolymerElements/paper-toggle-button/issues"
-  },
-  "bundleDependencies": false,
-  "contributors": [
-    {
-      "name": "The Polymer Authors"
-    }
-  ],
-  "dependencies": {
-    "@polymer/iron-checked-element-behavior": "^3.0.0-pre.1",
-    "@polymer/paper-behaviors": "^3.0.0-pre.1",
-    "@polymer/paper-styles": "^3.0.0-pre.1",
-    "@polymer/polymer": "^3.0.0-pre.1"
-  },
-  "deprecated": false,
-  "description": "A material design toggle button control",
-  "devDependencies": {},
+  "name": "@polymer/paper-toggle-button",
   "flat": true,
-  "homepage": "https://github.com/PolymerElements/paper-toggle-button",
+  "version": "3.0.0-pre.10",
+  "description": "A material design toggle button control",
+  "contributors": [
+    "The Polymer Authors"
+  ],
   "keywords": [
     "web-components",
     "polymer",
     "toggle",
     "control"
   ],
-  "license": "http://polymer.github.io/LICENSE.txt",
   "main": "paper-toggle-button.html",
-  "name": "@polymer/paper-toggle-button",
   "repository": {
     "type": "git",
-    "url": "git://github.com/PolymerElements/paper-toggle-button.git"
+    "url": "git://github.com/PolymerElements/paper-toggle-button"
   },
-  "version": "3.0.0-pre.1"
+  "license": "BSD-3-Clause",
+  "homepage": "https://github.com/PolymerElements/paper-toggle-button",
+  "dependencies": {
+    "@polymer/polymer": "^3.0.0-pre.10",
+    "@polymer/iron-checked-element-behavior": "^3.0.0-pre.10",
+    "@polymer/paper-behaviors": "^3.0.0-pre.10",
+    "@polymer/paper-styles": "^3.0.0-pre.10"
+  },
+  "devDependencies": {
+    "@polymer/iron-component-page": "^3.0.0-pre.10",
+    "@polymer/iron-demo-helpers": "^3.0.0-pre.10",
+    "@polymer/iron-flex-layout": "^3.0.0-pre.10",
+    "@polymer/iron-test-helpers": "^3.0.0-pre.10",
+    "wct-browser-legacy": "0.0.1-pre.11",
+    "@webcomponents/webcomponentsjs": "^1.0.0"
+  },
+  "resolutions": {
+    "inherits": "2.0.3",
+    "samsam": "1.1.3",
+    "supports-color": "3.1.2",
+    "type-detect": "1.0.0"
+  }
 }

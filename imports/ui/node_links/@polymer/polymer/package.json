@@ -1,52 +1,27 @@
 {
-  "_from": "@polymer/polymer@^3.0.0-pre.1",
-  "_id": "@polymer/polymer@3.0.0-pre.1",
-  "_inBundle": false,
-  "_integrity": "sha512-yfVY9yl3hmnbU+RtcOobmmiPCkqIqpjMdo3+KoJ6gpFTUFFClKBqSAe7qussIGoyEUNdacXHF6OUj0Y2bTIDew==",
-  "_location": "/@polymer/polymer",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "range",
-    "registry": true,
-    "raw": "@polymer/polymer@^3.0.0-pre.1",
-    "name": "@polymer/polymer",
-    "escapedName": "@polymer%2fpolymer",
-    "scope": "@polymer",
-    "rawSpec": "^3.0.0-pre.1",
-    "saveSpec": null,
-    "fetchSpec": "^3.0.0-pre.1"
-  },
-  "_requiredBy": [
-    "/@adornis/polymerredux"
-  ],
-  "_resolved": "https://registry.npmjs.org/@polymer/polymer/-/polymer-3.0.0-pre.1.tgz",
-  "_shasum": "9fc26b5259aad9265f324ced02de715991d2eabe",
-  "_spec": "@polymer/polymer@^3.0.0-pre.1",
-  "_where": "/home/yorrd/PhpstormProjects/basePolymer2Proj/node_modules/@adornis/polymerredux",
-  "bugs": {
-    "url": "https://github.com/Polymer/polymer/issues"
-  },
-  "bundleDependencies": false,
+  "name": "@polymer/polymer",
+  "flat": true,
+  "version": "3.0.0-pre.10",
   "contributors": [
-    {
-      "name": "The Polymer Authors",
-      "url": "http://polymer.github.io/AUTHORS.txt"
-    }
+    "The Polymer Authors (http://polymer.github.io/AUTHORS.txt)"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Polymer/polymer.git"
+  },
+  "license": "BSD-3-Clause",
   "dependencies": {
     "@webcomponents/shadycss": "^1.0.0",
     "@webcomponents/webcomponentsjs": "^1.0.0"
   },
-  "deprecated": false,
-  "description": "[![Build Status](https://travis-ci.org/Polymer/polymer.svg?branch=master)](https://travis-ci.org/Polymer/polymer)",
-  "devDependencies": {},
-  "flat": true,
-  "homepage": "https://github.com/Polymer/polymer#readme",
-  "license": "http://polymer.github.io/LICENSE.txt",
-  "name": "@polymer/polymer",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Polymer/polymer.git"
+  "devDependencies": {
+    "wct-browser-legacy": "0.0.1-pre.11",
+    "@polymer/test-fixture": "^3.0.0-pre.10"
   },
-  "version": "3.0.0-pre.1"
+  "resolutions": {
+    "inherits": "2.0.3",
+    "samsam": "1.1.3",
+    "supports-color": "3.1.2",
+    "type-detect": "1.0.0"
+  }
 }

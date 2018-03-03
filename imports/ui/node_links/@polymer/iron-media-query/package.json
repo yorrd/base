@@ -1,56 +1,35 @@
 {
-  "_from": "@polymer/iron-media-query@^3.0.0-pre.1",
-  "_id": "@polymer/iron-media-query@3.0.0-pre.1",
-  "_inBundle": false,
-  "_integrity": "sha512-w8fL/SBYSpq7REwWstCRJbaW4JjpGpu6KHfqxQbNedmA+iQmMWcCiudh24c6v+uhG6kiGis1rnfy3pTmzg+G5g==",
-  "_location": "/@polymer/iron-media-query",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "range",
-    "registry": true,
-    "raw": "@polymer/iron-media-query@^3.0.0-pre.1",
-    "name": "@polymer/iron-media-query",
-    "escapedName": "@polymer%2firon-media-query",
-    "scope": "@polymer",
-    "rawSpec": "^3.0.0-pre.1",
-    "saveSpec": null,
-    "fetchSpec": "^3.0.0-pre.1"
-  },
-  "_requiredBy": [
-    "/@polymer/app-layout"
-  ],
-  "_resolved": "https://registry.npmjs.org/@polymer/iron-media-query/-/iron-media-query-3.0.0-pre.1.tgz",
-  "_shasum": "5738c8d741574bd71eb740d2f9f073062d4a8510",
-  "_spec": "@polymer/iron-media-query@^3.0.0-pre.1",
-  "_where": "/home/yorrd/PhpstormProjects/basePolymer2Proj/node_modules/@polymer/app-layout",
-  "bugs": {
-    "url": "https://github.com/PolymerElements/iron-media-query/issues"
-  },
-  "bundleDependencies": false,
-  "contributors": [
-    {
-      "name": "The Polymer Authors"
-    }
-  ],
-  "dependencies": {
-    "@polymer/polymer": "^3.0.0-pre.1"
-  },
-  "deprecated": false,
-  "description": "Lets you bind to a CSS media query",
-  "devDependencies": {},
+  "name": "@polymer/iron-media-query",
   "flat": true,
-  "homepage": "https://github.com/PolymerElements/iron-media-query",
+  "version": "3.0.0-pre.10",
+  "description": "Lets you bind to a CSS media query",
+  "contributors": [
+    "The Polymer Authors"
+  ],
   "keywords": [
     "web-components",
     "polymer",
     "media"
   ],
-  "license": "http://polymer.github.io/LICENSE.txt",
   "main": "iron-media-query.html",
-  "name": "@polymer/iron-media-query",
   "repository": {
     "type": "git",
-    "url": "git://github.com/PolymerElements/iron-media-query.git"
+    "url": "git://github.com/PolymerElements/iron-media-query"
   },
-  "version": "3.0.0-pre.1"
+  "license": "BSD-3-Clause",
+  "homepage": "https://github.com/PolymerElements/iron-media-query",
+  "dependencies": {
+    "@polymer/polymer": "^3.0.0-pre.10"
+  },
+  "devDependencies": {
+    "@polymer/paper-styles": "^3.0.0-pre.10",
+    "wct-browser-legacy": "0.0.1-pre.11",
+    "@webcomponents/webcomponentsjs": "^1.0.0"
+  },
+  "resolutions": {
+    "inherits": "2.0.3",
+    "samsam": "1.1.3",
+    "supports-color": "3.1.2",
+    "type-detect": "1.0.0"
+  }
 }

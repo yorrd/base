@@ -4,6 +4,7 @@ import PolymerRedux from '../node_links/@adornis/polymerredux/polymer-redux';
 import CollectionHolder from './collection-holder';
 import { persistReducer, autoRehydrate, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import PolymerRedux from '@adornis/polymerredux/polymer-redux';
 
 const reducer = (state = {subReady: {}}, action) => {
     let object = Object.assign({}, state);

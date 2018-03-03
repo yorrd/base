@@ -76,7 +76,7 @@ export default function PolymerRedux(store) {
 
 		subscribers.set(element, unsubscribe);
 		update(store.getState());
-		
+
 		return update;
 	};
 

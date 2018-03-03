@@ -1,57 +1,39 @@
 {
-  "_from": "@polymer/paper-ripple@^3.0.0-pre.1",
-  "_id": "@polymer/paper-ripple@3.0.0-pre.1",
-  "_inBundle": false,
-  "_integrity": "sha512-K7d439UEDBpUJHV7iYsHueOMLK48Fq7sC42wwmt6oEgI5vKkbCtf76031yGems7fe++5LDim1cbCV8Fm3Iw1KQ==",
-  "_location": "/@polymer/paper-ripple",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "range",
-    "registry": true,
-    "raw": "@polymer/paper-ripple@^3.0.0-pre.1",
-    "name": "@polymer/paper-ripple",
-    "escapedName": "@polymer%2fpaper-ripple",
-    "scope": "@polymer",
-    "rawSpec": "^3.0.0-pre.1",
-    "saveSpec": null,
-    "fetchSpec": "^3.0.0-pre.1"
-  },
-  "_requiredBy": [
-    "/@polymer/paper-behaviors"
-  ],
-  "_resolved": "https://registry.npmjs.org/@polymer/paper-ripple/-/paper-ripple-3.0.0-pre.1.tgz",
-  "_shasum": "67e692ea2c6d91d4f5f5bdf998dbd8a52acd9efa",
-  "_spec": "@polymer/paper-ripple@^3.0.0-pre.1",
-  "_where": "/home/yorrd/PhpstormProjects/basePolymer2Proj/node_modules/@polymer/paper-behaviors",
-  "bugs": {
-    "url": "https://github.com/PolymerElements/paper-ripple/issues"
-  },
-  "bundleDependencies": false,
-  "contributors": [
-    {
-      "name": "The Polymer Authors"
-    }
-  ],
-  "dependencies": {
-    "@polymer/iron-a11y-keys-behavior": "^3.0.0-pre.1",
-    "@polymer/polymer": "^3.0.0-pre.1"
-  },
-  "deprecated": false,
-  "description": "Adds a material design ripple to any container",
-  "devDependencies": {},
+  "name": "@polymer/paper-ripple",
   "flat": true,
-  "homepage": "https://github.com/PolymerElements/paper-ripple#readme",
+  "version": "3.0.0-pre.10",
+  "description": "Adds a material design ripple to any container",
+  "contributors": [
+    "The Polymer Authors"
+  ],
   "keywords": [
     "web-components",
     "polymer",
     "ripple"
   ],
-  "license": "http://polymer.github.io/LICENSE.txt",
   "main": "paper-ripple.html",
-  "name": "@polymer/paper-ripple",
   "repository": {
     "type": "git",
     "url": "git://github.com/PolymerElements/paper-ripple.git"
   },
-  "version": "3.0.0-pre.1"
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "@polymer/iron-a11y-keys-behavior": "^3.0.0-pre.10",
+    "@polymer/polymer": "^3.0.0-pre.10"
+  },
+  "devDependencies": {
+    "@polymer/iron-component-page": "^3.0.0-pre.10",
+    "@polymer/iron-icon": "^3.0.0-pre.10",
+    "@polymer/iron-icons": "^3.0.0-pre.10",
+    "@polymer/iron-test-helpers": "^3.0.0-pre.10",
+    "@polymer/iron-demo-helpers": "^3.0.0-pre.10",
+    "wct-browser-legacy": "0.0.1-pre.11",
+    "@webcomponents/webcomponentsjs": "^1.0.0"
+  },
+  "resolutions": {
+    "inherits": "2.0.3",
+    "samsam": "1.1.3",
+    "supports-color": "3.1.2",
+    "type-detect": "1.0.0"
+  }
 }

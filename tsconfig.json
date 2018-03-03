@@ -1,14 +1,17 @@
 {
     "compilerOptions": {
         "target": "es6",
-        "lib": ["es5", "es6", "dom"],
+        "lib": ["esnext", "es7", "webworker", "es5", "es6", "dom"],
         "baseUrl": ".",
         "paths": {
-            "*": [
-                "*",
-                "node_modules/*"
-            ]
-        }
+            "*": ["*"]
+        },
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "experimentalDecorators": true,
+        "sourceMap": true,
+        "allowJs": true,
+        "isolatedModules": true
     },
     "compileOnSave": true
 }

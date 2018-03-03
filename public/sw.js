@@ -1,5 +1,5 @@
 const HTMLToCache = '/';
-const version = 'kmp-1'; // remember to change this version before every deployment
+const version = 'kmp-2'; // remember to change this version before every deployment
 
 self.addEventListener('install', (event) => {
     event.waitUntil(caches.open(version).then((cache) => {
