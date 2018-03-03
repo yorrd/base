@@ -19,6 +19,8 @@
     "@polymer/paper-toggle-button": "^3.0.0-pre.10",
     "@skatejs/ssr": "^0.15.4",
     "@types/meteor": "^1.4.13",
+    "@types/redux": "^3.6.0",
+    "@types/redux-devtools-extension": "^2.13.2",
     "@webcomponents/custom-elements": "github:webcomponents/custom-elements",
     "@webcomponents/webcomponentsjs": "^1.0.18",
     "babel-runtime": "^6.26.0",

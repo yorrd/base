@@ -1,8 +1,12 @@
 {
-    "extends": [
-        "tslint-eslint-rules"
-    ],
+    "defaultSeverity": "error",
+    "extends": ["tslint:recommended"],
+    "jsRules": {},
     "rules": {
-        "no-constant-condition": true
-    }
+        "curly": false,
+        "arrow-parens": false,
+        "object-literal-sort-keys": false,
+        "ordered-imports": false
+    },
+    "rulesDirectory": []
 }

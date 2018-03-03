@@ -1,6 +1,8 @@
+import { Mongo } from "meteor/mongo";
+
 export default class CollectionHolder {
-    static getCollection(coll, persistent) {
-        if (!coll) throw new Error('can\'t get collection undefined');
+    public static getCollection(coll: string, persistent: boolean = false) {
+        if (!coll) throw new Error("can't get collection undefined");
         if (!this.collection) this.collection = {};
         if (!this.collection[coll]) {
             if (persistent) {
@@ -12,4 +14,6 @@ export default class CollectionHolder {
         }
         return this.collection[coll];
     }
+
+    private static collection: object;
 }
