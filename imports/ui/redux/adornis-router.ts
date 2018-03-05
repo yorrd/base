@@ -52,9 +52,9 @@ class AdornisRouter extends AdornisMixin(Element) {
 
             // -----REDUX STATE-----
             // route Obj saved in state
-            _routeObj: {
+            _routeData: {
                 type: Object,
-                statePath: "router",
+                statePath: "router.data",
             },
 
             _routePath: {
@@ -69,39 +69,28 @@ class AdornisRouter extends AdornisMixin(Element) {
         };
     }
 
+
     public connectedCallback() {
         super.connectedCallback();
 
-        if (this.patterns.length === 0)
-            throw new Error("Adornis Router needs at least one pattern");
-        this.set("_resArray", []);
-        this.patterns.forEach(() => {
-            this.push("_resArray", {
-                data: "",
-                queryParams: "",
-                active: false,
-            });
-        });
+        if (this.patterns.length === 0) throw new Error('Adornis Router needs at least one pattern');
+        this.set('_resArray', []);
+        this.patterns.forEach(() => { this.push('_resArray', { data: '', queryParams: '', active: false }); });
         this._writeToState(this._resArray);
     }
 
-    private __writeToState(arr) {
+    private _writeToState(arr) {
         // TODO I have no FUCKING clue why we need setTimeout here, but otherwise array is not loaded completely
         setTimeout(() => {
             if (!arr) return;
             const filtered = arr.find(entry => entry.active);
-            const routeObj = {
-                data: filtered.data,
-                queryParams: filtered.queryParams,
-                path: this._route.path,
-            };
-            if (JSON.stringify(routeObj) === JSON.stringify(this._routeObj))
-                return;
-            this.set("routeObj", routeObj);
+            const { data } = filtered;
+            if (JSON.stringify(data) === JSON.stringify(this._routeData)) return;
+            this.set('_routeData', data);
         });
     }
 
-    private __getNthPattern(index) {
+    private _getNthPattern(index) {
         return this.patterns[index];
     }
 
