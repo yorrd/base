@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "start":
-            "yarn install && rm -r imports/ui/node_links/@polymer && cp -r node_modules/@polymer/ imports/ui/node_links && find imports/ui/node_links/ -name \"*.js\" -exec bash -c 'mv \"$1\" \"${1%.js}\".ts' - '{}' \\; && meteor run",
+            "yarn install && rm -r imports/ui/node_links/@polymer && cp -r node_modules/@polymer/ imports/ui/node_links && find imports/ui/node_links/ -name \"*.js\" -exec bash -c 'mv \"$1\" \"${1%.js}\".ts' - '{}' \\; && meteor run | grep -v node_links",
         "weigh": "weigh --path imports/ui/index.html --depth 2",
         "testdeploy": "deploy/testDeploy.sh",
         "rundeploy": "deploy/start.sh",
