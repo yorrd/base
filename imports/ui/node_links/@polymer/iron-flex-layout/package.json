@@ -1,36 +1,69 @@
 {
-  "name": "@polymer/iron-flex-layout",
-  "flat": true,
-  "version": "3.0.0-pre.10",
-  "description": "Provide flexbox-based layouts",
-  "contributors": [
-    "The Polymer Authors"
+  "_from": "@polymer/iron-flex-layout@^3.0.0-pre.10",
+  "_id": "@polymer/iron-flex-layout@3.0.0-pre.10",
+  "_inBundle": false,
+  "_integrity": "sha512-3mYjBfXJa5ytzSB0SsG++RbI1imRWGA7NKQbBQYWvAFf0QSJZ4/Q2VRvB+uI55mNK1jEIoQ+HWMbl4Edl2N2Gg==",
+  "_location": "/@polymer/iron-flex-layout",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "@polymer/iron-flex-layout@^3.0.0-pre.10",
+    "name": "@polymer/iron-flex-layout",
+    "escapedName": "@polymer%2firon-flex-layout",
+    "scope": "@polymer",
+    "rawSpec": "^3.0.0-pre.10",
+    "saveSpec": null,
+    "fetchSpec": "^3.0.0-pre.10"
+  },
+  "_requiredBy": [
+    "/@polymer/paper-button",
+    "/@polymer/paper-styles"
   ],
+  "_resolved": "https://registry.npmjs.org/@polymer/iron-flex-layout/-/iron-flex-layout-3.0.0-pre.10.tgz",
+  "_shasum": "3436278e5ba65d423e3bdb1a7682e1611709c23f",
+  "_spec": "@polymer/iron-flex-layout@^3.0.0-pre.10",
+  "_where": "/home/yorrd/PhpstormProjects/base/node_modules/@polymer/paper-button",
+  "bugs": {
+    "url": "https://github.com/PolymerElements/iron-flex-layout/issues"
+  },
+  "bundleDependencies": false,
+  "contributors": [
+    {
+      "name": "The Polymer Authors"
+    }
+  ],
+  "dependencies": {
+    "@polymer/polymer": "^3.0.0-pre.10"
+  },
+  "deprecated": false,
+  "description": "Provide flexbox-based layouts",
+  "devDependencies": {
+    "@polymer/iron-component-page": "^3.0.0-pre.10",
+    "@polymer/iron-demo-helpers": "^3.0.0-pre.10",
+    "@polymer/test-fixture": "^3.0.0-pre.10",
+    "@webcomponents/webcomponentsjs": "^1.0.0",
+    "wct-browser-legacy": "0.0.1-pre.11"
+  },
+  "flat": true,
+  "homepage": "https://github.com/PolymerElements/iron-flex-layout#readme",
   "keywords": [
     "web-components",
     "polymer",
     "layout"
   ],
+  "license": "BSD-3-Clause",
   "main": "iron-flex-layout.html",
+  "name": "@polymer/iron-flex-layout",
   "repository": {
     "type": "git",
     "url": "git://github.com/PolymerElements/iron-flex-layout.git"
-  },
-  "license": "BSD-3-Clause",
-  "dependencies": {
-    "@polymer/polymer": "^3.0.0-pre.10"
-  },
-  "devDependencies": {
-    "@polymer/test-fixture": "^3.0.0-pre.10",
-    "wct-browser-legacy": "0.0.1-pre.11",
-    "@webcomponents/webcomponentsjs": "^1.0.0",
-    "@polymer/iron-component-page": "^3.0.0-pre.10",
-    "@polymer/iron-demo-helpers": "^3.0.0-pre.10"
   },
   "resolutions": {
     "inherits": "2.0.3",
     "samsam": "1.1.3",
     "supports-color": "3.1.2",
     "type-detect": "1.0.0"
-  }
+  },
+  "version": "3.0.0-pre.10"
 }

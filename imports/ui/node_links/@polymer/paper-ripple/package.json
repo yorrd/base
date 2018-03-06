@@ -1,39 +1,71 @@
 {
-  "name": "@polymer/paper-ripple",
-  "flat": true,
-  "version": "3.0.0-pre.10",
-  "description": "Adds a material design ripple to any container",
-  "contributors": [
-    "The Polymer Authors"
+  "_from": "@polymer/paper-ripple@^3.0.0-pre.10",
+  "_id": "@polymer/paper-ripple@3.0.0-pre.10",
+  "_inBundle": false,
+  "_integrity": "sha512-kqZwlIBqQMTjKhZIz8L05u6Y76ySmGwsk+Ha+Rxfq0JNZtnRzEBj3D8alechrFOvzfOf289lUeBlcDkRarC0qQ==",
+  "_location": "/@polymer/paper-ripple",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "@polymer/paper-ripple@^3.0.0-pre.10",
+    "name": "@polymer/paper-ripple",
+    "escapedName": "@polymer%2fpaper-ripple",
+    "scope": "@polymer",
+    "rawSpec": "^3.0.0-pre.10",
+    "saveSpec": null,
+    "fetchSpec": "^3.0.0-pre.10"
+  },
+  "_requiredBy": [
+    "/@polymer/paper-behaviors"
   ],
+  "_resolved": "https://registry.npmjs.org/@polymer/paper-ripple/-/paper-ripple-3.0.0-pre.10.tgz",
+  "_shasum": "b591d4f813799c88fa4d1fb60bafb89bb71e2115",
+  "_spec": "@polymer/paper-ripple@^3.0.0-pre.10",
+  "_where": "/home/yorrd/PhpstormProjects/base/node_modules/@polymer/paper-behaviors",
+  "bugs": {
+    "url": "https://github.com/PolymerElements/paper-ripple/issues"
+  },
+  "bundleDependencies": false,
+  "contributors": [
+    {
+      "name": "The Polymer Authors"
+    }
+  ],
+  "dependencies": {
+    "@polymer/iron-a11y-keys-behavior": "^3.0.0-pre.10",
+    "@polymer/polymer": "^3.0.0-pre.10"
+  },
+  "deprecated": false,
+  "description": "Adds a material design ripple to any container",
+  "devDependencies": {
+    "@polymer/iron-component-page": "^3.0.0-pre.10",
+    "@polymer/iron-demo-helpers": "^3.0.0-pre.10",
+    "@polymer/iron-icon": "^3.0.0-pre.10",
+    "@polymer/iron-icons": "^3.0.0-pre.10",
+    "@polymer/iron-test-helpers": "^3.0.0-pre.10",
+    "@webcomponents/webcomponentsjs": "^1.0.0",
+    "wct-browser-legacy": "0.0.1-pre.11"
+  },
+  "flat": true,
+  "homepage": "https://github.com/PolymerElements/paper-ripple#readme",
   "keywords": [
     "web-components",
     "polymer",
     "ripple"
   ],
+  "license": "BSD-3-Clause",
   "main": "paper-ripple.html",
+  "name": "@polymer/paper-ripple",
   "repository": {
     "type": "git",
     "url": "git://github.com/PolymerElements/paper-ripple.git"
-  },
-  "license": "BSD-3-Clause",
-  "dependencies": {
-    "@polymer/iron-a11y-keys-behavior": "^3.0.0-pre.10",
-    "@polymer/polymer": "^3.0.0-pre.10"
-  },
-  "devDependencies": {
-    "@polymer/iron-component-page": "^3.0.0-pre.10",
-    "@polymer/iron-icon": "^3.0.0-pre.10",
-    "@polymer/iron-icons": "^3.0.0-pre.10",
-    "@polymer/iron-test-helpers": "^3.0.0-pre.10",
-    "@polymer/iron-demo-helpers": "^3.0.0-pre.10",
-    "wct-browser-legacy": "0.0.1-pre.11",
-    "@webcomponents/webcomponentsjs": "^1.0.0"
   },
   "resolutions": {
     "inherits": "2.0.3",
     "samsam": "1.1.3",
     "supports-color": "3.1.2",
     "type-detect": "1.0.0"
-  }
+  },
+  "version": "3.0.0-pre.10"
 }

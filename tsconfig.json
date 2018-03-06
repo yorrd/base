@@ -10,8 +10,7 @@
         "moduleResolution": "node",
         "experimentalDecorators": true,
         "sourceMap": true,
-        "allowJs": true,
-        "isolatedModules": true
+        "allowJs": true
     },
     "compileOnSave": true
 }

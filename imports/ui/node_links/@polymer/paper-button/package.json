@@ -1,31 +1,46 @@
 {
-  "name": "@polymer/paper-button",
-  "flat": true,
-  "version": "3.0.0-pre.10",
-  "description": "Material design button",
-  "contributors": [
-    "The Polymer Authors"
-  ],
-  "keywords": [
-    "web-components",
-    "web-component",
-    "polymer",
-    "paper",
-    "button"
-  ],
-  "main": "paper-button.html",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/PolymerElements/paper-button.git"
+  "_from": "@polymer/paper-button@next",
+  "_id": "@polymer/paper-button@3.0.0-pre.10",
+  "_inBundle": false,
+  "_integrity": "sha512-EyrtEVsH39aNSjl2HDC7qBbXETIvT/m8Hkcf/Y2yfOUS9+u2hNpa8x+/Cs6gezWxuaFHZ6EWQhQh/KeAQhJTLQ==",
+  "_location": "/@polymer/paper-button",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "@polymer/paper-button@next",
+    "name": "@polymer/paper-button",
+    "escapedName": "@polymer%2fpaper-button",
+    "scope": "@polymer",
+    "rawSpec": "next",
+    "saveSpec": null,
+    "fetchSpec": "next"
   },
-  "license": "BSD-3-Clause",
-  "homepage": "https://github.com/PolymerElements/paper-button",
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@polymer/paper-button/-/paper-button-3.0.0-pre.10.tgz",
+  "_shasum": "7a34769ecfb848248355354e3693f5c4fce90b00",
+  "_spec": "@polymer/paper-button@next",
+  "_where": "/home/yorrd/PhpstormProjects/base",
+  "bugs": {
+    "url": "https://github.com/PolymerElements/paper-button/issues"
+  },
+  "bundleDependencies": false,
+  "contributors": [
+    {
+      "name": "The Polymer Authors"
+    }
+  ],
   "dependencies": {
-    "@polymer/polymer": "^3.0.0-pre.10",
     "@polymer/iron-flex-layout": "^3.0.0-pre.10",
     "@polymer/paper-behaviors": "^3.0.0-pre.10",
-    "@polymer/paper-styles": "^3.0.0-pre.10"
+    "@polymer/paper-styles": "^3.0.0-pre.10",
+    "@polymer/polymer": "^3.0.0-pre.10"
   },
+  "deprecated": false,
+  "description": "Material design button",
   "devDependencies": {
     "@polymer/iron-component-page": "^3.0.0-pre.10",
     "@polymer/iron-demo-helpers": "^3.0.0-pre.10",
@@ -33,13 +48,30 @@
     "@polymer/iron-icons": "^3.0.0-pre.10",
     "@polymer/iron-test-helpers": "^3.0.0-pre.10",
     "@polymer/test-fixture": "^3.0.0-pre.10",
-    "wct-browser-legacy": "0.0.1-pre.11",
-    "@webcomponents/webcomponentsjs": "^1.0.0"
+    "@webcomponents/webcomponentsjs": "^1.0.0",
+    "wct-browser-legacy": "0.0.1-pre.11"
+  },
+  "flat": true,
+  "homepage": "https://github.com/PolymerElements/paper-button",
+  "keywords": [
+    "web-components",
+    "web-component",
+    "polymer",
+    "paper",
+    "button"
+  ],
+  "license": "BSD-3-Clause",
+  "main": "paper-button.html",
+  "name": "@polymer/paper-button",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PolymerElements/paper-button.git"
   },
   "resolutions": {
     "inherits": "2.0.3",
     "samsam": "1.1.3",
     "supports-color": "3.1.2",
     "type-detect": "1.0.0"
-  }
+  },
+  "version": "3.0.0-pre.10"
 }

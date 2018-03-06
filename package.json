@@ -3,36 +3,22 @@
     "version": "2.0.0-alpha",
     "private": true,
     "scripts": {
-        "start":
-            "yarn install && rm -r imports/ui/node_links/@polymer && cp -r node_modules/@polymer/ imports/ui/node_links && find imports/ui/node_links/ -name \"*.js\" -exec bash -c 'mv \"$1\" \"${1%.js}\".ts' - '{}' \\; && meteor run | grep -v node_links",
+        "start": "yarn install && rm -r imports/ui/node_links/@polymer && cp -r node_modules/@polymer/ imports/ui/node_links && find imports/ui/node_links/ -name \"*.js\" -exec bash -c 'mv \"$1\" \"${1%.js}\".ts' - '{}' \\; && meteor run | grep -v node_links",
         "weigh": "weigh --path imports/ui/index.html --depth 2",
         "testdeploy": "deploy/testDeploy.sh",
         "rundeploy": "deploy/start.sh",
-        "upload":
-            "deploy/upload.sh BaseProject git@adornis.de:/srv/node/BaseProjectDeploy 30"
+        "upload": "deploy/upload.sh BaseProject git@adornis.de:/srv/node/BaseProjectDeploy 30"
     },
     "dependencies": {
-        "@adornis/polymerredux":
-            "git+ssh://gogs@adornis.de:components/PolymerRedux.git",
-        "@babel/runtime": "^7.0.0-beta.38",
-        "@polymer/app-layout": "^3.0.0-pre.10",
-        "@polymer/app-route": "^3.0.0-pre.10",
+        "@babel/runtime": "^7.0.0-beta.40",
         "@polymer/paper-button": "^3.0.0-pre.10",
-        "@polymer/paper-input": "^3.0.0-pre.10",
-        "@polymer/paper-toggle-button": "^3.0.0-pre.10",
-        "@skatejs/ssr": "^0.15.4",
+        "@polymer/polymer": "^3.0.0-pre.10",
         "@types/meteor": "^1.4.13",
         "@types/redux": "^3.6.0",
         "@types/redux-devtools-extension": "^2.13.2",
-        "@webcomponents/custom-elements":
-            "github:webcomponents/custom-elements",
+        "@webcomponents/custom-elements": "github:webcomponents/custom-elements",
         "@webcomponents/webcomponentsjs": "^1.0.18",
-        "babel-runtime": "^6.26.0",
-        "es6-promise": "^4.1.0",
-        "meteor-node-stubs": "~0.2.0",
-        "redux": "^3.7.2",
-        "redux-persist": "^5.4.0",
-        "window": "^4.2.2"
+        "core-js": "^2.5.3"
     },
     "devDependencies": {
         "polymer-weight": "^1.0.3",
