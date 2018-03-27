@@ -3,16 +3,16 @@
     "version": "2.0.0-alpha",
     "private": true,
     "scripts": {
-        "start": "yarn install && rm -r imports/ui/node_links/@polymer && cp -r node_modules/@polymer/ imports/ui/node_links && find imports/ui/node_links/ -name \"*.js\" -exec bash -c 'mv \"$1\" \"${1%.js}\".ts' - '{}' \\; && meteor run | grep -v node_links",
+        "start": "meteor run",
         "weigh": "weigh --path imports/ui/index.html --depth 2",
         "testdeploy": "deploy/testDeploy.sh",
         "rundeploy": "deploy/start.sh",
         "upload": "deploy/upload.sh BaseProject git@adornis.de:/srv/node/BaseProjectDeploy 30"
     },
     "dependencies": {
-        "@babel/runtime": "^7.0.0-beta.40",
-        "@polymer/paper-button": "^3.0.0-pre.10",
-        "@polymer/polymer": "^3.0.0-pre.10",
+        "@babel/runtime": "^7.0.0-beta.42",
+        "@polymer/paper-button": "^3.0.0-pre.12",
+        "@polymer/polymer": "^3.0.0-pre.12",
         "@types/meteor": "^1.4.13",
         "@types/redux": "^3.6.0",
         "@types/redux-devtools-extension": "^2.13.2",

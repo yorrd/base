@@ -1,10 +1,7 @@
-import {
-    Element,
-    html,
-} from "../node_links/@polymer/polymer/polymer-element.js";
-import { afterNextRender } from "../node_links/@polymer/polymer/lib/utils/render-status.js";
+import { PolymerElement, html } from "@polymer/polymer/polymer-element.js";
+import { afterNextRender } from "@polymer/polymer/lib/utils/render-status.js";
 
-export class MyApp extends Element {
+export class MyApp extends PolymerElement {
     static get template() {
         return html`
 
@@ -22,7 +19,7 @@ export class MyApp extends Element {
         afterNextRender(
             this,
             () => {
-                import("../node_links/@polymer/paper-button/paper-button.js");
+                import("@polymer/paper-button/paper-button.js");
             },
             [],
         );
